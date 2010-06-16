@@ -19,21 +19,21 @@ classdef SqueakySpk < handle
     properties (SetAccess = private)
         
         % properties of data that you are cleaning [MAIN DATA]
-        clean = true(length(spike.time),1);;
-        time;
-        channel;
-        waveform;
-        unit;
+        clean = true(length(spike.time),1); % [BOOL]
+        time; % [DOUBLE, seconds]
+        channel; % [INT]
+        waveform; % [DOUBLE, mV]
+        unit; % [INT]
         
         % properties of the stimulus given while collecting the main data [STIM DATA]
-        st_time;
-        st_channel;
+        st_time; % [DOUBLE, seconds]
+        st_channel; % [INT]
         
-        % properties of the spontaneous data used for spk varification [SPONT DATA]
-        sp_time;
-        sp_channel;
-        sp_waveform;
-        sp_unit;
+        % properties of the spontaneous data used for spk verification [SPONT DATA]
+        sp_time; % [DOUBLE, seconds]
+        sp_channel; % [INT]
+        sp_waveform; % [DOUBLE, mV]
+        sp_unit; % [INT]
         
     end
     
@@ -74,11 +74,9 @@ classdef SqueakySpk < handle
             
         end
         
-        %% BLOCK 2: CLEANING METHODS (methods that alter the 'clean' array)
-        
-        % HARD THRESHOLD CLEANER
+        %% BLOCK 2: CLEANING METHODS (methods that alter the 'clean' array)    
         function HardThreshold(SS,threshold)
-            %Removes all spikes with P2P amplitude
+            % HARDTHRESHOLD removes all 'spikes' with P2P amplitude
             %greater than threshold (dependent on whatever units you are
             %measuring AP's with).
             
@@ -90,22 +88,32 @@ classdef SqueakySpk < handle
             tmp = ((max(SS.waveform) - min(SS.waveform)) < threshold);
             SS.clean = SS.clean&(tmp');
         end
-        
+        function RemoveSpkWithBlank(SS)
+            % REMOVESPKWITHBLANK Removes all 'spikes' that have more that have 5 or more
+            % voltage values in their waveform below 0.01 uV inidcating that a
+            % portion of the waveform is blanked. This is extremely
+            % unlikely otherwise.
+            
+            tmp = ~(sum(abs(SS.waveform) <= 0.01,1) >= 5);
+            SS.clean = SS.clean&(tmp');
+        end
         
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
-        %         function obj = set.time
-        %
-        %         end
+        WaveClus(SS,minspk)
+        % WAVECLUS ported version of Rodrigo Quian Quiroga's wave-clus
+        % combined wavelet/superparamagnetic clustering algorithm. One
+        % optional argument, maxclusters, determines the maximal number of
+        % units allowed per channel. This method is contained in a separate
+        % file.
         
         %% BLOCK 4: ADVANCED CLEANING METHODS (methods that alter the'clean' array, but have dependences on overloaded input properties)
         
         
         %% BLOCK 5: VISUALIZATION TOOLS
+        RasterWave_Comp(SS, bound, Fs)
         % RASTERWAVE_COMP modified version of rasterwave that shows the
         % spikes that have been cleaned versus those that have not. This
         % method is contained in a separate file.
-        RasterWave_Comp(SS, bound, Fs)
-       
     end
     
 
