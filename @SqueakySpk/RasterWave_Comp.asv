@@ -41,15 +41,14 @@ if nargin < 1
 end
 
 % find spike times within bound defined by user
-startind = find(SS.time > bound(1),1);
+startind = find(sort(SS.time) > bound(1),1);
 if bound(2) == SS.time(end)
     endind = length(SS.time);
 else
-    endind = find(SS.time > bound(2),1) - 1;
+    endind = find(sort(SS.time) > bound(2),1) - 1;
 end
 spkinterest = SS.time(startind:endind);
 cleaninterest = SS.clean(startind:endind);
-waveinterest = SS.waveform(:,startind:endind);
 % Has the user sorted yet?
 usechan = isempty(SS.unit);
 if usechan
@@ -64,8 +63,8 @@ set(fh,'color','k'); % sets the background color to black
 % Plot the raster for spikes in the time bound of interest
 subplot(211)
 hold on
-plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
-plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4); 
+plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'r.','MarkerSize',3);
+plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'w.','MarkerSize',3); 
 axis tight
 h = gca;
 set(h,'color','k','XColor',[1 1 1],'YColor',[1 1 1],'ylim',[0 max(unitinterest)+1])
@@ -109,7 +108,7 @@ while but == 1
         set(h2,'color','y','linewidth',1.2)
         subplot(212)
         t = 1000/Fs.*(1:size(SS.waveform,1));
-        v = waveinterest(:,ind);
+        v = 1000.*SS.waveform(:,ind);
         plot(t,v,'y','linewidth',3)
         set(gca,'color','k','XColor',[1 1 1],'YColor',[1 1 1])
         xlabel('\textbf{time (ms)}','fontsize',13,'Interpreter','Latex')

@@ -2,8 +2,20 @@ classdef SqueakySpk < handle
     %SQUEAKY SPIKE Data Class and methods for basic preprosessing of data
     %collected using extracellular, multielectrode arrays.
     
-    %   Detailed explanation goes here
-    
+    %   Properties:
+    %
+    %   Methods:
+    %     1. Constructor
+    %         a. SqueakySpk   
+    %     2. Basic Cleaning
+    %         a. HardThreshold
+    %         b. PassOver
+    %         c.
+    %     3. Spike Sorting
+    %         a. WaveClus
+    %     4. Advanced Cleaning
+    %         a. BioFilt
+        
     properties (SetAccess = private)
         
         % properties of data that you are cleaning [MAIN DATA]
@@ -36,7 +48,7 @@ classdef SqueakySpk < handle
             SS.time = spike.time;
             SS.channel = spike.channel;
             SS.waveform = (spike.waveform).*1000; % Assumes data is provided in mV [is this true?];
-            SS.unit = zeros(length(spike.time),1);
+            SS.unit = [];
             
             % Load stimulus information
             if nargin < 2 || isempty (stimulus)
@@ -72,10 +84,10 @@ classdef SqueakySpk < handle
             
             % Set default threshold if non is provided
             if nargin < 2 || isempty(threshold)
-                threshold = 125; %uV
+                threshold = 175; %uV
             end
             
-            tmp = ((max(SS.waveform) - min(SS.waveform)) > threshold);
+            tmp = ((max(SS.waveform) - min(SS.waveform)) < threshold);
             SS.clean = SS.clean&(tmp');
         end
         
@@ -88,27 +100,17 @@ classdef SqueakySpk < handle
         %% BLOCK 4: ADVANCED CLEANING METHODS (methods that alter the'clean' array, but have dependences on overloaded input properties)
         
         
-        
-        
-        % RASTERWAVE_COMP modified version of rasterwave that shows the
-        % spikes that have been cleaned versus those that have not. This
-        % method is contained in a separate file.
-        
-        RasterWave_Comp()
-        
-        function output(SS)
-            figure;plot(SS.clean);
-            out = SS.clean;
-        end
-    end
-    
-    methods (Static)
         %% BLOCK 5: VISUALIZATION TOOLS
         % RASTERWAVE_COMP modified version of rasterwave that shows the
         % spikes that have been cleaned versus those that have not. This
         % method is contained in a separate file.
-        RasterWave_Comp
+        RasterWave_Comp(SS, bound, Fs)
+       
     end
+    
+
+
+
     
 end
 
