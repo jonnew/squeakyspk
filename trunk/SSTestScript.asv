@@ -1,0 +1,6 @@
+spkdat = loadspike('20100604_16269_stim.spk');
+stimdat = loadstim('20100604_16269_stim.stim');
+spontdat = loadspike('20100604_16269_spont.spk');
+
+
+ss20100604 = SqueakySpk(spkdat);
