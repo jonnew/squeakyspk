@@ -1,6 +1,6 @@
-function RasterWave_Comp(SS, bound, Fs)
-%RASTERWAVE_COMP Rasterwave_comp method for the SqeakySpk class.
-
+function RasterWave_Comp(SS, bound, what2show, Fs)
+% RASTERWAVE_COMP Rasterwave_comp method for the SqeakySpk class.
+% 
 % Plots the a raster image of spike times versus unit and allows
 % the user to click each point to examine the raw voltage waveform it
 % represents. Spikes that will currently be cleaned in the Squeaky spike
@@ -15,10 +15,15 @@ function RasterWave_Comp(SS, bound, Fs)
 %   an then plots the corresponding raw voltage trace taken from the
 %   SS.waveform matrix.
 %
-%   RASTERWAVE_COMP(SS,bound,Fs) creates a raster
+%   RASTERWAVE_COMP(SS, bound, showdirty, Fs) creates a raster
 %   wave plot for a portion of the full recording specified in bound = [start
-%   stop] measured in whatever the units SS.time are in. Fs is the
-%   sampling frequency of the waveforms provided. Default value is 25 KHz.
+%   stop] measured in whatever the units SS.time are in. what2show is a
+%   string argument that can take three values ['both','clean', or
+%   'dirty']. This determins what type of data is shown in the raster plot.
+%   Those data that will be removed after cleaning ('dirty') those data
+%   that have survived cleaning ('clean') or both types in different
+%   colors. Fs is the sampling frequency of the waveforms provided. Default
+%   value is 25 KHz.
 %
 %   Created by: Jon Newman (jnewman6 at gatech dot edu)
 %   Location: The Georgia Institute of Technology
@@ -29,9 +34,11 @@ function RasterWave_Comp(SS, bound, Fs)
 %
 
 % check number and type of arguments
-% check number and type of arguments
-if nargin < 3 || isempty(Fs)
+if nargin < 4 || isempty(Fs)
     Fs = 25000; % Default sampling frequecy (Hz)
+end
+if nargin < 3 || isempty(what2show)
+    what2show = 'both'; % Default sampling frequecy (Hz)
 end
 if nargin < 2 || isempty(bound)
     bound = [0 SS.time(end)];
@@ -41,14 +48,16 @@ if nargin < 1
 end
 
 % find spike times within bound defined by user
-startind = find(sort(SS.time) > bound(1),1);
+startind = find(SS.time > bound(1),1);
 if bound(2) == SS.time(end)
     endind = length(SS.time);
 else
-    endind = find(sort(SS.time) > bound(2),1) - 1;
+    endind = find(SS.time > bound(2),1) - 1;
 end
+
 spkinterest = SS.time(startind:endind);
 cleaninterest = SS.clean(startind:endind);
+waveinterest = SS.waveform(:,startind:endind);
 % Has the user sorted yet?
 usechan = isempty(SS.unit);
 if usechan
@@ -60,11 +69,26 @@ end
 % Set up figure and plot raster array
 fh = figure();
 set(fh,'color','k'); % sets the background color to black
-% Plot the raster for spikes in the time bound of interest
 subplot(211)
 hold on
-plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'r.','MarkerSize',3);
-plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'w.','MarkerSize',3); 
+
+% Plot the raster for spikes in the time bound of interest
+switch what2show
+    case 'both'
+        plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
+        plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
+    case 'clean'
+        spkinterest = spkinterest(cleaninterest);
+        unitinterest = unitinterest(cleaninterest);
+        waveinterest = waveinterest(:,cleaninterest);
+        plot(spkinterest,unitinterest,'w.','MarkerSize',4);
+    case 'dirty'
+        spkinterest = spkinterest(~cleaninterest);
+        unitinterest = unitinterest(~cleaninterest);
+        waveinterest = waveinterest(:,~cleaninterest);
+        plot(spkinterest,unitinterest,'r.','MarkerSize',4);
+end
+
 axis tight
 h = gca;
 set(h,'color','k','XColor',[1 1 1],'YColor',[1 1 1],'ylim',[0 max(unitinterest)+1])
@@ -107,8 +131,8 @@ while but == 1
         set(h1,'color','y','linewidth',1.2)
         set(h2,'color','y','linewidth',1.2)
         subplot(212)
-        t = 1000/Fs.*(1:size(SS.waveform,1));
-        v = 1000.*SS.waveform(:,ind);
+        t = 1000/Fs.*(1:size(waveinterest,1));
+        v = waveinterest(:,ind);
         plot(t,v,'y','linewidth',3)
         set(gca,'color','k','XColor',[1 1 1],'YColor',[1 1 1])
         xlabel('\textbf{time (ms)}','fontsize',13,'Interpreter','Latex')
@@ -121,9 +145,7 @@ while but == 1
     end
 end
 
-end
-
-%% 'getclick' is needed above
+% 'getclick' is needed above
     function [out1,out2,out3] = getclick(arg1)
         %GINPUT Graphical input from mouse.
         %   [X,Y] = GINPUT(N) gets N points from the current axes and returns
@@ -350,8 +372,7 @@ end
             
         end
     end
-
-%% 'xmark' is needed above
+% 'xmark' is needed above
     function [H1 H2]=xmark(center,rad,aspectR)
         scalefac = 3.9*(aspectR(2)/aspectR(1));
         X1 = center(1) + [-rad rad];
@@ -360,3 +381,5 @@ end
         H1 = line(X1,Y1);
         H2 = line(X1,Y2);
     end
+
+end

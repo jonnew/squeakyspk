@@ -1,19 +1,66 @@
-function WaveClus(SS,minspk)
+function WaveClus(SS,maxclus,minspk,decompmeth,plotall)
+% WAVECLUS ported version of Rodrigo Quian Quiroga's wave-clus
+% combined wavelet/superparamagnetic clustering algorithm. 
+% 
+% Inputs:
+% maxclus - determines the maximal number of units allowed per channel.
+% minspk - sets the minimal number of spikes within a cluster for the
+% user to accept that data a legitimate unit.
+% decompmeth - Decomposition/feature extraction method. Default is 'wav'
+% which is a wavelet decomposition using Haar wavelets. User can also
+% specify principle component analysis using 'pca' (first three dimensions
+% are used in this case).
+% 
+% Outputs:
+% A modified unit field in the SqueakySpk object.
+% Written by: JN  
 
-if nargin < 2 || isempty(minspk)
+if nargin < 5 || isempty(plotall)
+    plotall = 1;
+end
+if nargin < 4 || isempty(decompmeth)
+    decompmeth = 'wav';
+end
+if nargin < 3 || isempty(minspk)
     minspk = 20;
 end
+if nargin < 2 || isempty(maxclus)
+    maxclus = 3;
+end
+if minspk < 2
+    error('Please raise the minimal number of spikes to form a cluster or there may not be enough data on some channels to perform clustering at all.')
+end
 
-% Waveclus for main data
-time = SS.time;
-channel = SS.channel;
-waveform = SS.waveform;
+% Waveclus for main data, only perform clustering on clean data all else is
+% not clustered!
 
-[chan2anal chanparse] = PepareBatchData(time,channel,waveform);
-Do_Clustering(chanparse,chan2anal);
-UnitID = Populate_Results(chan2anal);
+% ERROR - SOMETHING WRONG WITH MANIPULATION OF DATA INDICIES OR CLEAN
+% ARRAY. SPIKES THAT SHOULD NOT BE CLEANED ARE GETTING CLEANED.
+time = SS.time;%(SS.clean);
+channel = SS.channel;%(SS.clean);
+waveform = SS.waveform;%(:,SS.clean);
+uniquechan = unique(channel);
 
-SS.unit = UnitID;
+[chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
+clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
+finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
+
+
+    SS.time = finresult.time;
+    SS.channel = finresult.channel;
+    SS.waveform = finresult.waveform;
+    SS.unit = finresult.unit;
+    SS.avgwaveform = finresult.meanwave;
+
+% Add dirty data back, but with the 0 unit specification
+% [SS.time tempindex] = sort([finresult.time;SS.time(~SS.clean)]);
+% channel = [finresult.channel;SS.channel(~SS.clean)];
+% SS.channel = channel(tempindex);
+% waveform = [finresult.waveform SS.waveform(:,~SS.clean)];
+% SS.waveform = waveform(:,tempindex);
+% unit = [finresult.unit;zeros(sum(~SS.clean),1)];
+% SS.unit = unit(tempindex);
+% SS.avgwaveform = finresult.meanwave;
 
 % Waveclus for spontaneous data
 if ~isempty(SS.sp_time)
@@ -22,18 +69,22 @@ if ~isempty(SS.sp_time)
     channel = SS.sp_channel;
     waveform = SS.sp_waveform;
     
-    [chan2anal chanparse] = PepareBatchData(time,channel,waveform);
-    Do_Clustering(chanparse,chan2anal);
-    UnitID = Populate_Results(chan2anal);
+    [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
+    clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
+    finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
     
-    SS.sp_unit = UnitID;
-    
+    SS.sp_time = finresult.time;
+    SS.sp_channel = finresult.channel;
+    SS.sp_waveform = finresult.waveform;
+    SS.sp_unit = finresult.unit;
+    SS.sp_avgwaveform = finresult.meanwave;
 end
 
 % Functions called for clustering
-    function Do_Clustering(channelparse,chan2anal)
+    function clusterresults = Do_Clustering(channelparse,chan2anal,maxclus,minspk,plotall)
         
-        print2file = 1;                              %for saving printouts.
+        print2file = 0;                             %for saving printouts.
+        print2paper = 0;                            %For printing to a .jpg
         
         handles.par.w_pre=22;                       %number of pre-event data points stored
         handles.par.w_post=52;                      %number of post-event data points stored
@@ -51,7 +102,7 @@ end
         handles.par.template_type = 'center';       % nn, center, ml, mahal
         handles.par.template_sdnum = 3;             % max radius of cluster in std devs. % JN: MAY WANT TO MAKE LOWER SO THAT NON-SPIKES GET EXCLUDED MORE
         
-        handles.par.features = 'wav';               %choice of spike features
+        handles.par.features = decompmeth;          %choice of spike features
         handles.par.inputs = 10;                    %number of inputs to the clustering
         handles.par.scales = 4;                     %scales for wavelet decomposition
         if strcmp(handles.par.features,'pca');      %number of inputs to the clustering for pca
@@ -78,10 +129,12 @@ end
         
         handles.par.sr = 24000;                     %sampling frequency, in Hz.
         
-        figure
-        set(gcf,'PaperOrientation','Landscape','PaperPosition',[0.25 0.25 10.5 8])
         
         parsefieldnames = fieldnames(channelparse);
+        clusterresults = {};
+        
+        figure
+        set(gcf,'PaperOrientation','Landscape','PaperPosition',[0.25 0.25 10.5 8])
         
         for k=1:size(chan2anal,2)
             
@@ -112,12 +165,45 @@ end
             [temp] = find_temp(tree,handles);
             
             %DEFINE CLUSTERS
-            class1=find(clu(temp,3:end)==0);
-            class2=find(clu(temp,3:end)==1);
-            class3=find(clu(temp,3:end)==2);
-            class4=find(clu(temp,3:end)==3);
-            class5=find(clu(temp,3:end)==4);
-            class0=setdiff(1:size(spikes,1), sort([class1 class2 class3 class4 class5]));
+            switch maxclus
+                case 1
+                    class1=find(clu(temp,3:end)==0);
+                    class2 = [];
+                    class3 = [];
+                    class4 = [];
+                    class5 = [];
+                    class0=setdiff(1:size(spikes,1), sort(class1));
+                case 2
+                    class1=find(clu(temp,3:end)==0);
+                    class2=find(clu(temp,3:end)==1);
+                    class3 = [];
+                    class4 = [];
+                    class5 = [];
+                    class0=setdiff(1:size(spikes,1), sort([class1 class2]));
+                case 3
+                    class1=find(clu(temp,3:end)==0);
+                    class2=find(clu(temp,3:end)==1);
+                    class3=find(clu(temp,3:end)==2);
+                    class4 = [];
+                    class5 = [];
+                    class0=setdiff(1:size(spikes,1), sort([class1 class2 class3]));
+                case 4
+                    class1=find(clu(temp,3:end)==0);
+                    class2=find(clu(temp,3:end)==1);
+                    class3=find(clu(temp,3:end)==2);
+                    class4=find(clu(temp,3:end)==3);
+                    class5 = [];
+                    class0=setdiff(1:size(spikes,1), sort([class1 class2 class3 class4]));
+                    
+                case 5
+                    class1=find(clu(temp,3:end)==0);
+                    class2=find(clu(temp,3:end)==1);
+                    class3=find(clu(temp,3:end)==2);
+                    class4=find(clu(temp,3:end)==3);
+                    class5=find(clu(temp,3:end)==4);
+                    class0=setdiff(1:size(spikes,1), sort([class1 class2 class3 class4 class5]));
+            end
+            
             whos class*
             
             % IF TEMPLATE MATCHING WAS DONE, THEN FORCE
@@ -143,6 +229,11 @@ end
             end
             
             %PLOTS
+            cluster=zeros(nspk,2);
+            cluster(:,2)= index';
+            meanwave = [];
+            
+            %PLOTS (if requested by user)
             clf
             clus_pop = [];
             ylimit = [];
@@ -165,15 +256,15 @@ end
             ylabel('Cluster Size')
             subplot(2,5,1)
             hold on
-            cluster=zeros(nspk,2);
-            cluster(:,2)= index';
             num_clusters = length(find([length(class1) length(class2) length(class3)...
                 length(class4) length(class5) length(class0)] >= handles.par.min_clus));
             clus_pop = [clus_pop length(class0)];
             if length(class0) > handles.par.min_clus;
                 subplot(2,5,5);
                 max_spikes=min(length(class0),handles.par.max_spikes);
-                plot(spikes(class0(1:max_spikes),:)','k');
+                if plotall
+                    plot(spikes(class0(1:max_spikes),:)','k');
+                end
                 xlim([1 size(spikes,2)]);
                 title('Cluster 0','Fontweight','bold')
                 subplot(2,5,10)
@@ -186,6 +277,8 @@ end
                 title([num2str(length(class0)) ' spikes']);
             end
             if length(class1) > handles.par.min_clus;
+                meanwave1 = mean(spikes(class1,:),1);
+                meanwave = [meanwave meanwave1'];
                 clus_pop = [clus_pop length(class1)];
                 subplot(2,5,1);
                 max_spikes=min(length(class1),handles.par.max_spikes);
@@ -193,8 +286,10 @@ end
                 xlim([1 size(spikes,2)]);
                 subplot(2,5,2);
                 hold
-                plot(spikes(class1(1:max_spikes),:)','b');
-                plot(mean(spikes(class1,:),1),'k','linewidth',2)
+                if plotall
+                    plot(spikes(class1(1:max_spikes),:)','b');
+                end
+                plot(meanwave1,'k','linewidth',2)
                 xlim([1 size(spikes,2)]);
                 title('Cluster 1','Fontweight','bold')
                 ylimit = [ylimit;ylim];
@@ -209,6 +304,8 @@ end
                 cluster(class1(:),1)=1;
             end
             if length(class2) > handles.par.min_clus;
+                meanwave2 = mean(spikes(class2,:),1);
+                meanwave = [meanwave meanwave2'];
                 clus_pop = [clus_pop length(class2)];
                 subplot(2,5,1);
                 max_spikes=min(length(class2),handles.par.max_spikes);
@@ -216,8 +313,10 @@ end
                 xlim([1 size(spikes,2)]);
                 subplot(2,5,3);
                 hold
-                plot(spikes(class2(1:max_spikes),:)','r');
-                plot(mean(spikes(class2,:),1),'k','linewidth',2)
+                if plotall
+                    plot(spikes(class2(1:max_spikes),:)','r');
+                end
+                plot(meanwave2,'k','linewidth',2)
                 xlim([1 size(spikes,2)]);
                 title('Cluster 2','Fontweight','bold')
                 ylimit = [ylimit;ylim];
@@ -232,6 +331,8 @@ end
                 title([num2str(length(class2)) ' spikes']);
             end
             if length(class3) > handles.par.min_clus;
+                meanwave3 = mean(spikes(class3,:),1);
+                meanwave = [meanwave meanwave3'];
                 clus_pop = [clus_pop length(class3)];
                 subplot(2,5,1);
                 max_spikes=min(length(class3),handles.par.max_spikes);
@@ -239,8 +340,10 @@ end
                 xlim([1 size(spikes,2)]);
                 subplot(2,5,4);
                 hold
-                plot(spikes(class3(1:max_spikes),:)','g');
-                plot(mean(spikes(class3,:),1),'k','linewidth',2)
+                if plotall
+                    plot(spikes(class3(1:max_spikes),:)','g');
+                end
+                plot(meanwave3,'k','linewidth',2)
                 xlim([1 size(spikes,2)]);
                 title('Cluster 3','Fontweight','bold')
                 ylimit = [ylimit;ylim];
@@ -255,10 +358,14 @@ end
                 title([num2str(length(class3)) ' spikes']);
             end
             if length(class4) > handles.par.min_clus;
+                meanwave4 = mean(spikes(class4,:),1);
+                meanwave = [meanwave meanwave4'];
                 clus_pop = [clus_pop length(class4)];
                 cluster(class4(:),1)=4;
             end
             if length(class5) > handles.par.min_clus;
+                meanwave5 = mean(spikes(class5,:),1);
+                meanwave = [meanwave meanwave5'];
                 clus_pop = [clus_pop length(class5)];
                 subplot(2,5,1);
                 cluster(class5(:),1)=5;
@@ -277,87 +384,100 @@ end
             title([pwd '/' char(file_to_cluster)],'Interpreter','none','Fontsize',14)
             features_name = handles.par.features;
             toc
-            if print2file==0;
+            
+            if print2paper==1;
                 print
-            else
+            end
+            if print2file ==1;
                 set(gcf,'papertype','usletter','paperorientation','portrait','paperunits','inches')
                 set(gcf,'paperposition',[.25 .25 10.5 7.8])
                 eval(['print -djpeg fig2print_' char(file_to_cluster)]);
             end
+           
+            drawnow;
             
-            %SAVE FILES
-            par = handles.par;
-            cluster_class = cluster;
-            outfile=['times_' char(file_to_cluster)];
-            save(outfile, 'cluster_class', 'par', 'spikes', 'inspk')
-            numclus=length(clus_pop)-1;
-            outfileclus='cluster_results.txt';
-            fout=fopen(outfileclus,'at+');
-            fprintf(fout,'%s\t %s\t %g\t %d %g\t', char(file_to_cluster), features_name, temperature, numclus, handles.par.stdmin);
-            for ii=1:numclus
-                fprintf(fout,'%d\t',clus_pop(ii));
-            end
-            fprintf(fout,'%d\n',clus_pop(end));
-            fclose(fout);
+            %Output
+            clusterresults.(genvarname(file_to_cluster{1})).spkindex = inspk;
+            clusterresults.(genvarname(file_to_cluster{1})).class = cluster;
+            clusterresults.(genvarname(file_to_cluster{1})).waveform = spikes;
+            clusterresults.(genvarname(file_to_cluster{1})).meanwave = meanwave;
+            
         end
         
         
     end
-    function unitID = Populate_Results(channels2anal)
-        chanfiles = textread('chanfiles.txt','%s');
-        currunit = 1;
+    function result = Populate_Results(uniquechan, channels2anal,clusterresults,time,channel,waveform)
         
+        % DELETE ANY RESIDUAL FILES
+        delete *.dg_01.lab
+        delete *.dg_01
+        delete *.run
+        delete *.mag
+        delete *.edges
+        delete *.param
+        delete('Cluster.exe')
+        
+        currunit = 1;
+        j = 1;
         spiketime = [];
         spikechannel = [];
         spikewave = [];
         unitID = [];
+        meanwave = [];
         
-        for i = 1:length(chanfiles)
+        for i = uniquechan'
             
-            chan = channels2anal(i);
-            sortdata = load(strcat(['times_' char(chanfiles(i))]));
-            numclus = max(sortdata.cluster_class(:,1));
-            for k = 1:numclus
-                indclus = find(sortdata.cluster_class(:,1) == k);
-                if length(indclus) > minfire
-                    spiketime = [spiketime sortdata.cluster_class(indclus,2)'./1000]; % convert back to seconds
-                    spikechannel = [spikechannel chan*ones(size(indclus))'];
-                    spikewave = [spikewave sortdata.spikes(indclus,:)'];
-                    unitID = [unitID currunit*ones(size(indclus))'];
-                    currunit = currunit+1;
+            if ismember(i,channels2anal)
+                chan = channels2anal(j);
+                sortdata = clusterresults.(genvarname(['chan' num2str(chan)]));
+                numclus = max(sortdata.class(:,1));
+                for k = 0:numclus
+                    
+                    if k == 0 % unsorted case
+                        indclus = sortdata.class(:,1) == k;
+                        spiketime = [spiketime; sortdata.class(indclus,2)./1000]; % convert back to seconds
+                        spikechannel = [spikechannel;chan*ones(size(indclus))];
+                        spikewave = [spikewave sortdata.waveform(indclus,:)'];
+                        unitID = [unitID;zeros(size(indclus))];
+                    else % sorted units
+                        indclus = sortdata.class(:,1) == k;
+                        spiketime = [spiketime; sortdata.class(indclus,2)./1000]; % convert back to seconds
+                        spikechannel = [spikechannel;chan*ones(size(indclus))];
+                        spikewave = [spikewave sortdata.waveform(indclus,:)'];
+                        unitID = [unitID;currunit*ones(size(indclus))];
+                        meanwave = [meanwave sortdata.meanwave];
+                        currunit = currunit+1;
+                    end
                 end
+                j = j+1;
+            else
+                ind = (channel == i);
+                spiketime = [spiketime;time(ind)];
+                spikechannel = [spikechannel;channel(ind)];
+                spikewave = [spikewave waveform(:,ind')];
+                unitID = [unitID;zeros(size(time(ind)))];
             end
-            
-            [spiketime temporalind] = sort(spiketime);
-            spikechannel = spikechannel(temporalind);
-            spikewave = spikewave(:,temporalind);
-            unitID = unitID(temporalind);
-            
         end
         
-        % Delete temporary files and variables
-        delete('Cluster.exe');
-        delete('chanfiles.txt');
-        delete('cluster_results.txt');
-        for i = 1:length(chanfiles)
-            delete(strcat([char(chanfiles(i)),'.mat']));
-            delete(strcat(['times_',char(chanfiles(i)),'.mat']));
-            delete(strcat(['fig2print_',char(chanfiles(i)),'.jpg']));
-            delete('*.lab');
-            delete('*.dg_01');
-        end
+        result = {};
+        
+        [result.time temporalind] = sort(spiketime);
+        result.channel = spikechannel(temporalind);
+        result.waveform = spikewave(:,temporalind);
+        result.unit = unitID(temporalind);
+        result.meanwave = meanwave;
         
     end
-    function [chan2anal channelparse] = PepareBatchData(time,channel,waveform)
+    function [chan2anal channelparse] = PepareBatchData(time,channel,waveform,minspk)
         
         channelparse = {};
         chan2anal = [];
         
         for chan = unique(channel)';
             
-            ind = channel == chan;
+            ind = (channel == chan);
             
-            if ~isempty(ind)
+            if sum(ind) >= minspk
                 
                 changood = chan;
                 
@@ -407,7 +527,7 @@ end
                     thr_dist = std(cc(:,i)) * 3;
                     thr_dist_min = mean(cc(:,i)) - thr_dist;
                     thr_dist_max = mean(cc(:,i)) + thr_dist;
-                    aux = cc(find(cc(:,i)>thr_dist_min & cc(:,i)<thr_dist_max),i);
+                    aux = cc((cc(:,i)>thr_dist_min & cc(:,i)<thr_dist_max),i);
                     if length(aux) > 10;
                         [ksstat]=test_ks(aux);
                         sd(i)=ksstat;
@@ -472,16 +592,15 @@ end
         KSmax =  max(deltacdf);
     end
     function [clu, tree] = run_cluster(handles)
+        
         dim=handles.par.inputs;
+        
+        delete *.dg_01.lab
+        delete *.dg_01
+        
+        % Assign new names
         fname=handles.par.fname;
         fname_in=handles.par.fname_in;
-        
-        % DELETE PREVIOUS FILES
-        fileexist = exist([fname '.dg_01.lab'],'file');
-        if(fileexist~=0)
-            delete([fname '.dg_01.lab']);
-            delete([fname '.dg_01']);
-        end
         
         dat=load(fname_in);
         n=length(dat);
@@ -539,6 +658,7 @@ end
         
         clu=load([fname '.dg_01.lab']);
         tree=load([fname '.dg_01']);
+        
         delete(sprintf('%s.run',fname));
         delete *.mag
         delete *.edges
