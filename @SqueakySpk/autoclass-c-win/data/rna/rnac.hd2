@@ -1,0 +1,27 @@
+!#; AutoClass C header file -- extension .hd2
+!#; the following chars in column 1 make the line a comment:
+!#; '!', '#', ';', ' ', and '\n' (empty line)
+
+
+;;; From: gautheret@bch.umontreal.ca (Daniel Gautheret)
+
+; 68 Data, 7 attributes
+
+;#! num_db2_format_defs <num of def lines -- min 1, max 4>
+num_db2_format_defs 2
+;; required
+number_of_attributes 7
+;; optional - default values are specified 
+;; separator_char  ' '
+;; comment_char    ';'
+;; unknown_token   '?'
+separator_char     ','
+
+;; <zero-based att#>  <att_type>  <att_sub_type>  <att_description>  <att_param_pairs>
+0 real scalar "numero" zero_point 0.0 rel_error 0.0 
+1 real scalar "x(p)" zero_point  0.0 rel_error .01
+2 real scalar "y(p)" zero_point -1.0 rel_error .01 
+3 real scalar "z(p)" zero_point -13.0 rel_error .01 
+4 real scalar "x(v)" zero_point -1.0 rel_error .01 
+5 real scalar "y(v)" zero_point -1.0 rel_error .01
+6 real scalar "z(v)" zero_point -1.0 rel_error .01

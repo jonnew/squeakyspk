@@ -1,0 +1,28 @@
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 11:51:13 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk.search
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 11:51:13 2001 
+

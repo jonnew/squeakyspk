@@ -1,0 +1,112 @@
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 12:11:37 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+report_mode="data"; comment_data_headers_p=true; xref_class_report_att_list=(13,2,25,14); sigma_contours_att_list=(18,19,20,21,22,23,24,25)
+
+ADVISORY[2]: read 26 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.hd2
+ADVISORY[1]: read 205 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.search
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.influ-o-data-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.case-data-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.class-data-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 12:11:37 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 12:12:49 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+report_mode="data"; comment_data_headers_p=true; xref_class_report_att_list=(13,2,25,14); sigma_contours_att_list=(18,19,20,21,22,23,24,25)
+
+ADVISORY[2]: read 26 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.hd2
+ADVISORY[1]: read 205 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.search
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.influ-o-data-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.case-data-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.class-data-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 12:12:49 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 12:13:35 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+report_mode="data"; comment_data_headers_p=true; xref_class_report_att_list=(13,2,25,14); sigma_contours_att_list=(18,19,20,21,22,23,24,25)
+
+ADVISORY[2]: read 26 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.hd2
+ADVISORY[1]: read 205 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.search
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.influ-o-data-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.case-data-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.class-data-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 12:13:36 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 12:15:19 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+report_mode="data"; comment_data_headers_p=true; xref_class_report_att_list=(13,2,25,14); sigma_contours_att_list=(18,19,20,21,22,23,24,25)
+
+ADVISORY[2]: read 26 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.hd2
+ADVISORY[1]: read 205 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.search
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.influ-o-data-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.case-data-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/autos/imports-85.class-data-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 12:15:19 2001 
+

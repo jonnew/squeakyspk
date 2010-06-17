@@ -1,0 +1,74 @@
+
+Checkpointing:
+
+    With very large databases there is a significant probability of a system crash
+during any one classification try.  Under such circumstances it is advisable to
+take the time to checkpoint the calculations for possible restart.
+
+    Checkpointing is initiated by specifying the CHECKPOINT_P keyword parameter
+value as true in the ".s-params" file.  This causes the inner convergence step, 
+to save a copy of the classification onto the checkpoint file each time the
+classification is updated, providing a certain period of time has elapsed.
+The file extension is ".chkpt[-bin]".
+
+    Each time a AutoClass completes a cycle, a "." is output to the screen to
+provide you with information to be used in setting the MIN_CHECKPOINT_PERIOD
+value (default 10800 seconds or 3 hours).  There is obviously a trade-off 
+between frequency of checkpointing and the probability that your machine may 
+crash, since the repetitive writing of the checkpoint file will slow the 
+search process.
+
+
+Restarting AutoClass Search:
+
+    To recover the classification and continue the search after rebooting and
+reloading AutoClass, specify RECONVERGE_TYPE = "chkpt" in the ".s-params" file
+(specify FORCE_NEW_SEARCH_P as false).
+
+AutoClass will reload the appropriate database and models, provided there has
+been no change in their filenames since the time they were loaded for the
+checkpointed classification run.  The ".s-params" file contains any non-
+default arguments that were provided to the original call.
+
+In the beginning of a search, before START_J_LIST has been emptied, it will be
+necessary to trim the original list to what would have remained in the crashed
+search.  This can be determined by looking at the ".log" file to determine what
+values were already used.  If the START_J_LIST has been emptied, then an empty
+START_J_LIST should be specified in the ".s-params" file.  This is done either
+by
+        start_j_list =
+or
+        start_j_list = -9999 
+
+Here is an a set of scripts to demonstrate check-pointing:
+
+% autoclass -search data/glass/glassc.db2 data/glass/glass-3c.hd2 \
+                data/glass/glass-mnc.model data/glass/glassc-chkpt.s-params
+Run 1)
+## glassc-chkpt.s-params
+max_n_tries = 2
+force_new_search_p = true
+## --------------------
+;; run to completion
+
+Run 2)
+## glassc-chkpt.s-params
+force_new_search_p = false
+max_n_tries = 10
+checkpoint_p = true
+min_checkpoint_period = 2
+## --------------------
+;; after 1 checkpoint, ctrl-C to simulate cpu crash
+
+Run 3)
+## glassc-chkpt.s-params
+force_new_search_p = false
+max_n_tries = 1
+checkpoint_p = true
+min_checkpoint_period = 1
+reconverge_type = "chkpt"
+## --------------------
+;; checkpointed trial should finish 
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------

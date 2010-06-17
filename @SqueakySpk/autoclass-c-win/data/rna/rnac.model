@@ -1,0 +1,12 @@
+!#; AutoClass C model file -- extension .model
+!#; the following chars in column 1 make the line a comment:
+!#; '!', '#', ';', ' ', and '\n' (empty line)
+
+;;; From: gautheret@bch.umontreal.ca (Daniel Gautheret)
+
+;; 1 or more model definitions
+;; model_index <zero-based index> <number of model definition lines>
+model_index 0 2
+;; <model type> <zero-based attribute number> <zero-based attribute number> ...
+ignore 0
+single_normal_cn 1 2 3 4 5 6

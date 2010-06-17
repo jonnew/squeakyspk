@@ -1,0 +1,376 @@
+DATA_CLSF_HEADER
+      AutoClass CLASSIFICATION for the 214 cases in
+        /home/tove/p/autoclass-c/data/glass/glassc.db2
+        /home/tove/p/autoclass-c/data/glass/glass-3c.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -11510.965
+      from classification results file
+        /home/tove/p/autoclass-c/data/glass/glassc.results-bin
+      and using models
+        /home/tove/p/autoclass-c/data/glass/glass-mnc.model - index = 0
+
+
+DATA_SEARCH_SUMMARY
+SEARCH SUMMARY 4 tries over  9 seconds
+SUMMARY OF 10 BEST RESULTS
+PROBABILITY  exp(-11434.215) N_CLASSES   5 FOUND ON TRY    3 *SAVED*  -1
+PROBABILITY  exp(-11510.965) N_CLASSES   7 FOUND ON TRY    4 *SAVED*  -2
+PROBABILITY  exp(-11663.794) N_CLASSES   3 FOUND ON TRY    2
+PROBABILITY  exp(-11670.677) N_CLASSES   2 FOUND ON TRY    1
+
+
+
+DATA_POP_CLASSES
+CLASSIFICATION HAS 7 POPULATED CLASSES(max global influence value = 1.430) 
+
+   Class     Log of class       Relative         Class     Normalized
+    num        strength       class strength     weight    class weight
+
+00        -4.68e+01          1.00e+00         100         0.466
+01        -5.15e+01          9.26e-03          33         0.155
+02        -5.90e+01          4.91e-06          27         0.126
+03        -5.79e+01          1.43e-05          22         0.104
+04        -5.39e+01          7.77e-04          16         0.074
+05        -6.17e+01          3.37e-07          12         0.056
+06        -5.80e+01          1.31e-05           4         0.019
+
+
+DATA_CLASS_DIVS
+CLASS DIVERGENCES
+
+   Class       class cross entropy       Class     Normalized
+    num        w.r.t. global class       weight    class weight
+
+00               1.15e+01             100         0.466
+01               8.89e+00              33         0.155
+02               5.70e+00              27         0.126
+03               8.56e+00              22         0.104
+04               7.72e+00              16         0.074
+05               1.05e+01              12         0.056
+06               1.29e+01               4         0.019
+
+DATA_NORM_INF_VALS
+ORDERED LIST OF NORMALIZED ATTRIBUTE INFLUENCE VALUES SUMMED OVER ALL CLASSES
+
+   num                        description                          I-*k 
+
+011  Log RI: refractive index                                   1.000
+012  Log Na: Wt.% Sodium oxide                                  1.000
+013  Log Mg: Wt.% Magnesium oxide                               1.000
+014  Log Al: Wt.% Aluminum oxide                                1.000
+015  Log Si: Wt.% Silicon oxide                                 1.000
+016  Log  K: Wt.% Potassium oxide                               1.000
+017  Log Ca: Wt.% Calcium oxide                                 1.000
+018  Log Ba: Wt.% Barium oxide                                  1.000
+019  Log Fe: Wt.% Iron oxide                                    1.000
+000  Id number                                                  -----
+001  RI: refractive index                                       -----
+002  Na: Wt.% Sodium oxide                                      -----
+003  Mg: Wt.% Magnesium oxide                                   -----
+004  Al: Wt.% Aluminum oxide                                    -----
+005  Si: Wt.% Silicon oxide                                     -----
+006   K: Wt.% Potassium oxide                                   -----
+007  Ca: Wt.% Calcium oxide                                     -----
+008  Ba: Wt.% Barium oxide                                      -----
+009  Fe: Wt.% Iron oxide                                        -----
+010  Type of glass                                              -----
+
+
+DATA_CLASS 0
+CLASS  0 - weight 100   normalized weight 0.466   relative strength  1.00e+00 *******
+                            class cross entropy w.r.t. global class  1.15e+01 *******
+
+
+INTEGER or REAL ATTRIBUTE  (t = I or R)                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 18 R MNcn  Log Ba: Wt.% Barium   1.276 (-5.30e+00  2.86e-02)  3.03e+01 (-4.43e+00  1.93e+00)
+              oxide                 
+00 13 R MNcn  Log Mg: Wt.% Magnesi  1.276 ( 1.27e+00  4.76e-02)  2.86e+01 (-9.37e-02  2.60e+00)
+              um oxide              
+00 16 R MNcn  Log  K: Wt.% Potassi  1.276 (-5.06e-01  8.16e-02)  1.19e+01 (-1.47e+00  1.74e+00)
+              um oxide              
+00 17 R MNcn  Log Ca: Wt.% Calcium  1.276 ( 2.13e+00  3.76e-02)  1.49e+00 ( 2.18e+00  1.45e-01)
+               oxide                
+00 12 R MNcn  Log Na: Wt.% Sodium   1.276 ( 2.57e+00  2.54e-02)  9.06e-01 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 11 R MNcn  Log RI: refractive i  1.276 (-6.59e-01  1.31e-02)  1.47e-01 (-6.57e-01  1.30e-02)
+              ndex                  
+00 15 R MNcn  Log Si: Wt.% Silicon  1.276 ( 4.29e+00  1.31e-02)  1.37e-01 ( 4.29e+00  1.30e-02)
+               oxide                
+00 14 R MNcn  Log Al: Wt.% Aluminu  1.276 ( 3.16e-01  1.42e-01)  7.13e-02 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 19 R MNcn  Log Fe: Wt.% Iron ox  1.276 (-4.13e+00  1.69e+00)  2.41e-02 (-4.18e+00  1.66e+00)
+              ide                   
+
+DATA_CORR_MATRIX
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+11  1.000  0.041  0.032 -0.061 -0.028 -0.073  0.092  0.000 -0.010
+12  0.041  1.000  0.252 -0.003 -0.285 -0.275 -0.190  0.000 -0.115
+13  0.032  0.252  1.000 -0.172 -0.107 -0.268 -0.303  0.000  0.076
+14 -0.061 -0.003 -0.172  1.000 -0.051  0.421 -0.477  0.000 -0.010
+15 -0.028 -0.285 -0.107 -0.051  1.000  0.112 -0.080  0.000 -0.025
+16 -0.073 -0.275 -0.268  0.421  0.112  1.000 -0.364  0.000  0.004
+17  0.092 -0.190 -0.303 -0.477 -0.080 -0.364  1.000  0.000  0.123
+18  0.000  0.000  0.000  0.000  0.000  0.000  0.000  1.000  0.000
+19 -0.010 -0.115  0.076 -0.010 -0.025  0.004  0.123  0.000  1.000
+
+
+
+DATA_CLASS 1
+CLASS  1 - weight  33   normalized weight 0.155   relative strength  9.26e-03 *******
+                            class cross entropy w.r.t. global class  8.89e+00 *******
+
+
+INTEGER or REAL ATTRIBUTE  (t = I or R)                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 18 R MNcn  Log Ba: Wt.% Barium   0.988 (-5.30e+00  2.95e-02)  2.94e+01 (-4.43e+00  1.93e+00)
+              oxide                 
+00 13 R MNcn  Log Mg: Wt.% Magnesi  0.988 ( 1.29e+00  4.90e-02)  2.83e+01 (-9.37e-02  2.60e+00)
+              um oxide              
+00 14 R MNcn  Log Al: Wt.% Aluminu  0.988 (-1.90e-02  3.92e-01)  8.28e-01 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 12 R MNcn  Log Na: Wt.% Sodium   0.988 ( 2.62e+00  3.61e-02)  5.90e-01 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 15 R MNcn  Log Si: Wt.% Silicon  0.988 ( 4.28e+00  1.35e-02)  4.26e-01 ( 4.29e+00  1.30e-02)
+               oxide                
+00 16 R MNcn  Log  K: Wt.% Potassi  0.988 (-1.90e+00  1.20e+00)  3.56e-01 (-1.47e+00  1.74e+00)
+              um oxide              
+00 11 R MNcn  Log RI: refractive i  0.988 (-6.55e-01  1.35e-02)  1.91e-01 (-6.57e-01  1.30e-02)
+              ndex                  
+00 17 R MNcn  Log Ca: Wt.% Calcium  0.988 ( 2.19e+00  1.01e-01)  1.20e-01 ( 2.18e+00  1.45e-01)
+               oxide                
+00 19 R MNcn  Log Fe: Wt.% Iron ox  0.988 (-4.02e+00  1.72e+00)  8.81e-02 (-4.18e+00  1.66e+00)
+              ide                   
+
+DATA_CORR_MATRIX
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+11  1.000  0.062  0.310 -0.353 -0.213 -0.229  0.394  0.000  0.102
+12  0.062  1.000  0.331 -0.175 -0.352 -0.348 -0.145  0.000 -0.163
+13  0.310  0.331  1.000 -0.698 -0.414 -0.542  0.646  0.000  0.034
+14 -0.353 -0.175 -0.698  1.000  0.361  0.466 -0.810  0.000 -0.043
+15 -0.213 -0.352 -0.414  0.361  1.000  0.302 -0.363  0.000 -0.088
+16 -0.229 -0.348 -0.542  0.466  0.302  1.000 -0.490  0.000  0.077
+17  0.394 -0.145  0.646 -0.810 -0.363 -0.490  1.000  0.000  0.202
+18  0.000  0.000  0.000  0.000  0.000  0.000  0.000  1.000  0.000
+19  0.102 -0.163  0.034 -0.043 -0.088  0.077  0.202  0.000  1.000
+
+
+
+DATA_CLASS 2
+CLASS  2 - weight  27   normalized weight 0.126   relative strength  4.91e-06 *******
+                            class cross entropy w.r.t. global class  5.70e+00 *******
+
+
+INTEGER or REAL ATTRIBUTE  (t = I or R)                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 18 R MNcn  Log Ba: Wt.% Barium   0.634 (-1.61e-01  1.20e+00)  3.57e+00 (-4.43e+00  1.93e+00)
+              oxide                 
+00 12 R MNcn  Log Na: Wt.% Sodium   0.634 ( 2.68e+00  4.63e-02)  1.86e+00 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 13 R MNcn  Log Mg: Wt.% Magnesi  0.634 (-4.37e+00  2.36e+00)  1.81e+00 (-9.37e-02  2.60e+00)
+              um oxide              
+00 16 R MNcn  Log  K: Wt.% Potassi  0.634 (-3.86e+00  2.23e+00)  1.07e+00 (-1.47e+00  1.74e+00)
+              um oxide              
+00 14 R MNcn  Log Al: Wt.% Aluminu  0.634 ( 7.39e-01  4.17e-01)  1.04e+00 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 17 R MNcn  Log Ca: Wt.% Calcium  0.634 ( 2.10e+00  1.61e-01)  5.13e-01 ( 2.18e+00  1.45e-01)
+               oxide                
+00 19 R MNcn  Log Fe: Wt.% Iron ox  0.634 (-4.75e+00  1.14e+00)  4.99e-01 (-4.18e+00  1.66e+00)
+              ide                   
+00 15 R MNcn  Log Si: Wt.% Silicon  0.634 ( 4.29e+00  1.36e-02)  4.27e-01 ( 4.29e+00  1.30e-02)
+               oxide                
+00 11 R MNcn  Log RI: refractive i  0.634 (-6.61e-01  1.36e-02)  3.09e-01 (-6.57e-01  1.30e-02)
+              ndex                  
+
+DATA_CORR_MATRIX
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+11  1.000 -0.077 -0.058  0.110 -0.062 -0.041  0.082  0.164  0.010
+12 -0.077  1.000 -0.392 -0.736  0.514 -0.447 -0.011 -0.701 -0.097
+13 -0.058 -0.392  1.000  0.071 -0.577  0.572 -0.692  0.167 -0.206
+14  0.110 -0.736  0.071  1.000 -0.553  0.238  0.280  0.693  0.147
+15 -0.062  0.514 -0.577 -0.553  1.000 -0.562  0.382 -0.557  0.111
+16 -0.041 -0.447  0.572  0.238 -0.562  1.000 -0.648  0.215 -0.071
+17  0.082 -0.011 -0.692  0.280  0.382 -0.648  1.000  0.003  0.254
+18  0.164 -0.701  0.167  0.693 -0.557  0.215  0.003  1.000 -0.011
+19  0.010 -0.097 -0.206  0.147  0.111 -0.071  0.254 -0.011  1.000
+
+
+
+DATA_CLASS 3
+CLASS  3 - weight  22   normalized weight 0.104   relative strength  1.43e-05 *******
+                            class cross entropy w.r.t. global class  8.56e+00 *******
+
+
+INTEGER or REAL ATTRIBUTE  (t = I or R)                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 18 R MNcn  Log Ba: Wt.% Barium   0.951 (-5.30e+00  3.02e-02)  2.87e+01 (-4.43e+00  1.93e+00)
+              oxide                 
+00 19 R MNcn  Log Fe: Wt.% Iron ox  0.951 (-5.11e+00  9.02e-01)  1.04e+00 (-4.18e+00  1.66e+00)
+              ide                   
+00 14 R MNcn  Log Al: Wt.% Aluminu  0.951 ( 4.89e-01  2.75e-01)  6.68e-01 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 17 R MNcn  Log Ca: Wt.% Calcium  0.951 ( 2.30e+00  1.76e-01)  6.51e-01 ( 2.18e+00  1.45e-01)
+               oxide                
+00 13 R MNcn  Log Mg: Wt.% Magnesi  0.951 (-1.82e+00  3.12e+00)  5.52e-01 (-9.37e-02  2.60e+00)
+              um oxide              
+00 16 R MNcn  Log  K: Wt.% Potassi  0.951 (-2.08e+00  2.60e+00)  2.34e-01 (-1.47e+00  1.74e+00)
+              um oxide              
+00 11 R MNcn  Log RI: refractive i  0.951 (-6.55e-01  1.38e-02)  1.20e-01 (-6.57e-01  1.30e-02)
+              ndex                  
+00 15 R MNcn  Log Si: Wt.% Silicon  0.951 ( 4.28e+00  1.77e-02)  6.83e-02 ( 4.29e+00  1.30e-02)
+               oxide                
+00 12 R MNcn  Log Na: Wt.% Sodium   0.951 ( 2.59e+00  8.07e-02)  9.12e-03 ( 2.59e+00  6.09e-02)
+              oxide                 
+
+DATA_CORR_MATRIX
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+11  1.000 -0.012  0.135 -0.239 -0.064 -0.042  0.363  0.000  0.064
+12 -0.012  1.000  0.249  0.043 -0.346 -0.581 -0.196  0.000 -0.082
+13  0.135  0.249  1.000 -0.423 -0.114 -0.515 -0.044  0.000  0.047
+14 -0.239  0.043 -0.423  1.000 -0.412  0.336 -0.434  0.000 -0.066
+15 -0.064 -0.346 -0.114 -0.412  1.000 -0.175  0.225  0.000  0.139
+16 -0.042 -0.581 -0.515  0.336 -0.175  1.000 -0.067  0.000  0.007
+17  0.363 -0.196 -0.044 -0.434  0.225 -0.067  1.000  0.000  0.164
+18  0.000  0.000  0.000  0.000  0.000  0.000  0.000  1.000  0.000
+19  0.064 -0.082  0.047 -0.066  0.139  0.007  0.164  0.000  1.000
+
+
+
+DATA_CLASS 4
+CLASS  4 - weight  16   normalized weight 0.074   relative strength  7.77e-04 *******
+                            class cross entropy w.r.t. global class  7.72e+00 *******
+
+
+INTEGER or REAL ATTRIBUTE  (t = I or R)                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 16 R MNcn  Log  K: Wt.% Potassi  0.858 (-5.59e-01  1.65e-01)  5.54e+00 (-1.47e+00  1.74e+00)
+              um oxide              
+00 13 R MNcn  Log Mg: Wt.% Magnesi  0.858 ( 9.57e-01  3.11e-01)  3.38e+00 (-9.37e-02  2.60e+00)
+              um oxide              
+00 19 R MNcn  Log Fe: Wt.% Iron ox  0.858 (-2.95e+00  2.02e+00)  6.09e-01 (-4.18e+00  1.66e+00)
+              ide                   
+00 12 R MNcn  Log Na: Wt.% Sodium   0.858 ( 2.57e+00  3.98e-02)  5.04e-01 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 17 R MNcn  Log Ca: Wt.% Calcium  0.858 ( 2.21e+00  7.27e-02)  4.41e-01 ( 2.18e+00  1.45e-01)
+               oxide                
+00 18 R MNcn  Log Ba: Wt.% Barium   0.858 (-3.66e+00  1.83e+00)  4.22e-01 (-4.43e+00  1.93e+00)
+              oxide                 
+00 14 R MNcn  Log Al: Wt.% Aluminu  0.858 ( 3.63e-01  1.91e-01)  2.95e-01 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 11 R MNcn  Log RI: refractive i  0.858 (-6.57e-01  1.42e-02)  3.04e-02 (-6.57e-01  1.30e-02)
+              ndex                  
+00 15 R MNcn  Log Si: Wt.% Silicon  0.858 ( 4.29e+00  1.42e-02)  2.76e-02 ( 4.29e+00  1.30e-02)
+               oxide                
+
+DATA_CORR_MATRIX
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+11  1.000  0.117 -0.129  0.088 -0.088 -0.065  0.138  0.011  0.028
+12  0.117  1.000 -0.199 -0.128 -0.418 -0.715  0.302  0.004 -0.003
+13 -0.129 -0.199  1.000 -0.728  0.269  0.233 -0.883  0.198 -0.182
+14  0.088 -0.128 -0.728  1.000 -0.210  0.275  0.614  0.126  0.096
+15 -0.088 -0.418  0.269 -0.210  1.000  0.214 -0.303 -0.069  0.009
+16 -0.065 -0.715  0.233  0.275  0.214  1.000 -0.379  0.342 -0.016
+17  0.138  0.302 -0.883  0.614 -0.303 -0.379  1.000 -0.377  0.006
+18  0.011  0.004  0.198  0.126 -0.069  0.342 -0.377  1.000  0.291
+19  0.028 -0.003 -0.182  0.096  0.009 -0.016  0.006  0.291  1.000
+
+
+
+DATA_CLASS 5
+CLASS  5 - weight  12   normalized weight 0.056   relative strength  3.37e-07 *******
+                            class cross entropy w.r.t. global class  1.05e+01 *******
+
+
+INTEGER or REAL ATTRIBUTE  (t = I or R)                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 17 R MNcn  Log Ca: Wt.% Calcium  1.166 ( 2.54e+00  1.91e-01)  1.88e+00 ( 2.18e+00  1.45e-01)
+               oxide                
+00 13 R MNcn  Log Mg: Wt.% Magnesi  1.166 (-4.27e+00  2.63e+00)  1.59e+00 (-9.37e-02  2.60e+00)
+              um oxide              
+00 11 R MNcn  Log RI: refractive i  1.166 (-6.43e-01  1.47e-02)  9.60e-01 (-6.57e-01  1.30e-02)
+              ndex                  
+00 14 R MNcn  Log Al: Wt.% Aluminu  1.166 (-4.79e-02  4.94e-01)  7.17e-01 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 16 R MNcn  Log  K: Wt.% Potassi  1.166 (-2.86e+00  2.13e+00)  6.49e-01 (-1.47e+00  1.74e+00)
+              um oxide              
+00 15 R MNcn  Log Si: Wt.% Silicon  1.166 ( 4.28e+00  2.27e-02)  4.37e-01 ( 4.29e+00  1.30e-02)
+               oxide                
+00 12 R MNcn  Log Na: Wt.% Sodium   1.166 ( 2.55e+00  1.38e-01)  2.94e-01 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 19 R MNcn  Log Fe: Wt.% Iron ox  1.166 (-3.80e+00  2.07e+00)  1.83e-01 (-4.18e+00  1.66e+00)
+              ide                   
+00 18 R MNcn  Log Ba: Wt.% Barium   1.166 (-4.27e+00  2.61e+00)  6.11e-02 (-4.43e+00  1.93e+00)
+              oxide                 
+
+DATA_CORR_MATRIX
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+11  1.000 -0.340 -0.013  0.231 -0.425  0.239  0.392  0.116  0.258
+12 -0.340  1.000  0.463 -0.273  0.033  0.001 -0.724  0.010 -0.306
+13 -0.013  0.463  1.000 -0.035 -0.414  0.225 -0.568  0.318 -0.340
+14  0.231 -0.273 -0.035  1.000 -0.561  0.781  0.029  0.540  0.731
+15 -0.425  0.033 -0.414 -0.561  1.000 -0.717 -0.030 -0.534 -0.432
+16  0.239  0.001  0.225  0.781 -0.717  1.000 -0.090  0.448  0.659
+17  0.392 -0.724 -0.568  0.029 -0.030 -0.090  1.000 -0.392  0.313
+18  0.116  0.010  0.318  0.540 -0.534  0.448 -0.392  1.000  0.141
+19  0.258 -0.306 -0.340  0.731 -0.432  0.659  0.313  0.141  1.000
+
+
+
+DATA_CLASS 6
+CLASS  6 - weight   4   normalized weight 0.019   relative strength  1.31e-05 *******
+                            class cross entropy w.r.t. global class  1.29e+01 *******
+
+
+INTEGER or REAL ATTRIBUTE  (t = I or R)                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 13 R MNcn  Log Mg: Wt.% Magnesi  1.430 ( 1.22e+00  1.89e-01)  6.94e+00 (-9.37e-02  2.60e+00)
+              um oxide              
+00 14 R MNcn  Log Al: Wt.% Aluminu  1.430 (-3.56e-01  8.69e-01)  7.62e-01 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 16 R MNcn  Log  K: Wt.% Potassi  1.430 (-2.06e+00  1.32e+00)  4.46e-01 (-1.47e+00  1.74e+00)
+              um oxide              
+00 18 R MNcn  Log Ba: Wt.% Barium   1.430 (-3.21e+00  3.41e+00)  3.59e-01 (-4.43e+00  1.93e+00)
+              oxide                 
+00 17 R MNcn  Log Ca: Wt.% Calcium  1.430 ( 2.20e+00  4.75e-02)  3.09e-01 ( 2.18e+00  1.45e-01)
+               oxide                
+00 19 R MNcn  Log Fe: Wt.% Iron ox  1.430 (-3.39e+00  3.00e+00)  2.60e-01 (-4.18e+00  1.66e+00)
+              ide                   
+00 12 R MNcn  Log Na: Wt.% Sodium   1.430 ( 2.62e+00  8.82e-02)  2.53e-01 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 11 R MNcn  Log RI: refractive i  1.430 (-6.55e-01  2.03e-02)  8.36e-02 (-6.57e-01  1.30e-02)
+              ndex                  
+00 15 R MNcn  Log Si: Wt.% Silicon  1.430 ( 4.28e+00  2.03e-02)  6.74e-02 ( 4.29e+00  1.30e-02)
+               oxide                
+
+DATA_CORR_MATRIX
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+11  1.000  0.065  0.073 -0.011 -0.063 -0.058 -0.068  0.041 -0.055
+12  0.065  1.000  0.738 -0.491 -0.574 -0.782 -0.475  0.054 -0.593
+13  0.073  0.738  1.000 -0.262 -0.629 -0.662 -0.662  0.334 -0.511
+14 -0.011 -0.491 -0.262  1.000  0.062  0.574 -0.203  0.566  0.174
+15 -0.063 -0.574 -0.629  0.062  1.000  0.515  0.618 -0.371  0.569
+16 -0.058 -0.782 -0.662  0.574  0.515  1.000  0.351  0.093  0.610
+17 -0.068 -0.475 -0.662 -0.203  0.618  0.351  1.000 -0.671  0.451
+18  0.041  0.054  0.334  0.566 -0.371  0.093 -0.671  1.000 -0.124
+19 -0.055 -0.593 -0.511  0.174  0.569  0.610  0.451 -0.124  1.000
+

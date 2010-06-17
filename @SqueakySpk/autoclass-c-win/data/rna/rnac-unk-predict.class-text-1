@@ -1,0 +1,64 @@
+
+
+
+      CROSS REFERENCE    CLASS => CASE NUMBER MEMBERSHIP
+
+
+      AutoClass PREDICTION for the 10 "TEST" cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk-predict.db2
+
+      based on the "TRAINING" classification of 68 cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk.db2
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -2315.537
+      from classification results file
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk.results-bin
+      and using models
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-unk.model - index = 0
+
+
+
+                                 CLASS = 0  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          5     0.991            2   0.009 
+          6     0.951            2   0.048     4   0.001 
+          8     0.999            2   0.001 
+          9     0.999            2   0.001 
+
+
+                                 CLASS = 1  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          2     0.999        
+          7     0.962            2   0.038 
+         10     0.563            2   0.437 
+
+
+                                 CLASS = 2  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          3     0.966            1   0.034 
+          4     0.604            1   0.395 
+
+
+                                 CLASS = 4  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          1     1.000        

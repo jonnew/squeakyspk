@@ -1,0 +1,395 @@
+
+
+
+      I N F L U E N C E   V A L U E S   R E P O R T   
+       order attributes by influence values = false
+      =============================================
+
+      AutoClass CLASSIFICATION for the 214 cases in
+        /home/tove/p/autoclass-c/data/glass/glassc.db2
+        /home/tove/p/autoclass-c/data/glass/glass-3c.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -11434.215
+      from classification results file
+        /home/tove/p/autoclass-c/data/glass/glassc.results-bin
+      and using models
+        /home/tove/p/autoclass-c/data/glass/glass-mnc.model - index = 0
+
+
+
+
+ORDER OF PRESENTATION:
+
+  * Summary of the generating search.
+  * Weight ordered list of the classes found & class strength heuristic.
+  * List of class cross entropies with respect to the global class.
+  * Ordered list of attribute influence values summed over all classes.
+  * Class listings, ordered by class weight.
+
+
+
+
+
+
+
+_____________________________________________________________________________
+_____________________________________________________________________________
+
+SEARCH SUMMARY 4 tries over  4 seconds
+
+  _______________ SUMMARY OF 10 BEST RESULTS _________________________  ##
+  PROBABILITY  exp(-11434.215) N_CLASSES   5 FOUND ON TRY    3 *SAVED*  -1
+  PROBABILITY  exp(-11510.965) N_CLASSES   7 FOUND ON TRY    4 *SAVED*  -2
+  PROBABILITY  exp(-11663.794) N_CLASSES   3 FOUND ON TRY    2
+  PROBABILITY  exp(-11670.677) N_CLASSES   2 FOUND ON TRY    1
+
+
+   ## - report filenames suffix
+_____________________________________________________________________________
+_____________________________________________________________________________
+
+
+CLASSIFICATION HAS 5 POPULATED CLASSES   (max global influence value = 3.141) 
+
+  We give below a heuristic measure of class strength: the approximate
+  geometric mean probability for instances belonging to each class,
+  computed from the class parameters and statistics.  This approximates
+  the contribution made, by any one instance "belonging" to the class,
+  to the log probability of the data set w.r.t. the classification.  It
+  thus provides a heuristic measure of how strongly each class predicts
+  "its" instances.
+
+   Class     Log of class       Relative         Class     Normalized
+    num        strength       class strength     weight    class weight
+
+     0        -4.67e+01          1.00e+00          99         0.465
+     1        -5.27e+01          2.48e-03          44         0.204
+     2        -5.99e+01          1.93e-06          35         0.164
+     3        -5.81e+01          1.19e-05          19         0.089
+     4        -5.69e+01          3.79e-05          17         0.079
+
+
+CLASS DIVERGENCES
+
+  The class divergence, or cross entropy w.r.t. the single class
+  classification, is a measure of how strongly the class probability
+  distribution  function differs from that of the database as a whole. 
+  It is zero for identical distributions, going infinite when two
+  discrete distributions place probability 1 on differing values of the
+  same attribute.
+
+   Class       class cross entropy       Class     Normalized
+    num        w.r.t. global class       weight    class weight
+
+     0               2.83e+01              99         0.465
+     1               2.14e+01              44         0.204
+     2               2.18e+01              35         0.164
+     3               2.35e+01              19         0.089
+     4               2.09e+01              17         0.079
+
+ORDERED LIST OF NORMALIZED ATTRIBUTE INFLUENCE VALUES SUMMED OVER ALL CLASSES
+
+  This gives a rough heuristic measure of relative influence of each
+  attribute in differentiating the classes from the overall data set.
+  Note that "influence values" are only computable with respect to the
+  model terms.  When multiple attributes are modeled by a single
+  dependent term (e.g. multi_normal_cn), the term influence value is
+  distributed equally over the modeled attributes.
+
+   num                        description                          I-*k 
+
+   011  Log RI: refractive index                                   1.000
+   012  Log Na: Wt.% Sodium oxide                                  1.000
+   013  Log Mg: Wt.% Magnesium oxide                               1.000
+   014  Log Al: Wt.% Aluminum oxide                                1.000
+   015  Log Si: Wt.% Silicon oxide                                 1.000
+   016  Log  K: Wt.% Potassium oxide                               1.000
+   017  Log Ca: Wt.% Calcium oxide                                 1.000
+   018  Log Ba: Wt.% Barium oxide                                  1.000
+   019  Log Fe: Wt.% Iron oxide                                    1.000
+   000  Id number                                                  -----
+   001  RI: refractive index                                       -----
+   002  Na: Wt.% Sodium oxide                                      -----
+   003  Mg: Wt.% Magnesium oxide                                   -----
+   004  Al: Wt.% Aluminum oxide                                    -----
+   005  Si: Wt.% Silicon oxide                                     -----
+   006   K: Wt.% Potassium oxide                                   -----
+   007  Ca: Wt.% Calcium oxide                                     -----
+   008  Ba: Wt.% Barium oxide                                      -----
+   009  Fe: Wt.% Iron oxide                                        -----
+   010  Type of glass                                              -----
+
+CLASS LISTINGS:
+
+  These listings are ordered by class weight --
+    * j is the zero-based class index,
+    * k is the zero-based attribute index, and
+    * l is the zero-based discrete attribute instance index.
+
+  Within each class, the covariant and independent model terms are ordered
+  by their term influence value I-jk.
+
+  Covariant attributes and discrete attribute instance values are both
+  ordered by their significance value.  Significance values are computed
+  with respect to a single class classification, using the divergence from
+  it, abs( log( Prob-jkl / Prob-*kl)), for discrete attributes and the
+  relative separation from it, abs( Mean-jk - Mean-*k) / StDev-jk, for
+  numerical valued attributes.  For the SNcm model, the value line is
+  followed by the probabilities that the value is known, for that class
+  and for the single class classification.
+
+  Entries are attribute type dependent, and the corresponding headers are
+  reproduced with each class.  In these --
+    * num/t denotes model term number,
+    * num/a denotes attribute number,
+    * t     denotes attribute type,
+    * mtt   denotes model term type, and
+    * I-jk  denotes the term influence value for attribute k
+            in class j.  This is the cross entropy or
+            Kullback-Leibler distance between the class and
+            full database probability distributions (see
+            interpretation-c.text).
+    * Mean  StDev
+      -jk   -jk    The estimated mean and standard deviation
+                   for attribute k in class j.
+    * |Mean-jk -   The absolute difference between the
+       Mean-*k|/   two means, scaled w.r.t. the class
+       StDev-jk    standard deviation, to get a measure
+                   of the distance between the attribute
+                   means in the class and full data.
+    * Mean  StDev  The estimated mean and standard
+      -*k   -*k    deviation for attribute k when the
+                   model is applied to the data set
+                   as a whole.
+    * Prob-jk is known  1.00e+00   Prob-*k is  known  9.98e-01
+            The SNcm model allows for the possibility that data
+            values are unknown, and models this with a discrete
+            known/unknown probability.  The gaussian normal for
+            known values is then conditional on the known
+            probability.   In this instance, we have a class
+            where all values are known, as opposed to a database
+            where only 99.8% of values are known.
+
+
+CLASS  0 - weight  99   normalized weight 0.465   relative strength  1.00e+00 *******
+                            class cross entropy w.r.t. global class  2.83e+01 *******
+
+   Model file:   /home/tove/p/autoclass-c/data/glass/glass-mnc.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (multi_normal_cn MNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 11 R MNcn  Log RI: refractive i  3.141 (-6.59e-01  1.31e-02)  1.46e-01 (-6.57e-01  5.82e-03)
+              ndex                  
+00 12 R MNcn  Log Na: Wt.% Sodium   3.141 ( 2.57e+00  2.54e-02)  8.92e-01 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 13 R MNcn  Log Mg: Wt.% Magnesi  3.141 ( 1.27e+00  4.24e-02)  3.22e+01 (-9.37e-02  2.60e+00)
+              um oxide              
+00 14 R MNcn  Log Al: Wt.% Aluminu  3.141 ( 3.13e-01  1.42e-01)  4.75e-02 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 15 R MNcn  Log Si: Wt.% Silicon  3.141 ( 4.29e+00  1.31e-02)  1.31e-01 ( 4.29e+00  1.07e-02)
+               oxide                
+00 16 R MNcn  Log  K: Wt.% Potassi  3.141 (-5.09e-01  8.06e-02)  1.20e+01 (-1.47e+00  1.74e+00)
+              um oxide              
+00 17 R MNcn  Log Ca: Wt.% Calcium  3.141 ( 2.13e+00  3.80e-02)  1.47e+00 ( 2.18e+00  1.45e-01)
+               oxide                
+00 18 R MNcn  Log Ba: Wt.% Barium   3.141 (-5.30e+00  2.86e-02)  3.03e+01 (-4.43e+00  1.93e+00)
+              oxide                 
+00 19 R MNcn  Log Fe: Wt.% Iron ox  3.141 (-4.12e+00  1.70e+00)  3.28e-02 (-4.18e+00  1.66e+00)
+              ide                   
+
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+ 11  1.000  0.040  0.034 -0.061 -0.028 -0.072  0.092  0.000 -0.009
+ 12  0.040  1.000  0.222  0.017 -0.278 -0.261 -0.194  0.000 -0.128
+ 13  0.034  0.222  1.000 -0.124 -0.099 -0.184 -0.295  0.000  0.059
+ 14 -0.061  0.017 -0.124  1.000 -0.054  0.383 -0.502  0.000 -0.010
+ 15 -0.028 -0.278 -0.099 -0.054  1.000  0.100 -0.085  0.000 -0.026
+ 16 -0.072 -0.261 -0.184  0.383  0.100  1.000 -0.359  0.000  0.033
+ 17  0.092 -0.194 -0.295 -0.502 -0.085 -0.359  1.000  0.000  0.141
+ 18  0.000  0.000  0.000  0.000  0.000  0.000  0.000  1.000  0.000
+ 19 -0.009 -0.128  0.059 -0.010 -0.026  0.033  0.141  0.000  1.000
+
+
+
+CLASS  1 - weight  44   normalized weight 0.204   relative strength  2.48e-03 *******
+                            class cross entropy w.r.t. global class  2.14e+01 *******
+
+   Model file:   /home/tove/p/autoclass-c/data/glass/glass-mnc.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (multi_normal_cn MNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 11 R MNcn  Log RI: refractive i  2.383 (-6.54e-01  1.33e-02)  1.96e-01 (-6.57e-01  5.82e-03)
+              ndex                  
+00 12 R MNcn  Log Na: Wt.% Sodium   2.383 ( 2.61e+00  4.34e-02)  3.19e-01 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 13 R MNcn  Log Mg: Wt.% Magnesi  2.383 ( 1.25e+00  1.21e-01)  1.11e+01 (-9.37e-02  2.60e+00)
+              um oxide              
+00 14 R MNcn  Log Al: Wt.% Aluminu  2.383 (-6.89e-03  4.21e-01)  7.44e-01 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 15 R MNcn  Log Si: Wt.% Silicon  2.383 ( 4.28e+00  1.33e-02)  3.61e-01 ( 4.29e+00  1.07e-02)
+               oxide                
+00 16 R MNcn  Log  K: Wt.% Potassi  2.383 (-1.79e+00  1.19e+00)  2.61e-01 (-1.47e+00  1.74e+00)
+              um oxide              
+00 17 R MNcn  Log Ca: Wt.% Calcium  2.383 ( 2.21e+00  1.00e-01)  2.38e-01 ( 2.18e+00  1.45e-01)
+               oxide                
+00 18 R MNcn  Log Ba: Wt.% Barium   2.383 (-5.30e+00  2.92e-02)  2.97e+01 (-4.43e+00  1.93e+00)
+              oxide                 
+00 19 R MNcn  Log Fe: Wt.% Iron ox  2.383 (-4.11e+00  1.69e+00)  3.81e-02 (-4.18e+00  1.66e+00)
+              ide                   
+
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+ 11  1.000  0.118  0.149 -0.301 -0.272 -0.247  0.392  0.000  0.039
+ 12  0.118  1.000  0.557 -0.389 -0.499 -0.515 -0.072  0.000 -0.208
+ 13  0.149  0.557  1.000 -0.423 -0.384 -0.538  0.038  0.000 -0.064
+ 14 -0.301 -0.389 -0.423  1.000  0.377  0.545 -0.622  0.000 -0.009
+ 15 -0.272 -0.499 -0.384  0.377  1.000  0.439 -0.418  0.000  0.084
+ 16 -0.247 -0.515 -0.538  0.545  0.439  1.000 -0.417  0.000  0.112
+ 17  0.392 -0.072  0.038 -0.622 -0.418 -0.417  1.000  0.000  0.099
+ 18  0.000  0.000  0.000  0.000  0.000  0.000  0.000  1.000  0.000
+ 19  0.039 -0.208 -0.064 -0.009  0.084  0.112  0.099  0.000  1.000
+
+
+
+CLASS  2 - weight  35   normalized weight 0.164   relative strength  1.93e-06 *******
+                            class cross entropy w.r.t. global class  2.18e+01 *******
+
+   Model file:   /home/tove/p/autoclass-c/data/glass/glass-mnc.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (multi_normal_cn MNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 11 R MNcn  Log RI: refractive i  2.417 (-6.61e-01  1.35e-02)  2.64e-01 (-6.57e-01  5.82e-03)
+              ndex                  
+00 12 R MNcn  Log Na: Wt.% Sodium   2.417 ( 2.66e+00  3.78e-02)  1.85e+00 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 13 R MNcn  Log Mg: Wt.% Magnesi  2.417 (-3.57e+00  2.87e+00)  1.21e+00 (-9.37e-02  2.60e+00)
+              um oxide              
+00 14 R MNcn  Log Al: Wt.% Aluminu  2.417 ( 7.59e-01  2.37e-01)  1.91e+00 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 15 R MNcn  Log Si: Wt.% Silicon  2.417 ( 4.29e+00  1.35e-02)  1.74e-01 ( 4.29e+00  1.07e-02)
+               oxide                
+00 16 R MNcn  Log  K: Wt.% Potassi  2.417 (-3.78e+00  2.47e+00)  9.33e-01 (-1.47e+00  1.74e+00)
+              um oxide              
+00 17 R MNcn  Log Ca: Wt.% Calcium  2.417 ( 2.12e+00  1.61e-01)  3.53e-01 ( 2.18e+00  1.45e-01)
+               oxide                
+00 18 R MNcn  Log Ba: Wt.% Barium   2.417 (-1.34e+00  2.48e+00)  1.25e+00 (-4.43e+00  1.93e+00)
+              oxide                 
+00 19 R MNcn  Log Fe: Wt.% Iron ox  2.417 (-4.87e+00  1.02e+00)  6.84e-01 (-4.18e+00  1.66e+00)
+              ide                   
+
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+ 11  1.000  0.088  0.022 -0.125  0.028 -0.136  0.141 -0.023 -0.014
+ 12  0.088  1.000 -0.252 -0.191  0.541 -0.625  0.300  0.402  0.087
+ 13  0.022 -0.252  1.000 -0.469 -0.277  0.083 -0.254 -0.423 -0.268
+ 14 -0.125 -0.191 -0.469  1.000 -0.382  0.502 -0.213  0.299  0.181
+ 15  0.028  0.541 -0.277 -0.382  1.000 -0.668  0.464  0.232  0.210
+ 16 -0.136 -0.625  0.083  0.502 -0.668  1.000 -0.720  0.017 -0.068
+ 17  0.141  0.300 -0.254 -0.213  0.464 -0.720  1.000 -0.268  0.145
+ 18 -0.023  0.402 -0.423  0.299  0.232  0.017 -0.268  1.000  0.206
+ 19 -0.014  0.087 -0.268  0.181  0.210 -0.068  0.145  0.206  1.000
+
+
+
+CLASS  3 - weight  19   normalized weight 0.089   relative strength  1.19e-05 *******
+                            class cross entropy w.r.t. global class  2.35e+01 *******
+
+   Model file:   /home/tove/p/autoclass-c/data/glass/glass-mnc.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (multi_normal_cn MNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 11 R MNcn  Log RI: refractive i  2.607 (-6.54e-01  1.40e-02)  2.22e-01 (-6.57e-01  5.82e-03)
+              ndex                  
+00 12 R MNcn  Log Na: Wt.% Sodium   2.607 ( 2.59e+00  8.40e-02)  1.06e-01 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 13 R MNcn  Log Mg: Wt.% Magnesi  2.607 ( 7.47e-01  6.16e-01)  1.37e+00 (-9.37e-02  2.60e+00)
+              um oxide              
+00 14 R MNcn  Log Al: Wt.% Aluminu  2.607 ( 3.68e-01  2.46e-01)  2.50e-01 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 15 R MNcn  Log Si: Wt.% Silicon  2.607 ( 4.28e+00  1.40e-02)  3.02e-01 ( 4.29e+00  1.07e-02)
+               oxide                
+00 16 R MNcn  Log  K: Wt.% Potassi  2.607 (-8.34e-01  5.87e-01)  1.09e+00 (-1.47e+00  1.74e+00)
+              um oxide              
+00 17 R MNcn  Log Ca: Wt.% Calcium  2.607 ( 2.26e+00  1.20e-01)  6.31e-01 ( 2.18e+00  1.45e-01)
+               oxide                
+00 18 R MNcn  Log Ba: Wt.% Barium   2.607 (-3.18e+00  2.10e+00)  5.94e-01 (-4.43e+00  1.93e+00)
+              oxide                 
+00 19 R MNcn  Log Fe: Wt.% Iron ox  2.607 (-3.28e+00  2.09e+00)  4.29e-01 (-4.18e+00  1.66e+00)
+              ide                   
+
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+ 11  1.000  0.078 -0.142  0.074 -0.144 -0.060  0.154 -0.060 -0.109
+ 12  0.078  1.000  0.054 -0.108 -0.741 -0.220 -0.387  0.341 -0.049
+ 13 -0.142  0.054  1.000 -0.354 -0.069  0.306 -0.718  0.482 -0.046
+ 14  0.074 -0.108 -0.354  1.000 -0.191  0.465  0.393 -0.316 -0.145
+ 15 -0.144 -0.741 -0.069 -0.191  1.000  0.012  0.138 -0.177  0.307
+ 16 -0.060 -0.220  0.306  0.465  0.012  1.000 -0.091 -0.131  0.008
+ 17  0.154 -0.387 -0.718  0.393  0.138 -0.091  1.000 -0.738 -0.199
+ 18 -0.060  0.341  0.482 -0.316 -0.177 -0.131 -0.738  1.000  0.109
+ 19 -0.109 -0.049 -0.046 -0.145  0.307  0.008 -0.199  0.109  1.000
+
+
+
+CLASS  4 - weight  17   normalized weight 0.079   relative strength  3.79e-05 *******
+                            class cross entropy w.r.t. global class  2.09e+01 *******
+
+   Model file:   /home/tove/p/autoclass-c/data/glass/glass-mnc.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (multi_normal_cn MNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 11 R MNcn  Log RI: refractive i  2.322 (-6.49e-01  1.41e-02)  5.88e-01 (-6.57e-01  5.82e-03)
+              ndex                  
+00 12 R MNcn  Log Na: Wt.% Sodium   2.322 ( 2.56e+00  1.27e-01)  2.93e-01 ( 2.59e+00  6.09e-02)
+              oxide                 
+00 13 R MNcn  Log Mg: Wt.% Magnesi  2.322 (-5.30e+00  1.41e-02)  3.69e+02 (-9.37e-02  2.60e+00)
+              um oxide              
+00 14 R MNcn  Log Al: Wt.% Aluminu  2.322 ( 6.68e-02  5.58e-01)  4.29e-01 ( 3.06e-01  3.70e-01)
+              m oxide               
+00 15 R MNcn  Log Si: Wt.% Silicon  2.322 ( 4.29e+00  2.26e-02)  9.95e-02 ( 4.29e+00  1.07e-02)
+               oxide                
+00 16 R MNcn  Log  K: Wt.% Potassi  2.322 (-2.29e+00  2.32e+00)  3.50e-01 (-1.47e+00  1.74e+00)
+              um oxide              
+00 17 R MNcn  Log Ca: Wt.% Calcium  2.322 ( 2.48e+00  2.27e-01)  1.32e+00 ( 2.18e+00  1.45e-01)
+               oxide                
+00 18 R MNcn  Log Ba: Wt.% Barium   2.322 (-4.92e+00  1.67e+00)  2.91e-01 (-4.43e+00  1.93e+00)
+              oxide                 
+00 19 R MNcn  Log Fe: Wt.% Iron ox  2.322 (-4.24e+00  1.83e+00)  3.36e-02 (-4.18e+00  1.66e+00)
+              ide                   
+
+ Correlation matrix (row & column indices are attribute numbers)
+        11     12     13     14     15     16     17     18     19
+ 11  1.000 -0.517  0.000  0.212 -0.697  0.037  0.721  0.296  0.472
+ 12 -0.517  1.000  0.000 -0.479  0.408 -0.279 -0.634 -0.372 -0.265
+ 13  0.000  0.000  1.000  0.000  0.000  0.000  0.000  0.000  0.000
+ 14  0.212 -0.479  0.000  1.000 -0.431  0.814  0.280  0.314  0.353
+ 15 -0.697  0.408  0.000 -0.431  1.000 -0.249 -0.717 -0.481 -0.681
+ 16  0.037 -0.279  0.000  0.814 -0.249  1.000 -0.001  0.196  0.294
+ 17  0.721 -0.634  0.000  0.280 -0.717 -0.001  1.000  0.118  0.368
+ 18  0.296 -0.372  0.000  0.314 -0.481  0.196  0.118  1.000  0.419
+ 19  0.472 -0.265  0.000  0.353 -0.681  0.294  0.368  0.419  1.000
+

@@ -1,0 +1,62 @@
+
+
+
+      CROSS REFERENCE    CLASS => CASE NUMBER MEMBERSHIP
+
+
+      AutoClass PREDICTION for the 8 "TEST" cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-location-predict.db2
+
+      based on the "TRAINING" classification of 68 cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.db2
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-location.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -2514.293
+      from classification results file
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac-location.results-bin
+      and using models
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.model - index = 0
+
+
+
+                                 CLASS = 0  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          5     1.000        
+          7     0.995            1   0.005 
+          8     0.976            1   0.024 
+
+
+                                 CLASS = 2  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          4     1.000        
+
+
+                                 CLASS = 3  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          1     1.000        
+          2     1.000        
+          3     1.000        
+
+
+                                 CLASS = 4  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          6     0.901            1   0.099 

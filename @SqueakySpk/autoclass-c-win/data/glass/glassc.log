@@ -1,0 +1,516 @@
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 12:05:25 2001 
+
+AUTOCLASS -SEARCH default parameters:
+rel_error=1.000000e-02; start_j_list=(2,3,5,7,10,15,25); n_classes_fn_type="random_ln_normal"; fixed_j=0; min_report_period=30; max_duration=0; max_n_tries=0; n_save=2; log_file_p=true; search_file_p=true; results_file_p=true; min_save_period=1800; max_n_store=10; n_final_summary=10; start_fn_type="random"; try_fn_type="converge_search_3"; initial_cycles_p=true; save_compact_p=true; read_compact_p=true; randomize_random_p=true; n_data=0; halt_range=5.000000e-01; halt_factor=1.000000e-04; rel_delta_range=2.500000e-03; n_average=3; cs4_delta_range=2.500000e-03; sigma_beta_n_values=6; max_cycles=200; converge_print_p=false; force_new_search_p=true; checkpoint_p=false; min_checkpoint_period=10800; reconverge_type=""; screen_output_p=true; interactive_p=true; break_on_warnings_p=true; free_storage_p=true
+
+USER supplied parameters which override the defaults:
+min_report_period=30000; max_n_tries=4; start_fn_type="block"; randomize_random_p=false; force_new_search_p=true
+
+
+##############  Starting Input Check  ###############
+
+To log file: 
+   /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+During loading of: 
+   [1] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.db2,
+   [2] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2,
+   [3] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-mnc.model.
+
+   [Attribute #, value #, and datum # are zero based.]
+
+ADVISORY[2]: data_file_format settings:
+             separator_char = ' ', comment_char = ';', unknown_token = '?'
+ADVISORY[2]: read 11 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2
+ADVISORY[1]: read 214 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.db2
+ADVISORY[1]: discrete translations [ (internal external):count ... ] built 
+             from input data --
+   Attribute #10, "Type of glass":
+      [ (0 1):70 (1 2):76 (2 3):17 (3 5):13 (4 6):9 (5 7):29 ]
+ADVISORY[1]: real statistics [ min < (mean : variance) < max ] built 
+             from input data --
+   Attribute #1, "RI: refractive index":
+      [  1.5112e+00 < ( 1.5184e+00 : 9.1795e-06) <  1.5339e+00 ]
+   Attribute #2, "Na: Wt.% Sodium oxide":
+      [  1.0730e+01 < ( 1.3408e+01 : 6.6373e-01) <  1.7380e+01 ]
+   Attribute #3, "Mg: Wt.% Magnesium oxide":
+      [  0.0000e+00 < ( 2.6845e+00 : 2.0708e+00) <  4.4900e+00 ]
+   Attribute #4, "Al: Wt.% Aluminum oxide":
+      [  2.9000e-01 < ( 1.4449e+00 : 2.4811e-01) <  3.5000e+00 ]
+   Attribute #5, "Si: Wt.% Silicon oxide":
+      [  6.9810e+01 < ( 7.2651e+01 : 5.9712e-01) <  7.5410e+01 ]
+   Attribute #6, " K: Wt.% Potassium oxide":
+      [  0.0000e+00 < ( 4.9706e-01 : 4.2337e-01) <  6.2100e+00 ]
+   Attribute #7, "Ca: Wt.% Calcium oxide":
+      [  5.4300e+00 < ( 8.9570e+00 : 2.0159e+00) <  1.6190e+01 ]
+   Attribute #8, "Ba: Wt.% Barium oxide":
+      [  0.0000e+00 < ( 1.7505e-01 : 2.4607e-01) <  3.1500e+00 ]
+   Attribute #9, "Fe: Wt.% Iron oxide":
+      [  0.0000e+00 < ( 5.7009e-02 : 9.4499e-03) <  5.1000e-01 ]
+ADVISORY[3]: read 1 model def from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-mnc.model
+ADVISORY[2]: log_transform is being applied to attribute #1:
+             "RI: refractive index" and will be stored as attribute #11.
+   Attribute #11, "Log RI: refractive index":
+      [ -6.7109e-01 < (-6.5709e-01 : 3.3848e-05) < -6.2749e-01 ]
+ADVISORY[2]: log_transform is being applied to attribute #2:
+             "Na: Wt.% Sodium oxide" and will be stored as attribute #12.
+   Attribute #12, "Log Na: Wt.% Sodium oxide":
+      [  2.3730e+00 < ( 2.5940e+00 : 3.6577e-03) <  2.8553e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #3:
+             "Mg: Wt.% Magnesium oxide" and will be stored as attribute #13.
+   Attribute #13, "Log Mg: Wt.% Magnesium oxide":
+      [ -5.2983e+00 < (-9.3701e-02 : 6.6834e+00) <  1.5030e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #4:
+             "Al: Wt.% Aluminum oxide" and will be stored as attribute #14.
+   Attribute #14, "Log Al: Wt.% Aluminum oxide":
+      [ -1.2379e+00 < ( 3.0602e-01 : 1.3473e-01) <  1.2528e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #5:
+             "Si: Wt.% Silicon oxide" and will be stored as attribute #15.
+   Attribute #15, "Log Si: Wt.% Silicon oxide":
+      [  4.2458e+00 < ( 4.2856e+00 : 1.1407e-04) <  4.3229e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #6:
+             " K: Wt.% Potassium oxide" and will be stored as attribute #16.
+   Attribute #16, "Log  K: Wt.% Potassium oxide":
+      [ -5.2984e+00 < (-1.4740e+00 : 2.9845e+00) <  1.8270e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #7:
+             "Ca: Wt.% Calcium oxide" and will be stored as attribute #17.
+   Attribute #17, "Log Ca: Wt.% Calcium oxide":
+      [  1.6919e+00 < ( 2.1815e+00 : 2.0663e-02) <  2.7844e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #8:
+             "Ba: Wt.% Barium oxide" and will be stored as attribute #18.
+   Attribute #18, "Log Ba: Wt.% Barium oxide":
+      [ -5.2981e+00 < (-4.4321e+00 : 3.6644e+00) <  1.1490e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #9:
+             "Fe: Wt.% Iron oxide" and will be stored as attribute #19.
+   Attribute #19, "Log Fe: Wt.% Iron oxide":
+      [ -5.2982e+00 < (-4.1753e+00 : 2.7054e+00) < -6.6359e-01 ]
+
+############ Input Check Concluded ##############
+
+WELCOME TO AUTOCLASS.
+  1) Each time I have finished a new 'trial', or attempt to find a good
+     classification, I will print the number of classes that trial
+     started and ended with, such as 9->7.
+  2) If that trial results in a duplicate of a previous run, I will print
+     'dup' first.
+  3) If that trial results in a classification better than any previous, 
+     I will print 'best' first.
+  4) If more than 8 hours 20 minutes have passed since the last report, and a new
+     classification has been found which is better than any previous ones,
+     I will report on that classification and on the status of the search
+     so far.
+  5) This report will include an estimate of the time it will take to find
+     another even better classification, and how much better that will be.
+     In addition, I will estimate a lower bound on how long it might take to
+     find the very best classification, and how much better that might be.
+  6) If you are warned about too much time in overhead, you may want to
+     change the parameters n_save, min_save_period, min_report_period, or
+     min_checkpoint_period.
+  7) To quit searching, type a 'q', hit <return>, and wait.  Otherwise I'll
+     go on until I complete trial number (4).
+  8) If needed, every 30 minutes I will save the best 2 classifications
+     so far to file: 
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.results-bin
+     and a description of the search to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.search
+  9) A record of this search will be printed to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+
+BEGINNING SEARCH at Thu Jun  7 12:05:25 2001
+
+[j_in=2]  [cs-3: cycles 9] best2->2(1) [j_in=3]  [cs-3: cycles 14] best3->3(2) [j_in=5]  [cs-3: cycles 32] best5->5(3) [j_in=7]  [cs-3: cycles 12] 7->7(4) 
+
+
+ENDING SEARCH because max number of tries reached at Thu Jun  7 12:05:25 2001
+  after a total of 4 tries over 1 second
+A log of this search is in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+The search results are stored in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.results-bin
+This search can be restarted by having "force_new_search_p = false" in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.s-params
+ and reinvoking the "autoclass -search ..." form
+
+------------------  SUMMARY OF 10 BEST RESULTS  ------------------
+PROBABILITY  exp(-10897.738) N_CLASSES   5 FOUND ON TRY    3 *SAVED*
+PROBABILITY  exp(-11187.745) N_CLASSES   7 FOUND ON TRY    4 *SAVED*
+PROBABILITY  exp(-11229.516) N_CLASSES   3 FOUND ON TRY    2
+PROBABILITY  exp(-11236.431) N_CLASSES   2 FOUND ON TRY    1
+
+------------------  SUMMARY OF TRY CONVERGENCE  ------------------
+try    3    num_cycles   32    max_cycles  200    convergent
+try    4    num_cycles   12    max_cycles  200    convergent
+try    2    num_cycles   14    max_cycles  200    convergent
+try    1    num_cycles    9    max_cycles  200    convergent
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 12:05:25 2001 
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 12:07:38 2001 
+
+AUTOCLASS -SEARCH default parameters:
+rel_error=1.000000e-02; start_j_list=(2,3,5,7,10,15,25); n_classes_fn_type="random_ln_normal"; fixed_j=0; min_report_period=30; max_duration=0; max_n_tries=0; n_save=2; log_file_p=true; search_file_p=true; results_file_p=true; min_save_period=1800; max_n_store=10; n_final_summary=10; start_fn_type="random"; try_fn_type="converge_search_3"; initial_cycles_p=true; save_compact_p=true; read_compact_p=true; randomize_random_p=true; n_data=0; halt_range=5.000000e-01; halt_factor=1.000000e-04; rel_delta_range=2.500000e-03; n_average=3; cs4_delta_range=2.500000e-03; sigma_beta_n_values=6; max_cycles=200; converge_print_p=false; force_new_search_p=true; checkpoint_p=false; min_checkpoint_period=10800; reconverge_type=""; screen_output_p=true; interactive_p=true; break_on_warnings_p=true; free_storage_p=true
+
+USER supplied parameters which override the defaults:
+min_report_period=30000; max_n_tries=4; start_fn_type="block"; randomize_random_p=false; rel_delta_range=5.000000e-02; force_new_search_p=true
+
+
+##############  Starting Input Check  ###############
+
+To log file: 
+   /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+During loading of: 
+   [1] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.db2,
+   [2] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2,
+   [3] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-mnc.model.
+
+   [Attribute #, value #, and datum # are zero based.]
+
+ADVISORY[2]: data_file_format settings:
+             separator_char = ' ', comment_char = ';', unknown_token = '?'
+ADVISORY[2]: read 11 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2
+ADVISORY[1]: read 214 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.db2
+ADVISORY[1]: discrete translations [ (internal external):count ... ] built 
+             from input data --
+   Attribute #10, "Type of glass":
+      [ (0 1):70 (1 2):76 (2 3):17 (3 5):13 (4 6):9 (5 7):29 ]
+ADVISORY[1]: real statistics [ min < (mean : variance) < max ] built 
+             from input data --
+   Attribute #1, "RI: refractive index":
+      [  1.5112e+00 < ( 1.5184e+00 : 9.1795e-06) <  1.5339e+00 ]
+   Attribute #2, "Na: Wt.% Sodium oxide":
+      [  1.0730e+01 < ( 1.3408e+01 : 6.6373e-01) <  1.7380e+01 ]
+   Attribute #3, "Mg: Wt.% Magnesium oxide":
+      [  0.0000e+00 < ( 2.6845e+00 : 2.0708e+00) <  4.4900e+00 ]
+   Attribute #4, "Al: Wt.% Aluminum oxide":
+      [  2.9000e-01 < ( 1.4449e+00 : 2.4811e-01) <  3.5000e+00 ]
+   Attribute #5, "Si: Wt.% Silicon oxide":
+      [  6.9810e+01 < ( 7.2651e+01 : 5.9712e-01) <  7.5410e+01 ]
+   Attribute #6, " K: Wt.% Potassium oxide":
+      [  0.0000e+00 < ( 4.9706e-01 : 4.2337e-01) <  6.2100e+00 ]
+   Attribute #7, "Ca: Wt.% Calcium oxide":
+      [  5.4300e+00 < ( 8.9570e+00 : 2.0159e+00) <  1.6190e+01 ]
+   Attribute #8, "Ba: Wt.% Barium oxide":
+      [  0.0000e+00 < ( 1.7505e-01 : 2.4607e-01) <  3.1500e+00 ]
+   Attribute #9, "Fe: Wt.% Iron oxide":
+      [  0.0000e+00 < ( 5.7009e-02 : 9.4499e-03) <  5.1000e-01 ]
+ADVISORY[3]: read 1 model def from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-mnc.model
+ADVISORY[2]: log_transform is being applied to attribute #1:
+             "RI: refractive index" and will be stored as attribute #11.
+   Attribute #11, "Log RI: refractive index":
+      [ -6.7109e-01 < (-6.5709e-01 : 3.3848e-05) < -6.2749e-01 ]
+ADVISORY[2]: log_transform is being applied to attribute #2:
+             "Na: Wt.% Sodium oxide" and will be stored as attribute #12.
+   Attribute #12, "Log Na: Wt.% Sodium oxide":
+      [  2.3730e+00 < ( 2.5940e+00 : 3.6577e-03) <  2.8553e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #3:
+             "Mg: Wt.% Magnesium oxide" and will be stored as attribute #13.
+   Attribute #13, "Log Mg: Wt.% Magnesium oxide":
+      [ -5.2983e+00 < (-9.3701e-02 : 6.6834e+00) <  1.5030e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #4:
+             "Al: Wt.% Aluminum oxide" and will be stored as attribute #14.
+   Attribute #14, "Log Al: Wt.% Aluminum oxide":
+      [ -1.2379e+00 < ( 3.0602e-01 : 1.3473e-01) <  1.2528e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #5:
+             "Si: Wt.% Silicon oxide" and will be stored as attribute #15.
+   Attribute #15, "Log Si: Wt.% Silicon oxide":
+      [  4.2458e+00 < ( 4.2856e+00 : 1.1407e-04) <  4.3229e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #6:
+             " K: Wt.% Potassium oxide" and will be stored as attribute #16.
+   Attribute #16, "Log  K: Wt.% Potassium oxide":
+      [ -5.2984e+00 < (-1.4740e+00 : 2.9845e+00) <  1.8270e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #7:
+             "Ca: Wt.% Calcium oxide" and will be stored as attribute #17.
+   Attribute #17, "Log Ca: Wt.% Calcium oxide":
+      [  1.6919e+00 < ( 2.1815e+00 : 2.0663e-02) <  2.7844e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #8:
+             "Ba: Wt.% Barium oxide" and will be stored as attribute #18.
+   Attribute #18, "Log Ba: Wt.% Barium oxide":
+      [ -5.2981e+00 < (-4.4321e+00 : 3.6644e+00) <  1.1490e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #9:
+             "Fe: Wt.% Iron oxide" and will be stored as attribute #19.
+   Attribute #19, "Log Fe: Wt.% Iron oxide":
+      [ -5.2982e+00 < (-4.1753e+00 : 2.7054e+00) < -6.6359e-01 ]
+
+############ Input Check Concluded ##############
+
+WELCOME TO AUTOCLASS.
+  1) Each time I have finished a new 'trial', or attempt to find a good
+     classification, I will print the number of classes that trial
+     started and ended with, such as 9->7.
+  2) If that trial results in a duplicate of a previous run, I will print
+     'dup' first.
+  3) If that trial results in a classification better than any previous, 
+     I will print 'best' first.
+  4) If more than 8 hours 20 minutes have passed since the last report, and a new
+     classification has been found which is better than any previous ones,
+     I will report on that classification and on the status of the search
+     so far.
+  5) This report will include an estimate of the time it will take to find
+     another even better classification, and how much better that will be.
+     In addition, I will estimate a lower bound on how long it might take to
+     find the very best classification, and how much better that might be.
+  6) If you are warned about too much time in overhead, you may want to
+     change the parameters n_save, min_save_period, min_report_period, or
+     min_checkpoint_period.
+  7) To quit searching, type a 'q', hit <return>, and wait.  Otherwise I'll
+     go on until I complete trial number (4).
+  8) If needed, every 30 minutes I will save the best 2 classifications
+     so far to file: 
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.results-bin
+     and a description of the search to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.search
+  9) A record of this search will be printed to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+
+BEGINNING SEARCH at Thu Jun  7 12:07:38 2001
+
+[j_in=2]  [cs-3: cycles 7] best2->2(1) [j_in=3]  [cs-3: cycles 11] best3->3(2) [j_in=5]  [cs-3: cycles 20] best5->5(3) [j_in=7]  [cs-3: cycles 10] 7->7(4) 
+
+
+ENDING SEARCH because max number of tries reached at Thu Jun  7 12:07:39 2001
+  after a total of 4 tries over 2 seconds
+A log of this search is in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+The search results are stored in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.results-bin
+This search can be restarted by having "force_new_search_p = false" in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.s-params
+ and reinvoking the "autoclass -search ..." form
+
+------------------  SUMMARY OF 10 BEST RESULTS  ------------------
+PROBABILITY  exp(-10907.367) N_CLASSES   5 FOUND ON TRY    3 *SAVED*
+PROBABILITY  exp(-11187.751) N_CLASSES   7 FOUND ON TRY    4 *SAVED*
+PROBABILITY  exp(-11229.554) N_CLASSES   3 FOUND ON TRY    2
+PROBABILITY  exp(-11236.418) N_CLASSES   2 FOUND ON TRY    1
+
+------------------  SUMMARY OF TRY CONVERGENCE  ------------------
+try    3    num_cycles   20    max_cycles  200    convergent
+try    4    num_cycles   10    max_cycles  200    convergent
+try    2    num_cycles   11    max_cycles  200    convergent
+try    1    num_cycles    7    max_cycles  200    convergent
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 12:07:39 2001 
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 12:09:20 2001 
+
+AUTOCLASS -SEARCH default parameters:
+rel_error=1.000000e-02; start_j_list=(2,3,5,7,10,15,25); n_classes_fn_type="random_ln_normal"; fixed_j=0; min_report_period=30; max_duration=0; max_n_tries=0; n_save=2; log_file_p=true; search_file_p=true; results_file_p=true; min_save_period=1800; max_n_store=10; n_final_summary=10; start_fn_type="random"; try_fn_type="converge_search_3"; initial_cycles_p=true; save_compact_p=true; read_compact_p=true; randomize_random_p=true; n_data=0; halt_range=5.000000e-01; halt_factor=1.000000e-04; rel_delta_range=2.500000e-03; n_average=3; cs4_delta_range=2.500000e-03; sigma_beta_n_values=6; max_cycles=200; converge_print_p=false; force_new_search_p=true; checkpoint_p=false; min_checkpoint_period=10800; reconverge_type=""; screen_output_p=true; interactive_p=true; break_on_warnings_p=true; free_storage_p=true
+
+USER supplied parameters which override the defaults:
+min_report_period=30000; max_n_tries=4; start_fn_type="block"; try_fn_type="converge_search_4"; randomize_random_p=false; cs4_delta_range=2.500000e-03; sigma_beta_n_values=6; force_new_search_p=true
+
+
+##############  Starting Input Check  ###############
+
+To log file: 
+   /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+During loading of: 
+   [1] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.db2,
+   [2] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2,
+   [3] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-mnc.model.
+
+   [Attribute #, value #, and datum # are zero based.]
+
+ADVISORY[2]: data_file_format settings:
+             separator_char = ' ', comment_char = ';', unknown_token = '?'
+ADVISORY[2]: read 11 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2
+ADVISORY[1]: read 214 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.db2
+ADVISORY[1]: discrete translations [ (internal external):count ... ] built 
+             from input data --
+   Attribute #10, "Type of glass":
+      [ (0 1):70 (1 2):76 (2 3):17 (3 5):13 (4 6):9 (5 7):29 ]
+ADVISORY[1]: real statistics [ min < (mean : variance) < max ] built 
+             from input data --
+   Attribute #1, "RI: refractive index":
+      [  1.5112e+00 < ( 1.5184e+00 : 9.1795e-06) <  1.5339e+00 ]
+   Attribute #2, "Na: Wt.% Sodium oxide":
+      [  1.0730e+01 < ( 1.3408e+01 : 6.6373e-01) <  1.7380e+01 ]
+   Attribute #3, "Mg: Wt.% Magnesium oxide":
+      [  0.0000e+00 < ( 2.6845e+00 : 2.0708e+00) <  4.4900e+00 ]
+   Attribute #4, "Al: Wt.% Aluminum oxide":
+      [  2.9000e-01 < ( 1.4449e+00 : 2.4811e-01) <  3.5000e+00 ]
+   Attribute #5, "Si: Wt.% Silicon oxide":
+      [  6.9810e+01 < ( 7.2651e+01 : 5.9712e-01) <  7.5410e+01 ]
+   Attribute #6, " K: Wt.% Potassium oxide":
+      [  0.0000e+00 < ( 4.9706e-01 : 4.2337e-01) <  6.2100e+00 ]
+   Attribute #7, "Ca: Wt.% Calcium oxide":
+      [  5.4300e+00 < ( 8.9570e+00 : 2.0159e+00) <  1.6190e+01 ]
+   Attribute #8, "Ba: Wt.% Barium oxide":
+      [  0.0000e+00 < ( 1.7505e-01 : 2.4607e-01) <  3.1500e+00 ]
+   Attribute #9, "Fe: Wt.% Iron oxide":
+      [  0.0000e+00 < ( 5.7009e-02 : 9.4499e-03) <  5.1000e-01 ]
+ADVISORY[3]: read 1 model def from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-mnc.model
+ADVISORY[2]: log_transform is being applied to attribute #1:
+             "RI: refractive index" and will be stored as attribute #11.
+   Attribute #11, "Log RI: refractive index":
+      [ -6.7109e-01 < (-6.5709e-01 : 3.3848e-05) < -6.2749e-01 ]
+ADVISORY[2]: log_transform is being applied to attribute #2:
+             "Na: Wt.% Sodium oxide" and will be stored as attribute #12.
+   Attribute #12, "Log Na: Wt.% Sodium oxide":
+      [  2.3730e+00 < ( 2.5940e+00 : 3.6577e-03) <  2.8553e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #3:
+             "Mg: Wt.% Magnesium oxide" and will be stored as attribute #13.
+   Attribute #13, "Log Mg: Wt.% Magnesium oxide":
+      [ -5.2983e+00 < (-9.3701e-02 : 6.6834e+00) <  1.5030e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #4:
+             "Al: Wt.% Aluminum oxide" and will be stored as attribute #14.
+   Attribute #14, "Log Al: Wt.% Aluminum oxide":
+      [ -1.2379e+00 < ( 3.0602e-01 : 1.3473e-01) <  1.2528e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #5:
+             "Si: Wt.% Silicon oxide" and will be stored as attribute #15.
+   Attribute #15, "Log Si: Wt.% Silicon oxide":
+      [  4.2458e+00 < ( 4.2856e+00 : 1.1407e-04) <  4.3229e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #6:
+             " K: Wt.% Potassium oxide" and will be stored as attribute #16.
+   Attribute #16, "Log  K: Wt.% Potassium oxide":
+      [ -5.2984e+00 < (-1.4740e+00 : 2.9845e+00) <  1.8270e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #7:
+             "Ca: Wt.% Calcium oxide" and will be stored as attribute #17.
+   Attribute #17, "Log Ca: Wt.% Calcium oxide":
+      [  1.6919e+00 < ( 2.1815e+00 : 2.0663e-02) <  2.7844e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #8:
+             "Ba: Wt.% Barium oxide" and will be stored as attribute #18.
+   Attribute #18, "Log Ba: Wt.% Barium oxide":
+      [ -5.2981e+00 < (-4.4321e+00 : 3.6644e+00) <  1.1490e+00 ]
+ADVISORY[2]: log_transform is being applied to attribute #9:
+             "Fe: Wt.% Iron oxide" and will be stored as attribute #19.
+   Attribute #19, "Log Fe: Wt.% Iron oxide":
+      [ -5.2982e+00 < (-4.1753e+00 : 2.7054e+00) < -6.6359e-01 ]
+
+############ Input Check Concluded ##############
+
+WELCOME TO AUTOCLASS.
+  1) Each time I have finished a new 'trial', or attempt to find a good
+     classification, I will print the number of classes that trial
+     started and ended with, such as 9->7.
+  2) If that trial results in a duplicate of a previous run, I will print
+     'dup' first.
+  3) If that trial results in a classification better than any previous, 
+     I will print 'best' first.
+  4) If more than 8 hours 20 minutes have passed since the last report, and a new
+     classification has been found which is better than any previous ones,
+     I will report on that classification and on the status of the search
+     so far.
+  5) This report will include an estimate of the time it will take to find
+     another even better classification, and how much better that will be.
+     In addition, I will estimate a lower bound on how long it might take to
+     find the very best classification, and how much better that might be.
+  6) If you are warned about too much time in overhead, you may want to
+     change the parameters n_save, min_save_period, min_report_period, or
+     min_checkpoint_period.
+  7) To quit searching, type a 'q', hit <return>, and wait.  Otherwise I'll
+     go on until I complete trial number (4).
+  8) If needed, every 30 minutes I will save the best 2 classifications
+     so far to file: 
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.results-bin
+     and a description of the search to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.search
+  9) A record of this search will be printed to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+
+BEGINNING SEARCH at Thu Jun  7 12:09:21 2001
+
+[j_in=2]  [cs-4: cycles 10] best2->2(1) [j_in=3]  [cs-4: cycles 15] best3->3(2) [j_in=5]  [cs-4: cycles 32] best5->5(3) [j_in=7]  [cs-4: cycles 13] 7->7(4) 
+
+
+ENDING SEARCH because max number of tries reached at Thu Jun  7 12:09:22 2001
+  after a total of 4 tries over 2 seconds
+A log of this search is in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+The search results are stored in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.results-bin
+This search can be restarted by having "force_new_search_p = false" in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.s-params
+ and reinvoking the "autoclass -search ..." form
+
+------------------  SUMMARY OF 10 BEST RESULTS  ------------------
+PROBABILITY  exp(-10897.738) N_CLASSES   5 FOUND ON TRY    3 *SAVED*
+PROBABILITY  exp(-11187.745) N_CLASSES   7 FOUND ON TRY    4 *SAVED*
+PROBABILITY  exp(-11229.516) N_CLASSES   3 FOUND ON TRY    2
+PROBABILITY  exp(-11236.432) N_CLASSES   2 FOUND ON TRY    1
+
+------------------  SUMMARY OF TRY CONVERGENCE  ------------------
+try    3    num_cycles   32    max_cycles  200    convergent
+try    4    num_cycles   13    max_cycles  200    convergent
+try    2    num_cycles   15    max_cycles  200    convergent
+try    1    num_cycles   10    max_cycles  200    convergent
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 12:09:22 2001 
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 12:10:32 2001 
+
+AUTOCLASS -PREDICT default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 11 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2
+ADVISORY[1]: read 214 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.search
+
+##############  Starting Input Check  ###############
+
+To log file: 
+   /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.log
+During loading of: 
+   [1] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc-predict.db2,
+   [2] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2,
+   [3] /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-mnc.model.
+
+   [Attribute #, value #, and datum # are zero based.]
+
+ADVISORY[2]: data_file_format settings:
+             separator_char = ' ', comment_char = ';', unknown_token = '?'
+ADVISORY[2]: read 11 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2
+ADVISORY[1]: read 10 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc-predict.db2
+ADVISORY[3]: read 1 model def from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-mnc.model
+ADVISORY[2]: log_transform is being applied to attribute #1:
+             "RI: refractive index" and will be stored as attribute #11.
+ADVISORY[2]: log_transform is being applied to attribute #2:
+             "Na: Wt.% Sodium oxide" and will be stored as attribute #12.
+ADVISORY[2]: log_transform is being applied to attribute #3:
+             "Mg: Wt.% Magnesium oxide" and will be stored as attribute #13.
+ADVISORY[2]: log_transform is being applied to attribute #4:
+             "Al: Wt.% Aluminum oxide" and will be stored as attribute #14.
+ADVISORY[2]: log_transform is being applied to attribute #5:
+             "Si: Wt.% Silicon oxide" and will be stored as attribute #15.
+ADVISORY[2]: log_transform is being applied to attribute #6:
+             " K: Wt.% Potassium oxide" and will be stored as attribute #16.
+ADVISORY[2]: log_transform is being applied to attribute #7:
+             "Ca: Wt.% Calcium oxide" and will be stored as attribute #17.
+ADVISORY[2]: log_transform is being applied to attribute #8:
+             "Ba: Wt.% Barium oxide" and will be stored as attribute #18.
+ADVISORY[2]: log_transform is being applied to attribute #9:
+             "Fe: Wt.% Iron oxide" and will be stored as attribute #19.
+
+############ Input Check Concluded ##############
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc-predict.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc-predict.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 12:10:32 2001 
+

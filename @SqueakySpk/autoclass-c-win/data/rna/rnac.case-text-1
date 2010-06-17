@@ -1,0 +1,43 @@
+
+
+
+      CROSS REFERENCE   CASE NUMBER => MOST PROBABLE CLASS
+
+
+      AutoClass CLASSIFICATION for the 68 cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.db2
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -2270.933
+      from classification results file
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.results-bin
+      and using models
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.model - index = 0
+
+
+
+     Case #  Class  Prob         Case #  Class  Prob         Case #  Class  Prob 
+------------------------------------------------------------------------------------------
+          1    4   1.000             24    0   0.991             47    1   0.999
+          2    0   1.000             25    1   0.999             48    1   0.999
+          3    0   0.999             26    1   0.999             49    0   0.992
+          4    3   0.999             27    1   0.999             50    2   0.993
+          5    0   0.983             28    0   0.996             51    2   0.999
+          6    2   0.999             29    1   0.987             52    0   0.984
+          7    2   0.947             30    0   0.999             53    3   0.999
+          8    4   1.000             31    0   1.000             54    1   0.998
+          9    2   0.999             32    3   0.999             55    1   0.998
+         10    2   0.995             33    4   1.000             56    1   0.976
+         11    4   1.000             34    4   0.998             57    0   0.999
+         12    0   0.998             35    3   1.000             58    0   0.994
+         13    3   0.999             36    3   0.999             59    0   1.000
+         14    2   0.987             37    3   0.992             60    1   0.999
+         15    2   0.999             38    1   0.999             61    1   0.999
+         16    1   0.999             39    2   0.999             62    1   0.918
+         17    0   0.999             40    2   0.956             63    0   0.999
+         18    0   0.999             41    1   0.999             64    3   0.998
+         19    0   0.985             42    4   1.000             65    1   0.995
+         20    0   0.997             43    2   0.999             66    1   0.999
+         21    1   0.999             44    1   0.999             67    0   0.999
+         22    0   0.999             45    1   0.999             68    0   0.812
+         23    0   0.990             46    4   0.999    
+

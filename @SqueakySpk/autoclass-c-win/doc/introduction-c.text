@@ -1,0 +1,46 @@
+Welcome to the AutoClass C Documentation!  
+
+The documentation is divided into a basic core that most users will need
+to at least skim through, and various other supporting documentation.
+
+
+BASIC DOCUMENTATION:
+
+   preparation-c.text        How to prepare data for use by AutoClass
+
+   search-c.text             How to run AutoClass to find classifications.
+
+   reports-c.text            How to examine the classification in various ways.
+
+   interpretation-c.text     How to interpret AutoClass results.
+
+   checkpoint-c.text	     Protocols for running a checkpointed search.
+
+   prediction-c.text         Use classifications to predict class membership for
+                             new cases.  
+
+SUPPORTING DOCUMENTATION:
+
+   classes-c.text            What classification is all about, for beginners.
+	
+   models-c.text             Brief descriptions of the model term implementations.
+
+   kdd-95.ps                 Postscript file containing:
+                             P. Cheeseman, J. Stutz, "Bayesian Classification (AutoClass):
+                             Theory and Results", in "Advances in Knowledge Discovery and
+                             Data Mining", Usama M. Fayyad, Gregory Piatetsky-Shapiro,
+                             Padhraic Smyth, & Ramasamy Uthurusamy, Eds. The AAAI Press, 
+                             Menlo Park, expected fall 1995.
+
+                             % ghostview kdd-95.ps  or % lpr kdd-95.ps
+
+   tr-fia-90-12-7-01.ps      Postscript file containing:
+                             R. Hanson, J. Stutz, P. Cheeseman, "Bayesian Classification
+                             Theory", Technical Report FIA-90-12-7-01, NASA Ames Research
+                             Center, Artificial Intelligence Branch, May 1991
+                             (the figures are not included, since they were inserted by
+                             "cut-and-paste" methods into the original "camera-ready"
+                             copy -- this will be corrected in the future)
+
+                             % ghostview tr-fia-90-12-7-01.ps  or
+                             % lpr tr-fia-90-12-7-01.ps

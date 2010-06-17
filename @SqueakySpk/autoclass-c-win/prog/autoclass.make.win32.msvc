@@ -1,0 +1,43 @@
+### AUTOCLASS C MAKE FILE FOR  Windows NT 4.0, MSVC Version 5.0
+
+CFLAGS=/nologo /MD /W3 /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /FD /c
+
+LFLAGS=ws2_32.lib /nologo /subsystem:console /incremental:no /machine:I386
+
+CC=cl
+
+SRCS=globals.c init.c io-read-data.c io-read-model.c io-results.c \
+	io-results-bin.c model-expander-3.c matrix-utilities.c \
+	model-single-multinomial.c model-single-normal-cm.c \
+	model-single-normal-cn.c model-multi-normal-cn.c \
+	model-transforms.c model-update.c search-basic.c \
+	search-control.c search-control-2.c \
+	search-converge.c struct-class.c struct-clsf.c \
+	statistics.c predictions.c \
+	struct-data.c struct-matrix.c struct-model.c \
+	utils.c utils-math.c \
+	intf-reports.c intf-extensions.c intf-influence-values.c \
+	intf-sigma-contours.c \
+	prints.c getparams.c autoclass.c
+
+OBJS=globals.obj init.obj io-read-data.obj io-read-model.obj io-results.obj \
+	io-results-bin.obj model-expander-3.obj matrix-utilities.obj \
+	model-single-multinomial.obj model-single-normal-cm.obj \
+	model-single-normal-cn.obj model-multi-normal-cn.obj \
+	model-transforms.obj model-update.obj search-basic.obj \
+	search-control.obj search-control-2.obj \
+	search-converge.obj struct-class.obj struct-clsf.obj \
+	statistics.obj predictions.obj \
+	struct-data.obj struct-matrix.obj struct-model.obj \
+	utils.obj utils-math.obj \
+	intf-reports.obj intf-extensions.obj intf-influence-values.obj \
+	intf-sigma-contours.obj \
+	prints.obj getparams.obj autoclass.obj
+
+autoclass.exe : $(OBJS)
+	$(CC) $** /link $(LFLAGS) /out:"Autoclass.exe"
+
+.c.obj :
+	$(CC) $(CFLAGS) $<
+
+

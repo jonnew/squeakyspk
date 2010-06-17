@@ -1,0 +1,89 @@
+  		AUTOCLASS MODEL DESCRIPTIONS
+
+1.0  		Introduction
+1.1             Single Multinomial Model
+1.2             Single Normal CN Model
+1.3             Single Normal CM Model
+1.4             Multi Normal CN Model
+
+
+1.0 Introduction
+
+   The following text sections are brief overviews of each model's
+implementation.
+
+
+1.1 Single Multinomial Model
+
+    This implements a single multinomial likelihood model term for symbolic
+or integer attributes which is conditionally independent of other attributes
+given the class.  The likelihood is defined to be the probability of the
+particular attribute value for the class.  It is assumed here that the data
+values have been transformed from native format to a zero based and contiguous
+series of integers, presumably in the data input module.  Any missing values 
+must be represented by one of these integer values.
+
+    The likelihood parameters are a vector of probabilities for each possible
+value of each attribute.  Priors are implicit, and implemented in the code.
+
+
+1.2 Single Normal CN Model
+
+    This term models a single real valued attribute with a conditionally
+independent Gaussian normal distribution.  This model assumes that there are
+no missing values and that the measurement error is both constant and small
+relative to the model variance.  The probability of any particular observation
+is then the integral of the posterior distribution from (X - error) to
+(X + error).  The model parameters are a mean and variance.  The sufficient
+statistics are the weighted mean, variance, and (constant) geometric mean error.
+The parameter prior distributations are a normal for the mean and a log uniform 
+for the root variance (sigma).  The prior distribution parameters are
+heuristicly approximated from the database statistics.  
+
+    This model is directly applicable to real location attributes.  It is
+indirectly applicable to real scaler (bounded below) attributes, using a log-
+transform of the attribute.  It is also applicable to bounded (above and below)
+real attributes with a log-odds transform, but this is not yet available.  It
+may be applied to integer attributes where they are considered to measured
+points on a continuous distribution.  Such attributes must have been described
+as reals.
+
+
+1.3 Single Normal CM Model
+
+    This term models a single real valued attribute as a class conditionally
+independent binary probability of actually observing a value, with a Gaussian
+normal probability for those values actually observed.  Thus the failure to
+observe a value for the attribute is considered to be a real possibility of the
+measurement process and is modeled as such.  The probability due to the attribute
+in any particular observation is then the discrete probability of having found a
+value multiplied (when a value is found) by the integral of the normal
+distribution from (X - error) to (X + error).  This model assumes that the
+measurement error is constant and is small relative to the data variance.  The
+model parameters are the binary probability of observing a value, a mean and a
+variance.  The sufficient statistics are the fraction of observations, and the
+weighted mean, variance, and (constant) geometric mean error.  The parameter
+prior distributations are a simple conjunct for the binary, a normal for the mean
+and a log uniform for the root variance (sigma).  The prior distribution
+parameters are heuristicly approximated from the database statistics.
+
+    This model is directly applicable to real location attributes.  It is 
+indirectly applicable to real scaler (bounded below) attributes, using a log-
+transform of the attribute.  It is also applicable to bounded (above and below)
+real attributes with a log-odds-transform, but this is not yet available.  It
+may be applied to integer attributes where values are considered to be measured
+points on a continuous distribution.  Such attributes must have been described
+as reals.
+
+
+1.4 Multi Normal CN Model
+
+This implements a likelihood term representing a set of real valued attributes,
+each with constant measurement error and without missing values, which are
+conditionally independent of other attributes given the class.  This term is
+defined as a normal covariant distribution, parameterized by a means vector and
+covariance matrix.  The current priors implementation assumes simple conjunct
+priors taken from the global empirical values.  Note that one objective in 
+writing this has been to avoid allocation of temporary vectors and matrices to 
+store intermediate results.  Thus the term parameter structure contains several 
+temp structures that are used in much the manner of a Fortran common structure.

@@ -1,0 +1,546 @@
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 11:52:10 2001 
+
+AUTOCLASS -SEARCH default parameters:
+rel_error=1.000000e-02; start_j_list=(2,3,5,7,10,15,25); n_classes_fn_type="random_ln_normal"; fixed_j=0; min_report_period=30; max_duration=0; max_n_tries=0; n_save=2; log_file_p=true; search_file_p=true; results_file_p=true; min_save_period=1800; max_n_store=10; n_final_summary=10; start_fn_type="random"; try_fn_type="converge_search_3"; initial_cycles_p=true; save_compact_p=true; read_compact_p=true; randomize_random_p=true; n_data=0; halt_range=5.000000e-01; halt_factor=1.000000e-04; rel_delta_range=2.500000e-03; n_average=3; cs4_delta_range=2.500000e-03; sigma_beta_n_values=6; max_cycles=200; converge_print_p=false; force_new_search_p=true; checkpoint_p=false; min_checkpoint_period=10800; reconverge_type=""; screen_output_p=true; interactive_p=true; break_on_warnings_p=true; free_storage_p=true
+
+USER supplied parameters which override the defaults:
+min_report_period=30000; max_n_tries=4; start_fn_type="block"; randomize_random_p=false; force_new_search_p=true
+
+
+##############  Starting Input Check  ###############
+
+To log file: 
+   /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+During loading of: 
+   [1] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.db2,
+   [2] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.hd2,
+   [3] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.model.
+
+   [Attribute #, value #, and datum # are zero based.]
+
+ADVISORY[2]: data_file_format settings:
+             separator_char = ',', comment_char = ';', unknown_token = '?'
+ADVISORY[2]: read 37 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.hd2
+ADVISORY[1]: read 47 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.db2
+ADVISORY[1]: discrete translations [ (internal external):count ... ] built 
+             from input data --
+   Attribute #1, "diagnosis":
+      [ (0 Diaporthe_Stem_Canker):10 (1 Charcoal_Rot):10 (2 Rhizoctonia_Root_Rot):10 (3 Phytophthora_Rot):17 ]
+   Attribute #2, "time of occurance":
+      [ (0 5):5 (1 6):5 (2 4):9 (3 7):6 (4 1):10 (5 3):7 (6 2):5 ]
+   Attribute #3, "plant stand":
+      [ (0 1):22 (1 2):25 ]
+   Attribute #4, "precipitation":
+      [ (0 3):33 (1 1):10 (2 2):4 ]
+   Attribute #5, "temperature":
+      [ (0 2):24 (1 3):6 (2 1):17 ]
+   Attribute #6, "occurance of hail":
+      [ (0 2):14 (1 1):33 ]
+   Attribute #7, "number years crop repeated":
+      [ (0 2):14 (1 4):15 (2 3):11 (3 1):7 ]
+   Attribute #8, "damaged area":
+      [ (0 1):7 (1 2):29 (2 3):5 (3 4):6 ]
+   Attribute #9, "damage severity":
+      [ (0 2):28 (1 3):19 ]
+   Attribute #10, "seed treatment":
+      [ (0 1):24 (1 2):23 ]
+   Attribute #11, "seed germination":
+      [ (0 3):19 (1 2):15 (2 1):13 ]
+   Attribute #12, "plant growth":
+      [ (0 2):47 ]
+   Attribute #13, "leaf condition":
+      [ (0 2):38 (1 1):9 ]
+   Attribute #14, "leaf spot halos":
+      [ (0 1):47 ]
+   Attribute #15, "leaf spot margin":
+      [ (0 3):47 ]
+   Attribute #16, "size of leaf spots":
+      [ (0 3):47 ]
+   Attribute #17, "slot holing":
+      [ (0 1):47 ]
+   Attribute #18, "leaf malformation":
+      [ (0 1):47 ]
+   Attribute #19, "leaf mildew growth":
+      [ (0 1):47 ]
+   Attribute #20, "condition of stem":
+      [ (0 2):47 ]
+   Attribute #21, "stem lodging":
+      [ (0 1):37 (1 2):10 ]
+   Attribute #22, "stem cankers":
+      [ (0 4):10 (1 1):10 (2 2):18 (3 3):9 ]
+   Attribute #23, "canker lesion color":
+      [ (0 2):16 (1 1):4 (2 4):10 (3 3):17 ]
+   Attribute #24, "fruiting bodies of stem":
+      [ (0 2):10 (1 1):37 ]
+   Attribute #25, "outer stem decay":
+      [ (0 2):26 (1 1):21 ]
+   Attribute #26, "mycelium on stem":
+      [ (0 1):45 (1 2):2 ]
+   Attribute #27, "internal discoloration of stem":
+      [ (0 1):37 (1 3):10 ]
+   Attribute #28, "scerotia internal or external":
+      [ (0 1):37 (1 2):10 ]
+   Attribute #29, "fruit pod condition":
+      [ (0 1):20 (1 4):27 ]
+   Attribute #30, "fruit spots":
+      [ (0 5):47 ]
+   Attribute #31, "seed condition":
+      [ (0 1):47 ]
+   Attribute #32, "seed mold growth":
+      [ (0 1):47 ]
+   Attribute #33, "seed discoloration":
+      [ (0 1):47 ]
+   Attribute #34, "seed size":
+      [ (0 1):47 ]
+   Attribute #35, "seed shriveling":
+      [ (0 1):47 ]
+   Attribute #36, "root condition":
+      [ (0 1):29 (1 2):18 ]
+ADVISORY[3]: read 1 model def from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.model
+
+############ Input Check Concluded ##############
+
+ADVISORY: start_j_list has been modified to: (2,3,5,7,10,15,20)
+
+WELCOME TO AUTOCLASS.
+  1) Each time I have finished a new 'trial', or attempt to find a good
+     classification, I will print the number of classes that trial
+     started and ended with, such as 9->7.
+  2) If that trial results in a duplicate of a previous run, I will print
+     'dup' first.
+  3) If that trial results in a classification better than any previous, 
+     I will print 'best' first.
+  4) If more than 8 hours 20 minutes have passed since the last report, and a new
+     classification has been found which is better than any previous ones,
+     I will report on that classification and on the status of the search
+     so far.
+  5) This report will include an estimate of the time it will take to find
+     another even better classification, and how much better that will be.
+     In addition, I will estimate a lower bound on how long it might take to
+     find the very best classification, and how much better that might be.
+  6) If you are warned about too much time in overhead, you may want to
+     change the parameters n_save, min_save_period, min_report_period, or
+     min_checkpoint_period.
+  7) To quit searching, type a 'q', hit <return>, and wait.  Otherwise I'll
+     go on until I complete trial number (4).
+  8) If needed, every 30 minutes I will save the best 2 classifications
+     so far to file: 
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.results-bin
+     and a description of the search to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.search
+  9) A record of this search will be printed to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+
+BEGINNING SEARCH at Thu Jun  7 11:52:10 2001
+
+[j_in=2]  [cs-3: cycles 4] best2->2(1) [j_in=3]  [cs-3: cycles 4] best3->3(2) [j_in=5]  [cs-3: cycles 6] best5->4(3) [j_in=7]  [cs-3: cycles 10] 7->5(4) 
+
+
+ENDING SEARCH because max number of tries reached at Thu Jun  7 11:52:10 2001
+  after a total of 4 tries over 1 second
+A log of this search is in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+The search results are stored in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.results-bin
+This search can be restarted by having "force_new_search_p = false" in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.s-params
+ and reinvoking the "autoclass -search ..." form
+
+------------------  SUMMARY OF 10 BEST RESULTS  ------------------
+PROBABILITY  exp(-645.604) N_CLASSES   4 FOUND ON TRY    3 *SAVED*
+PROBABILITY  exp(-660.007) N_CLASSES   5 FOUND ON TRY    4 *SAVED*
+PROBABILITY  exp(-710.824) N_CLASSES   3 FOUND ON TRY    2
+PROBABILITY  exp(-727.858) N_CLASSES   2 FOUND ON TRY    1
+
+------------------  SUMMARY OF TRY CONVERGENCE  ------------------
+try    3    num_cycles    6    max_cycles  200    convergent
+try    4    num_cycles   10    max_cycles  200    convergent
+try    2    num_cycles    4    max_cycles  200    convergent
+try    1    num_cycles    4    max_cycles  200    convergent
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 11:52:10 2001 
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 11:53:07 2001 
+
+AUTOCLASS -SEARCH default parameters:
+rel_error=1.000000e-02; start_j_list=(2,3,5,7,10,15,25); n_classes_fn_type="random_ln_normal"; fixed_j=0; min_report_period=30; max_duration=0; max_n_tries=0; n_save=2; log_file_p=true; search_file_p=true; results_file_p=true; min_save_period=1800; max_n_store=10; n_final_summary=10; start_fn_type="random"; try_fn_type="converge_search_3"; initial_cycles_p=true; save_compact_p=true; read_compact_p=true; randomize_random_p=true; n_data=0; halt_range=5.000000e-01; halt_factor=1.000000e-04; rel_delta_range=2.500000e-03; n_average=3; cs4_delta_range=2.500000e-03; sigma_beta_n_values=6; max_cycles=200; converge_print_p=false; force_new_search_p=true; checkpoint_p=false; min_checkpoint_period=10800; reconverge_type=""; screen_output_p=true; interactive_p=true; break_on_warnings_p=true; free_storage_p=true
+
+USER supplied parameters which override the defaults:
+min_report_period=30000; max_n_tries=4; start_fn_type="block"; randomize_random_p=false; rel_delta_range=5.000000e-02; force_new_search_p=true
+
+
+##############  Starting Input Check  ###############
+
+To log file: 
+   /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+During loading of: 
+   [1] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.db2,
+   [2] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.hd2,
+   [3] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.model.
+
+   [Attribute #, value #, and datum # are zero based.]
+
+ADVISORY[2]: data_file_format settings:
+             separator_char = ',', comment_char = ';', unknown_token = '?'
+ADVISORY[2]: read 37 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.hd2
+ADVISORY[1]: read 47 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.db2
+ADVISORY[1]: discrete translations [ (internal external):count ... ] built 
+             from input data --
+   Attribute #1, "diagnosis":
+      [ (0 Diaporthe_Stem_Canker):10 (1 Charcoal_Rot):10 (2 Rhizoctonia_Root_Rot):10 (3 Phytophthora_Rot):17 ]
+   Attribute #2, "time of occurance":
+      [ (0 5):5 (1 6):5 (2 4):9 (3 7):6 (4 1):10 (5 3):7 (6 2):5 ]
+   Attribute #3, "plant stand":
+      [ (0 1):22 (1 2):25 ]
+   Attribute #4, "precipitation":
+      [ (0 3):33 (1 1):10 (2 2):4 ]
+   Attribute #5, "temperature":
+      [ (0 2):24 (1 3):6 (2 1):17 ]
+   Attribute #6, "occurance of hail":
+      [ (0 2):14 (1 1):33 ]
+   Attribute #7, "number years crop repeated":
+      [ (0 2):14 (1 4):15 (2 3):11 (3 1):7 ]
+   Attribute #8, "damaged area":
+      [ (0 1):7 (1 2):29 (2 3):5 (3 4):6 ]
+   Attribute #9, "damage severity":
+      [ (0 2):28 (1 3):19 ]
+   Attribute #10, "seed treatment":
+      [ (0 1):24 (1 2):23 ]
+   Attribute #11, "seed germination":
+      [ (0 3):19 (1 2):15 (2 1):13 ]
+   Attribute #12, "plant growth":
+      [ (0 2):47 ]
+   Attribute #13, "leaf condition":
+      [ (0 2):38 (1 1):9 ]
+   Attribute #14, "leaf spot halos":
+      [ (0 1):47 ]
+   Attribute #15, "leaf spot margin":
+      [ (0 3):47 ]
+   Attribute #16, "size of leaf spots":
+      [ (0 3):47 ]
+   Attribute #17, "slot holing":
+      [ (0 1):47 ]
+   Attribute #18, "leaf malformation":
+      [ (0 1):47 ]
+   Attribute #19, "leaf mildew growth":
+      [ (0 1):47 ]
+   Attribute #20, "condition of stem":
+      [ (0 2):47 ]
+   Attribute #21, "stem lodging":
+      [ (0 1):37 (1 2):10 ]
+   Attribute #22, "stem cankers":
+      [ (0 4):10 (1 1):10 (2 2):18 (3 3):9 ]
+   Attribute #23, "canker lesion color":
+      [ (0 2):16 (1 1):4 (2 4):10 (3 3):17 ]
+   Attribute #24, "fruiting bodies of stem":
+      [ (0 2):10 (1 1):37 ]
+   Attribute #25, "outer stem decay":
+      [ (0 2):26 (1 1):21 ]
+   Attribute #26, "mycelium on stem":
+      [ (0 1):45 (1 2):2 ]
+   Attribute #27, "internal discoloration of stem":
+      [ (0 1):37 (1 3):10 ]
+   Attribute #28, "scerotia internal or external":
+      [ (0 1):37 (1 2):10 ]
+   Attribute #29, "fruit pod condition":
+      [ (0 1):20 (1 4):27 ]
+   Attribute #30, "fruit spots":
+      [ (0 5):47 ]
+   Attribute #31, "seed condition":
+      [ (0 1):47 ]
+   Attribute #32, "seed mold growth":
+      [ (0 1):47 ]
+   Attribute #33, "seed discoloration":
+      [ (0 1):47 ]
+   Attribute #34, "seed size":
+      [ (0 1):47 ]
+   Attribute #35, "seed shriveling":
+      [ (0 1):47 ]
+   Attribute #36, "root condition":
+      [ (0 1):29 (1 2):18 ]
+ADVISORY[3]: read 1 model def from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.model
+
+############ Input Check Concluded ##############
+
+ADVISORY: start_j_list has been modified to: (2,3,5,7,10,15,20)
+
+WELCOME TO AUTOCLASS.
+  1) Each time I have finished a new 'trial', or attempt to find a good
+     classification, I will print the number of classes that trial
+     started and ended with, such as 9->7.
+  2) If that trial results in a duplicate of a previous run, I will print
+     'dup' first.
+  3) If that trial results in a classification better than any previous, 
+     I will print 'best' first.
+  4) If more than 8 hours 20 minutes have passed since the last report, and a new
+     classification has been found which is better than any previous ones,
+     I will report on that classification and on the status of the search
+     so far.
+  5) This report will include an estimate of the time it will take to find
+     another even better classification, and how much better that will be.
+     In addition, I will estimate a lower bound on how long it might take to
+     find the very best classification, and how much better that might be.
+  6) If you are warned about too much time in overhead, you may want to
+     change the parameters n_save, min_save_period, min_report_period, or
+     min_checkpoint_period.
+  7) To quit searching, type a 'q', hit <return>, and wait.  Otherwise I'll
+     go on until I complete trial number (4).
+  8) If needed, every 30 minutes I will save the best 2 classifications
+     so far to file: 
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.results-bin
+     and a description of the search to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.search
+  9) A record of this search will be printed to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+
+BEGINNING SEARCH at Thu Jun  7 11:53:07 2001
+
+[j_in=2]  [cs-3: cycles 4] best2->2(1) [j_in=3]  [cs-3: cycles 4] best3->3(2) [j_in=5]  [cs-3: cycles 6] best5->4(3) [j_in=7]  [cs-3: cycles 8] 7->5(4) 
+
+
+ENDING SEARCH because max number of tries reached at Thu Jun  7 11:53:07 2001
+  after a total of 4 tries over 1 second
+A log of this search is in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+The search results are stored in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.results-bin
+This search can be restarted by having "force_new_search_p = false" in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.s-params
+ and reinvoking the "autoclass -search ..." form
+
+------------------  SUMMARY OF 10 BEST RESULTS  ------------------
+PROBABILITY  exp(-645.604) N_CLASSES   4 FOUND ON TRY    3 *SAVED*
+PROBABILITY  exp(-660.010) N_CLASSES   5 FOUND ON TRY    4 *SAVED*
+PROBABILITY  exp(-710.824) N_CLASSES   3 FOUND ON TRY    2
+PROBABILITY  exp(-727.858) N_CLASSES   2 FOUND ON TRY    1
+
+------------------  SUMMARY OF TRY CONVERGENCE  ------------------
+try    3    num_cycles    6    max_cycles  200    convergent
+try    4    num_cycles    8    max_cycles  200    convergent
+try    2    num_cycles    4    max_cycles  200    convergent
+try    1    num_cycles    4    max_cycles  200    convergent
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 11:53:07 2001 
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 11:53:57 2001 
+
+AUTOCLASS -SEARCH default parameters:
+rel_error=1.000000e-02; start_j_list=(2,3,5,7,10,15,25); n_classes_fn_type="random_ln_normal"; fixed_j=0; min_report_period=30; max_duration=0; max_n_tries=0; n_save=2; log_file_p=true; search_file_p=true; results_file_p=true; min_save_period=1800; max_n_store=10; n_final_summary=10; start_fn_type="random"; try_fn_type="converge_search_3"; initial_cycles_p=true; save_compact_p=true; read_compact_p=true; randomize_random_p=true; n_data=0; halt_range=5.000000e-01; halt_factor=1.000000e-04; rel_delta_range=2.500000e-03; n_average=3; cs4_delta_range=2.500000e-03; sigma_beta_n_values=6; max_cycles=200; converge_print_p=false; force_new_search_p=true; checkpoint_p=false; min_checkpoint_period=10800; reconverge_type=""; screen_output_p=true; interactive_p=true; break_on_warnings_p=true; free_storage_p=true
+
+USER supplied parameters which override the defaults:
+min_report_period=30000; max_n_tries=4; start_fn_type="block"; try_fn_type="converge_search_4"; randomize_random_p=false; cs4_delta_range=2.500000e-03; sigma_beta_n_values=6; force_new_search_p=true
+
+
+##############  Starting Input Check  ###############
+
+To log file: 
+   /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+During loading of: 
+   [1] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.db2,
+   [2] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.hd2,
+   [3] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.model.
+
+   [Attribute #, value #, and datum # are zero based.]
+
+ADVISORY[2]: data_file_format settings:
+             separator_char = ',', comment_char = ';', unknown_token = '?'
+ADVISORY[2]: read 37 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.hd2
+ADVISORY[1]: read 47 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.db2
+ADVISORY[1]: discrete translations [ (internal external):count ... ] built 
+             from input data --
+   Attribute #1, "diagnosis":
+      [ (0 Diaporthe_Stem_Canker):10 (1 Charcoal_Rot):10 (2 Rhizoctonia_Root_Rot):10 (3 Phytophthora_Rot):17 ]
+   Attribute #2, "time of occurance":
+      [ (0 5):5 (1 6):5 (2 4):9 (3 7):6 (4 1):10 (5 3):7 (6 2):5 ]
+   Attribute #3, "plant stand":
+      [ (0 1):22 (1 2):25 ]
+   Attribute #4, "precipitation":
+      [ (0 3):33 (1 1):10 (2 2):4 ]
+   Attribute #5, "temperature":
+      [ (0 2):24 (1 3):6 (2 1):17 ]
+   Attribute #6, "occurance of hail":
+      [ (0 2):14 (1 1):33 ]
+   Attribute #7, "number years crop repeated":
+      [ (0 2):14 (1 4):15 (2 3):11 (3 1):7 ]
+   Attribute #8, "damaged area":
+      [ (0 1):7 (1 2):29 (2 3):5 (3 4):6 ]
+   Attribute #9, "damage severity":
+      [ (0 2):28 (1 3):19 ]
+   Attribute #10, "seed treatment":
+      [ (0 1):24 (1 2):23 ]
+   Attribute #11, "seed germination":
+      [ (0 3):19 (1 2):15 (2 1):13 ]
+   Attribute #12, "plant growth":
+      [ (0 2):47 ]
+   Attribute #13, "leaf condition":
+      [ (0 2):38 (1 1):9 ]
+   Attribute #14, "leaf spot halos":
+      [ (0 1):47 ]
+   Attribute #15, "leaf spot margin":
+      [ (0 3):47 ]
+   Attribute #16, "size of leaf spots":
+      [ (0 3):47 ]
+   Attribute #17, "slot holing":
+      [ (0 1):47 ]
+   Attribute #18, "leaf malformation":
+      [ (0 1):47 ]
+   Attribute #19, "leaf mildew growth":
+      [ (0 1):47 ]
+   Attribute #20, "condition of stem":
+      [ (0 2):47 ]
+   Attribute #21, "stem lodging":
+      [ (0 1):37 (1 2):10 ]
+   Attribute #22, "stem cankers":
+      [ (0 4):10 (1 1):10 (2 2):18 (3 3):9 ]
+   Attribute #23, "canker lesion color":
+      [ (0 2):16 (1 1):4 (2 4):10 (3 3):17 ]
+   Attribute #24, "fruiting bodies of stem":
+      [ (0 2):10 (1 1):37 ]
+   Attribute #25, "outer stem decay":
+      [ (0 2):26 (1 1):21 ]
+   Attribute #26, "mycelium on stem":
+      [ (0 1):45 (1 2):2 ]
+   Attribute #27, "internal discoloration of stem":
+      [ (0 1):37 (1 3):10 ]
+   Attribute #28, "scerotia internal or external":
+      [ (0 1):37 (1 2):10 ]
+   Attribute #29, "fruit pod condition":
+      [ (0 1):20 (1 4):27 ]
+   Attribute #30, "fruit spots":
+      [ (0 5):47 ]
+   Attribute #31, "seed condition":
+      [ (0 1):47 ]
+   Attribute #32, "seed mold growth":
+      [ (0 1):47 ]
+   Attribute #33, "seed discoloration":
+      [ (0 1):47 ]
+   Attribute #34, "seed size":
+      [ (0 1):47 ]
+   Attribute #35, "seed shriveling":
+      [ (0 1):47 ]
+   Attribute #36, "root condition":
+      [ (0 1):29 (1 2):18 ]
+ADVISORY[3]: read 1 model def from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.model
+
+############ Input Check Concluded ##############
+
+ADVISORY: start_j_list has been modified to: (2,3,5,7,10,15,20)
+
+WELCOME TO AUTOCLASS.
+  1) Each time I have finished a new 'trial', or attempt to find a good
+     classification, I will print the number of classes that trial
+     started and ended with, such as 9->7.
+  2) If that trial results in a duplicate of a previous run, I will print
+     'dup' first.
+  3) If that trial results in a classification better than any previous, 
+     I will print 'best' first.
+  4) If more than 8 hours 20 minutes have passed since the last report, and a new
+     classification has been found which is better than any previous ones,
+     I will report on that classification and on the status of the search
+     so far.
+  5) This report will include an estimate of the time it will take to find
+     another even better classification, and how much better that will be.
+     In addition, I will estimate a lower bound on how long it might take to
+     find the very best classification, and how much better that might be.
+  6) If you are warned about too much time in overhead, you may want to
+     change the parameters n_save, min_save_period, min_report_period, or
+     min_checkpoint_period.
+  7) To quit searching, type a 'q', hit <return>, and wait.  Otherwise I'll
+     go on until I complete trial number (4).
+  8) If needed, every 30 minutes I will save the best 2 classifications
+     so far to file: 
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.results-bin
+     and a description of the search to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.search
+  9) A record of this search will be printed to file:
+     /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+
+BEGINNING SEARCH at Thu Jun  7 11:53:58 2001
+
+[j_in=2]  [cs-4: cycles 6] best2->2(1) [j_in=3]  [cs-4: cycles 6] best3->3(2) [j_in=5]  [cs-4: cycles 8] best5->4(3) [j_in=7]  [cs-4: cycles 11] 7->5(4) 
+
+
+ENDING SEARCH because max number of tries reached at Thu Jun  7 11:53:58 2001
+  after a total of 4 tries over 1 second
+A log of this search is in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+The search results are stored in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.results-bin
+This search can be restarted by having "force_new_search_p = false" in file:
+ /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.s-params
+ and reinvoking the "autoclass -search ..." form
+
+------------------  SUMMARY OF 10 BEST RESULTS  ------------------
+PROBABILITY  exp(-645.604) N_CLASSES   4 FOUND ON TRY    3 *SAVED*
+PROBABILITY  exp(-660.007) N_CLASSES   5 FOUND ON TRY    4 *SAVED*
+PROBABILITY  exp(-710.824) N_CLASSES   3 FOUND ON TRY    2
+PROBABILITY  exp(-727.858) N_CLASSES   2 FOUND ON TRY    1
+
+------------------  SUMMARY OF TRY CONVERGENCE  ------------------
+try    3    num_cycles    8    max_cycles  200    convergent
+try    4    num_cycles   11    max_cycles  200    convergent
+try    2    num_cycles    6    max_cycles  200    convergent
+try    1    num_cycles    6    max_cycles  200    convergent
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 11:53:58 2001 
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 11:54:44 2001 
+
+AUTOCLASS -PREDICT default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+xref_class_report_att_list=(1,2,3)
+
+ADVISORY[2]: read 37 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.hd2
+ADVISORY[1]: read 47 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.search
+
+##############  Starting Input Check  ###############
+
+To log file: 
+   /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.log
+During loading of: 
+   [1] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc-predict.db2,
+   [2] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.hd2,
+   [3] /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.model.
+
+   [Attribute #, value #, and datum # are zero based.]
+
+ADVISORY[2]: data_file_format settings:
+             separator_char = ',', comment_char = ';', unknown_token = '?'
+ADVISORY[2]: read 37 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.hd2
+ADVISORY[1]: read 4 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc-predict.db2
+ADVISORY[3]: read 1 model def from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc.model
+
+############ Input Check Concluded ##############
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc-predict.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/soybean/soyc-predict.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 11:54:44 2001 
+
