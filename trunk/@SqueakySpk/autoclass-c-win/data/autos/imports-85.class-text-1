@@ -1,0 +1,332 @@
+
+
+
+      CROSS REFERENCE: CLASS => CASE NUMBER MEMBERSHIP
+
+
+      AutoClass CLASSIFICATION for the 205 cases in:
+        /home/tove/p/autoclass-c/data/autos/imports-85.db2
+        /home/tove/p/autoclass-c/data/autos/imports-85.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -16453.536
+      from classification results file:
+        /home/tove/p/autoclass-c/data/autos/imports-85.results-bin
+      and using models: 
+        /home/tove/p/autoclass-c/data/autos/imports-85.model - index = 0
+
+
+
+                                 CLASS = 0  
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+    19   1488             chevrolet       5151       l                   1.00
+    20   1874             chevrolet       6295       ohc                 1.00
+    21   1909             chevrolet       6575       ohc                 1.00
+    22   1876             dodge           5572       ohc                 1.00
+    23   1876             dodge           6377       ohc                 1.00
+    25   1967             dodge           6229       ohc                 1.00
+    26   1989             dodge           6692       ohc                 1.00
+    27   1989             dodge           7609       ohc                 1.00
+    31   1713             honda           6479       ohc                 1.00
+    32   1819             honda           6855       ohc                 1.00
+    33   1837             honda           5399       ohc                 1.00
+    34   1940             honda           6529       ohc                 1.00
+    35   1956             honda           7129       ohc                 1.00
+    36   2010             honda           7295       ohc                 1.00
+    37   2024             honda           7295       ohc                 1.00
+    45   1874             isuzu           ?          ohc                 1.00
+    46   1909             isuzu           ?          ohc                 1.00
+    51   1890             mazda           5195       ohc                 1.00
+    52   1900             mazda           6095       ohc                 1.00
+    53   1905             mazda           6795       ohc                 1.00
+    54   1945             mazda           6695       ohc                 1.00
+    55   1950             mazda           7395       ohc                 1.00
+    77   1918             mitsubishi      5389       ohc                 1.00
+    78   1944             mitsubishi      6189       ohc                 1.00
+    79   2004             mitsubishi      6669       ohc                 1.00
+    90   1889             nissan          5499       ohc                 1.00
+    92   1918             nissan          6649       ohc                 1.00
+    93   1938             nissan          6849       ohc                 1.00
+    94   2024             nissan          7349       ohc                 1.00
+    95   1951             nissan          7299       ohc                 1.00
+    96   2028             nissan          7799       ohc                 1.00
+    97   1971             nissan          7499       ohc                 1.00
+    98   2037             nissan          7999       ohc                 1.00
+    99   2008             nissan          8249       ohc                 1.00
+   119   1918             plymouth        5572       ohc                 1.00
+   121   1967             plymouth        6229       ohc                 1.00
+   122   1989             plymouth        6692       ohc                 1.00
+   123   2191             plymouth        7609       ohc                 1.00
+   151   1985             toyota          5348       ohc                 1.00
+   152   2040             toyota          6338       ohc                 1.00
+   153   2015             toyota          6488       ohc                 1.00
+
+
+                                 CLASS = 0 (continued) 
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+   154   2280             toyota          6918       ohc                 1.00
+   155   2290             toyota          7898       ohc                 0.94
+                                                                     1   0.06
+   157   2081             toyota          6938       ohc                 1.00
+   158   2109             toyota          7198       ohc                 1.00
+   161   2094             toyota          7738       ohc                 1.00
+   162   2122             toyota          8358       ohc                 0.98
+                                                                     1   0.02
+   163   2140             toyota          9258       ohc                 0.76
+                                                                     1   0.24
+   164   2169             toyota          8058       ohc                 0.99
+   165   2204             toyota          8238       ohc                 0.99
+
+
+                                 CLASS = 1  
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+    24   2128             dodge           7957       ohc                 1.00
+    28   2191             dodge           8558       ohc                 1.00
+    38   2236             honda           7895       ohc                 1.00
+    39   2289             honda           9095       ohc                 1.00
+    40   2304             honda           8845       ohc                 1.00
+    41   2372             honda           10295      ohc                 1.00
+    42   2465             honda           12945      ohc                 1.00
+    43   2293             honda           10345      ohc                 1.00
+    44   2337             isuzu           6785       ohc                 1.00
+    80   2145             mitsubishi      7689       ohc                 1.00
+    81   2370             mitsubishi      9959       ohc                 0.95
+                                                                     3   0.05
+    82   2328             mitsubishi      8499       ohc                 1.00
+    86   2365             mitsubishi      6989       ohc                 1.00
+    87   2405             mitsubishi      8189       ohc                 1.00
+    88   2403             mitsubishi      9279       ohc                 1.00
+    89   2403             mitsubishi      9279       ohc                 1.00
+    91   2017             nissan          7099       ohc                 1.00
+   100   2324             nissan          8949       ohc                 0.98
+                                                                     4   0.02
+   101   2302             nissan          9549       ohc                 0.98
+                                                                     4   0.02
+   120   2128             plymouth        7957       ohc                 1.00
+   139   2050             subaru          5118       ohcf                1.00
+   140   2120             subaru          7053       ohcf                1.00
+   141   2240             subaru          7603       ohcf                1.00
+   142   2145             subaru          7126       ohcf                1.00
+   143   2190             subaru          7775       ohcf                1.00
+   144   2340             subaru          9960       ohcf                1.00
+   145   2385             subaru          9233       ohcf                1.00
+   146   2510             subaru          11259      ohcf                1.00
+   147   2290             subaru          7463       ohcf                1.00
+   148   2455             subaru          10198      ohcf                1.00
+   149   2420             subaru          8013       ohcf                1.00
+   150   2650             subaru          11694      ohcf                1.00
+   156   3110             toyota          8778       ohc                 1.00
+   159   2275             toyota          7898       ohc                 1.00
+
+
+                                 CLASS = 1 (continued) 
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+   160   2275             toyota          7788       ohc                 1.00
+   166   2265             toyota          9298       dohc                0.99
+   183   2261             volkswagen      7775       ohc                 1.00
+   184   2209             volkswagen      7975       ohc                 1.00
+   185   2264             volkswagen      7995       ohc                 1.00
+   186   2212             volkswagen      8195       ohc                 0.99
+   187   2275             volkswagen      8495       ohc                 0.99
+                                                                     4   0.01
+   188   2319             volkswagen      9495       ohc                 0.92
+                                                                     4   0.08
+   189   2300             volkswagen      9995       ohc                 0.98
+                                                                     4   0.02
+   190   2254             volkswagen      11595      ohc                 1.00
+   191   2221             volkswagen      9980       ohc                 1.00
+
+
+                                 CLASS = 2  
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+     5   2824             audi            17450      ohc                 1.00
+     6   2507             audi            15250      ohc                 1.00
+     7   2844             audi            17710      ohc                 1.00
+     8   2954             audi            18920      ohc                 1.00
+     9   3086             audi            23875      ohc                 1.00
+    10   3053             audi            ?          ohc                 1.00
+    11   2395             bmw             16430      ohc                 1.00
+    12   2395             bmw             16925      ohc                 1.00
+    13   2710             bmw             20970      ohc                 1.00
+    14   2765             bmw             21105      ohc                 1.00
+    15   3055             bmw             24565      ohc                 1.00
+    16   3230             bmw             30760      ohc                 0.97
+                                                                     5   0.03
+    66   2670             mazda           18280      ohc                 1.00
+    76   2910             mercury         16503      ohc                 1.00
+   102   3095             nissan          13499      ohcv                1.00
+   103   3296             nissan          14399      ohcv                1.00
+   104   3060             nissan          13499      ohcv                1.00
+   133   2658             saab            11850      ohc                 1.00
+   134   2695             saab            12170      ohc                 1.00
+   136   2758             saab            15510      ohc                 1.00
+   137   2808             saab            18150      dohc                1.00
+   138   2847             saab            18620      dohc                1.00
+   179   2976             toyota          16558      dohc                0.98
+                                                                     3   0.02
+   180   3016             toyota          15998      dohc                0.98
+                                                                     3   0.02
+   181   3131             toyota          15690      dohc                1.00
+   182   3151             toyota          15750      dohc                1.00
+   192   2661             volkswagen      13295      ohc                 1.00
+   195   2912             volvo           12940      ohc                 1.00
+   196   3034             volvo           13415      ohc                 1.00
+   197   2935             volvo           15985      ohc                 1.00
+   198   3042             volvo           16515      ohc                 1.00
+   199   3045             volvo           18420      ohc                 1.00
+
+
+                                 CLASS = 2 (continued) 
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+   200   3157             volvo           18950      ohc                 1.00
+   201   2952             volvo           16845      ohc                 1.00
+   202   3049             volvo           19045      ohc                 1.00
+   203   3012             volvo           21485      ohcv                1.00
+   205   3062             volvo           22625      ohc                 1.00
+
+
+                                 CLASS = 3  
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+     1   2548             alfa-romero     13495      dohc                1.00
+     2   2548             alfa-romero     16500      dohc                1.00
+     3   2823             alfa-romero     16500      ohcv                1.00
+    30   2811             dodge           12964      ohc                 1.00
+    47   2734             isuzu           11048      ohc                 1.00
+    56   2380             mazda           10945      rotor               1.00
+    57   2380             mazda           11845      rotor               1.00
+    58   2385             mazda           13645      rotor               1.00
+    59   2500             mazda           15645      rotor               1.00
+    83   2833             mitsubishi      12629      ohc                 1.00
+    84   2921             mitsubishi      14869      ohc                 1.00
+    85   2926             mitsubishi      14489      ohc                 1.00
+   105   3071             nissan          17199      ohcv                1.00
+   106   3139             nissan          19699      ohcv                1.00
+   107   3139             nissan          18399      ohcv                1.00
+   125   2818             plymouth        12764      ohc                 1.00
+   126   2778             porsche         22018      ohc                 1.00
+   127   2756             porsche         32528      ohcf                1.00
+   128   2756             porsche         34028      ohcf                1.00
+   129   2800             porsche         37028      ohcf                1.00
+   130   3366             porsche         ?          dohcv               1.00
+   131   2579             renault         9295       ohc                 1.00
+   132   2460             renault         9895       ohc                 1.00
+   135   2707             saab            15040      ohc                 1.00
+   167   2300             toyota          9538       dohc                0.62
+                                                                     1   0.38
+   168   2540             toyota          8449       ohc                 1.00
+   169   2536             toyota          9639       ohc                 1.00
+   170   2551             toyota          9989       ohc                 1.00
+   171   2679             toyota          11199      ohc                 1.00
+   172   2714             toyota          11549      ohc                 1.00
+   173   2975             toyota          17669      ohc                 0.99
+
+
+                                 CLASS = 4  
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+     4   2337             audi            13950      ohc                 1.00
+    29   2535             dodge           8921       ohc                 1.00
+    60   2385             mazda           8845       ohc                 1.00
+    61   2410             mazda           8495       ohc                 1.00
+
+
+                                 CLASS = 4 (continued) 
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+    62   2385             mazda           10595      ohc                 1.00
+    63   2410             mazda           10245      ohc                 1.00
+    64   2443             mazda           10795      ohc                 1.00
+    65   2425             mazda           11245      ohc                 1.00
+    67   2700             mazda           18344      ohc                 1.00
+   124   2535             plymouth        8921       ohc                 1.00
+   174   2326             toyota          8948       ohc                 1.00
+   175   2480             toyota          10698      ohc                 1.00
+   176   2414             toyota          9988       ohc                 1.00
+   177   2414             toyota          10898      ohc                 1.00
+   178   2458             toyota          11248      ohc                 1.00
+   193   2579             volkswagen      13845      ohc                 1.00
+   194   2563             volkswagen      12290      ohc                 1.00
+   204   3217             volvo           22470      ohc                 1.00
+
+
+                                 CLASS = 5  
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+    17   3380             bmw             41315      ohc                 1.00
+    18   3505             bmw             36880      ohc                 1.00
+    48   4066             jaguar          32250      dohc                1.00
+    49   4066             jaguar          35550      dohc                1.00
+    50   3950             jaguar          36000      ohcv                1.00
+    68   3515             mercedes-benz   25552      ohc                 1.00
+    69   3750             mercedes-benz   28248      ohc                 1.00
+    70   3495             mercedes-benz   28176      ohc                 1.00
+    71   3770             mercedes-benz   31600      ohc                 1.00
+    72   3740             mercedes-benz   34184      ohcv                1.00
+    73   3685             mercedes-benz   35056      ohcv                1.00
+    74   3900             mercedes-benz   40960      ohcv                1.00
+    75   3715             mercedes-benz   45400      ohcv                1.00
+
+
+                                 CLASS = 6  
+
+
+
+Case #   curb-weight      make            price      engine-type   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+   108   3020             peugot          11900      l                   1.00
+   109   3197             peugot          13200      l                   1.00
+   110   3230             peugot          12440      l                   1.00
+   111   3430             peugot          13860      l                   1.00
+   112   3075             peugot          15580      l                   1.00
+   113   3252             peugot          16900      l                   1.00
+   114   3285             peugot          16695      l                   1.00
+   115   3485             peugot          17075      l                   1.00
+   116   3075             peugot          16630      l                   1.00
+   117   3252             peugot          17950      l                   1.00
+   118   3130             peugot          18150      l                   1.00

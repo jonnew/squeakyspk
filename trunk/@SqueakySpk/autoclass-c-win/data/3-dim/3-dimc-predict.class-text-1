@@ -1,0 +1,46 @@
+
+
+
+      CROSS REFERENCE    CLASS => CASE NUMBER MEMBERSHIP
+
+
+      AutoClass PREDICTION for the 10 "TEST" cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/3-dim/3-dimc-predict.db2
+
+      based on the "TRAINING" classification of 100 cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/3-dim/3-dimc.db2
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/3-dim/3-dimc.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -4255.622
+      from classification results file
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/3-dim/3-dimc.results-bin
+      and using models
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/3-dim/3-dimc.model - index = 0
+
+
+
+                                 CLASS = 0  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          2     0.997            1   0.003 
+          3     0.894            1   0.106 
+          5     0.960            1   0.040 
+          8     0.891            1   0.109 
+          9     0.767            1   0.233 
+         10     0.761            1   0.239 
+
+
+                                 CLASS = 1  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          1     0.556            0   0.444 
+          4     0.979            0   0.021 
+          6     0.922            0   0.078 
+          7     0.559            0   0.441 

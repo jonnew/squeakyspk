@@ -1,0 +1,64 @@
+
+
+
+      CROSS REFERENCE    CLASS => CASE NUMBER MEMBERSHIP
+
+
+      AutoClass PREDICTION for the 10 "TEST" cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc-predict.db2
+
+      based on the "TRAINING" classification of 214 cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.db2
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-3c.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -10897.738
+      from classification results file
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glassc.results-bin
+      and using models
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/glass/glass-mnc.model - index = 0
+
+
+
+                                 CLASS = 0  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          1     1.000        
+          2     0.995            1   0.005 
+          3     1.000        
+          5     0.975            1   0.025 
+          7     0.999        
+
+
+                                 CLASS = 1  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          4     1.000        
+          8     0.998            3   0.002 
+
+
+                                 CLASS = 2  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+         10     1.000        
+
+
+                                 CLASS = 3  
+
+
+
+     Case #      Prob         (Class  Prob) (Class  Prob) (Class  Prob) (Class  Prob) 
+------------------------------------------------------------------------------------------
+
+          6     1.000        
+          9     1.000        

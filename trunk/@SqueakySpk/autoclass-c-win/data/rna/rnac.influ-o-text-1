@@ -1,0 +1,263 @@
+
+
+
+      I N F L U E N C E   V A L U E S   R E P O R T   
+       order attributes by influence values = true
+      =============================================
+
+      AutoClass CLASSIFICATION for the 68 cases in
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.db2
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -2270.933
+      from classification results file
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.results-bin
+      and using models
+        /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.model - index = 0
+
+
+
+
+ORDER OF PRESENTATION:
+
+  * Summary of the generating search.
+  * Weight ordered list of the classes found & class strength heuristic.
+  * List of class cross entropies with respect to the global class.
+  * Ordered list of attribute influence values summed over all classes.
+  * Class listings, ordered by class weight.
+
+
+
+
+
+
+
+_____________________________________________________________________________
+_____________________________________________________________________________
+
+SEARCH SUMMARY 4 tries over  1 second
+
+  _______________ SUMMARY OF 10 BEST RESULTS _________________________  ##
+  PROBABILITY  exp(-2270.933) N_CLASSES   5 FOUND ON TRY    3 *SAVED*  -1
+  PROBABILITY  exp(-2297.160) N_CLASSES   7 FOUND ON TRY    4 *SAVED*  -2
+  PROBABILITY  exp(-2317.474) N_CLASSES   3 FOUND ON TRY    2
+  PROBABILITY  exp(-2350.139) N_CLASSES   2 FOUND ON TRY    1
+
+
+   ## - report filenames suffix
+_____________________________________________________________________________
+_____________________________________________________________________________
+
+
+CLASSIFICATION HAS 5 POPULATED CLASSES   (max global influence value = 2.463) 
+
+  We give below a heuristic measure of class strength: the approximate
+  geometric mean probability for instances belonging to each class,
+  computed from the class parameters and statistics.  This approximates
+  the contribution made, by any one instance "belonging" to the class,
+  to the log probability of the data set w.r.t. the classification.  It
+  thus provides a heuristic measure of how strongly each class predicts
+  "its" instances.
+
+   Class     Log of class       Relative         Class     Normalized
+    num        strength       class strength     weight    class weight
+
+     0        -3.17e+01          1.09e-02          22         0.320
+     1        -2.72e+01          1.00e+00          20         0.292
+     2        -3.19e+01          8.82e-03          11         0.162
+     3        -3.27e+01          3.85e-03           8         0.117
+     4        -3.82e+01          1.63e-05           7         0.109
+
+
+CLASS DIVERGENCES
+
+  The class divergence, or cross entropy w.r.t. the single class
+  classification, is a measure of how strongly the class probability
+  distribution  function differs from that of the database as a whole. 
+  It is zero for identical distributions, going infinite when two
+  discrete distributions place probability 1 on differing values of the
+  same attribute.
+
+   Class       class cross entropy       Class     Normalized
+    num        w.r.t. global class       weight    class weight
+
+     0               4.25e+00              22         0.320
+     1               7.14e+00              20         0.292
+     2               5.38e+00              11         0.162
+     3               7.24e+00               8         0.117
+     4               2.01e+00               7         0.109
+
+ORDERED LIST OF NORMALIZED ATTRIBUTE INFLUENCE VALUES SUMMED OVER ALL CLASSES
+
+  This gives a rough heuristic measure of relative influence of each
+  attribute in differentiating the classes from the overall data set.
+  Note that "influence values" are only computable with respect to the
+  model terms.  When multiple attributes are modeled by a single
+  dependent term (e.g. multi_normal_cn), the term influence value is
+  distributed equally over the modeled attributes.
+
+   num                        description                          I-*k 
+
+   010  Log x(v)                                                   1.000
+   009  Log z(p)                                                   0.883
+   012  Log z(v)                                                   0.817
+   007  Log x(p)                                                   0.669
+   011  Log y(v)                                                   0.513
+   008  Log y(p)                                                   0.438
+   000  numero                                                     -----
+   001  x(p)                                                       -----
+   002  y(p)                                                       -----
+   003  z(p)                                                       -----
+   004  x(v)                                                       -----
+   005  y(v)                                                       -----
+   006  z(v)                                                       -----
+
+CLASS LISTINGS:
+
+  These listings are ordered by class weight --
+    * j is the zero-based class index,
+    * k is the zero-based attribute index, and
+    * l is the zero-based discrete attribute instance index.
+
+  Within each class, the covariant and independent model terms are ordered
+  by their term influence value I-jk.
+
+  Covariant attributes and discrete attribute instance values are both
+  ordered by their significance value.  Significance values are computed
+  with respect to a single class classification, using the divergence from
+  it, abs( log( Prob-jkl / Prob-*kl)), for discrete attributes and the
+  relative separation from it, abs( Mean-jk - Mean-*k) / StDev-jk, for
+  numerical valued attributes.  For the SNcm model, the value line is
+  followed by the probabilities that the value is known, for that class
+  and for the single class classification.
+
+  Entries are attribute type dependent, and the corresponding headers are
+  reproduced with each class.  In these --
+    * num/t denotes model term number,
+    * num/a denotes attribute number,
+    * t     denotes attribute type,
+    * mtt   denotes model term type, and
+    * I-jk  denotes the term influence value for attribute k
+            in class j.  This is the cross entropy or
+            Kullback-Leibler distance between the class and
+            full database probability distributions (see
+            interpretation-c.text).
+    * Mean  StDev
+      -jk   -jk    The estimated mean and standard deviation
+                   for attribute k in class j.
+    * |Mean-jk -   The absolute difference between the
+       Mean-*k|/   two means, scaled w.r.t. the class
+       StDev-jk    standard deviation, to get a measure
+                   of the distance between the attribute
+                   means in the class and full data.
+    * Mean  StDev  The estimated mean and standard
+      -*k   -*k    deviation for attribute k when the
+                   model is applied to the data set
+                   as a whole.
+    * Prob-jk is known  1.00e+00   Prob-*k is  known  9.98e-01
+            The SNcm model allows for the possibility that data
+            values are unknown, and models this with a discrete
+            known/unknown probability.  The gaussian normal for
+            known values is then conditional on the known
+            probability.   In this instance, we have a class
+            where all values are known, as opposed to a database
+            where only 99.8% of values are known.
+
+
+CLASS  0 - weight  22   normalized weight 0.320   relative strength  1.09e-02 *******
+                            class cross entropy w.r.t. global class  4.25e+00 *******
+
+   Model file:   /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (single_normal_cn SNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+05 12 R SNcn  Log z(v) ...........  1.404 ( 4.99e-01  1.61e-01)  2.90e+00 ( 3.22e-02  9.41e-01)
+01 08 R SNcn  Log y(p) ...........  1.007 ( 1.89e+00  3.48e-01)  2.51e+00 ( 1.02e+00  1.06e+00)
+03 10 R SNcn  Log x(v) ...........  0.894 ( 1.87e-01  2.82e-01)  1.18e+00 (-1.45e-01  1.04e+00)
+02 09 R SNcn  Log z(p) ...........  0.549 ( 7.19e-01  4.27e-01)  1.41e+00 ( 1.32e+00  7.80e-01)
+04 11 R SNcn  Log y(v) ...........  0.360 (-5.84e-01  8.89e-01)  5.72e-01 (-7.54e-02  6.83e-01)
+00 07 R SNcn  Log x(p) ...........  0.038 ( 1.81e+00  5.16e-01)  2.67e-01 ( 1.95e+00  5.68e-01)
+
+
+CLASS  1 - weight  20   normalized weight 0.292   relative strength  1.00e+00 *******
+                            class cross entropy w.r.t. global class  7.14e+00 *******
+
+   Model file:   /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (single_normal_cn SNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+05 12 R SNcn  Log z(v) ...........  2.345 ( 6.08e-01  6.61e-02)  8.71e+00 ( 3.22e-02  9.41e-01)
+04 11 R SNcn  Log y(v) ...........  1.288 ( 2.80e-01  1.33e-01)  2.67e+00 (-7.54e-02  6.83e-01)
+00 07 R SNcn  Log x(p) ...........  1.214 ( 2.18e+00  1.13e-01)  2.04e+00 ( 1.95e+00  5.68e-01)
+03 10 R SNcn  Log x(v) ...........  1.039 ( 1.78e-01  2.41e-01)  1.34e+00 (-1.45e-01  1.04e+00)
+02 09 R SNcn  Log z(p) ...........  0.685 ( 1.37e+00  2.52e-01)  1.83e-01 ( 1.32e+00  7.80e-01)
+01 08 R SNcn  Log y(p) ...........  0.569 ( 3.26e-01  5.04e-01)  1.37e+00 ( 1.02e+00  1.06e+00)
+
+
+CLASS  2 - weight  11   normalized weight 0.162   relative strength  8.82e-03 *******
+                            class cross entropy w.r.t. global class  5.38e+00 *******
+
+   Model file:   /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (single_normal_cn SNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+03 10 R SNcn  Log x(v) ...........  1.882 ( 4.28e-01  1.13e-01)  5.08e+00 (-1.45e-01  1.04e+00)
+04 11 R SNcn  Log y(v) ...........  1.001 ( 3.19e-01  1.87e-01)  2.11e+00 (-7.54e-02  6.83e-01)
+02 09 R SNcn  Log z(p) ...........  0.956 ( 1.99e+00  2.79e-01)  2.39e+00 ( 1.32e+00  7.80e-01)
+05 12 R SNcn  Log z(v) ...........  0.707 (-1.08e+00  9.91e-01)  1.13e+00 ( 3.22e-02  9.41e-01)
+01 08 R SNcn  Log y(p) ...........  0.493 (-3.35e-02  1.02e+00)  1.03e+00 ( 1.02e+00  1.06e+00)
+00 07 R SNcn  Log x(p) ...........  0.340 ( 1.81e+00  2.87e-01)  4.79e-01 ( 1.95e+00  5.68e-01)
+
+
+CLASS  3 - weight   8   normalized weight 0.117   relative strength  3.85e-03 *******
+                            class cross entropy w.r.t. global class  7.24e+00 *******
+
+   Model file:   /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (single_normal_cn SNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+02 09 R SNcn  Log z(p) ...........  2.463 ( 2.05e+00  6.28e-02)  1.17e+01 ( 1.32e+00  7.80e-01)
+03 10 R SNcn  Log x(v) ...........  2.097 (-2.18e+00  1.53e+00)  1.34e+00 (-1.45e-01  1.04e+00)
+00 07 R SNcn  Log x(p) ...........  1.478 ( 2.47e+00  1.22e-01)  4.25e+00 ( 1.95e+00  5.68e-01)
+01 08 R SNcn  Log y(p) ...........  0.551 ( 1.72e+00  5.21e-01)  1.35e+00 ( 1.02e+00  1.06e+00)
+05 12 R SNcn  Log z(v) ...........  0.359 (-7.12e-01  1.15e+00)  6.49e-01 ( 3.22e-02  9.41e-01)
+04 11 R SNcn  Log y(v) ...........  0.295 (-2.54e-01  3.70e-01)  4.84e-01 (-7.54e-02  6.83e-01)
+
+
+CLASS  4 - weight   7   normalized weight 0.109   relative strength  1.63e-05 *******
+                            class cross entropy w.r.t. global class  2.01e+00 *******
+
+   Model file:   /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.model  -  index = 0 
+   Numbers: numb/t = model term number; numb/a = attribute number 
+   Model term types (mtt): (single_normal_cn SNcn)
+
+
+REAL ATTRIBUTE  (t = R)                                        |Mean-jk -
+ numb t mtt   description           I-jk      Mean     StDev    Mean-*k|/     Mean      StDev
+ t  a                                         -jk      -jk       StDev-jk     -*k       -*k
+
+00 07 R SNcn  Log x(p) ...........  0.957 ( 1.41e+00  1.01e+00)  5.39e-01 ( 1.95e+00  5.68e-01)
+02 09 R SNcn  Log z(p) ...........  0.667 ( 1.19e+00  1.48e+00)  8.99e-02 ( 1.32e+00  7.80e-01)
+04 11 R SNcn  Log y(v) ...........  0.144 ( 8.43e-02  4.65e-01)  3.43e-01 (-7.54e-02  6.83e-01)
+03 10 R SNcn  Log x(v) ...........  0.112 (-5.62e-01  8.64e-01)  4.83e-01 (-1.45e-01  1.04e+00)
+05 12 R SNcn  Log z(v) ...........  0.108 (-3.45e-01  7.87e-01)  4.79e-01 ( 3.22e-02  9.41e-01)
+01 08 R SNcn  Log y(p) ...........  0.018 ( 1.13e+00  1.18e+00)  9.65e-02 ( 1.02e+00  1.06e+00)

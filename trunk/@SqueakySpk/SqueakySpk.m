@@ -10,7 +10,7 @@ classdef SqueakySpk < handle
     %     2. Basic Cleaning
     %         a. HardThreshold
     %         b. PassOver
-    %         c.
+    %         c. RemoveChan
     %     3. Spike Sorting
     %         a. WaveClus
     %     4. Advanced Cleaning
@@ -88,6 +88,7 @@ classdef SqueakySpk < handle
             tmp = ((max(SS.waveform) - min(SS.waveform)) < threshold);
             SS.clean = SS.clean&(tmp');
         end
+        
         function RemoveSpkWithBlank(SS)
             % REMOVESPKWITHBLANK Removes all 'spikes' that have more that have 5 or more
             % voltage values in their waveform below 0.01 uV inidcating that a
@@ -98,13 +99,32 @@ classdef SqueakySpk < handle
             SS.clean = SS.clean&(tmp');
         end
         
+        function RemoveChannel(SS,channeltoremove)
+            % REMOVECHANNELS removes channels that the experimenter knows
+            % apriori are bad for some reason. channelstoremove is a
+            % 1-based, linearly indexed set of channel numbers to be 
+            % removed from the data. The default channels to remove are [1
+            % 8 33 58 64] corresponding to the four unconnected channels
+            % and the ground on a standard MCS MEA.
+            if nargin < 2 || isempty(channelstoremove)
+                channeltoremove = [1 8 33 58 64];
+            end
+           
+            tmp = ones(size(SS.channel));
+            for k = channeltoremove
+               tmp = tmp&(SS.channel~=k);
+            end
+            SS.clean = SS.clean&(tmp);
+        end
+        
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
         WaveClus(SS,minspk)
         % WAVECLUS ported version of Rodrigo Quian Quiroga's wave-clus
-        % combined wavelet/superparamagnetic clustering algorithm. One
-        % optional argument, maxclusters, determines the maximal number of
-        % units allowed per channel. This method is contained in a separate
-        % file.
+        % combined wavelet/superparamagnetic clustering algorithm. maxclusters 
+        % determines the maximal number of units allowed per channel.
+        % minspk sets the minimal number of spikes within a cluster for the
+        % user to accept that data a legitimate unit. This method is contained
+        % in a separate file.
         
         %% BLOCK 4: ADVANCED CLEANING METHODS (methods that alter the'clean' array, but have dependences on overloaded input properties)
         

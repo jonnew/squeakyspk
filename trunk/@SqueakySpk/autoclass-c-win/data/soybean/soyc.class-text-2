@@ -1,0 +1,118 @@
+
+
+
+      CROSS REFERENCE: CLASS => CASE NUMBER MEMBERSHIP
+
+
+      AutoClass CLASSIFICATION for the 47 cases in:
+        /home/copernicus/id2/taylor/autoclass-c/data/soybean/soyc.db2
+        /home/copernicus/id2/taylor/autoclass-c/data/soybean/soyc.hd2
+      with log-A<X/H> (approximate marginal likelihood) = -660.007
+      from classification results file:
+        /home/copernicus/id2/taylor/autoclass-c/data/soybean/soyc.results-bin
+      and using models: 
+        /home/copernicus/id2/taylor/autoclass-c/data/soybean/soyc.model - index = 0
+
+
+
+                                 CLASS = 0  
+
+
+
+Case #   diagnosis               time of occurance   plant stand   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+     1   Diaporthe_Stem_Canker   5                   1                   1.00
+     2   Diaporthe_Stem_Canker   6                   1                   1.00
+     3   Diaporthe_Stem_Canker   4                   1                   1.00
+     4   Diaporthe_Stem_Canker   7                   1                   1.00
+     5   Diaporthe_Stem_Canker   5                   1                   1.00
+     6   Diaporthe_Stem_Canker   6                   1                   1.00
+     7   Diaporthe_Stem_Canker   4                   1                   1.00
+     8   Diaporthe_Stem_Canker   4                   1                   1.00
+     9   Diaporthe_Stem_Canker   7                   1                   1.00
+    10   Diaporthe_Stem_Canker   7                   1                   1.00
+
+
+                                 CLASS = 1  
+
+
+
+Case #   diagnosis               time of occurance   plant stand   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+    11   Charcoal_Rot            7                   1                   1.00
+    12   Charcoal_Rot            5                   1                   1.00
+    13   Charcoal_Rot            6                   1                   1.00
+    14   Charcoal_Rot            7                   1                   1.00
+    15   Charcoal_Rot            4                   1                   1.00
+    16   Charcoal_Rot            5                   1                   1.00
+    17   Charcoal_Rot            4                   1                   1.00
+    18   Charcoal_Rot            6                   1                   1.00
+    19   Charcoal_Rot            7                   1                   1.00
+    20   Charcoal_Rot            6                   1                   1.00
+
+
+                                 CLASS = 2  
+
+
+
+Case #   diagnosis               time of occurance   plant stand   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+    21   Rhizoctonia_Root_Rot    1                   2                   1.00
+    22   Rhizoctonia_Root_Rot    3                   2                   1.00
+    23   Rhizoctonia_Root_Rot    3                   2                   1.00
+    24   Rhizoctonia_Root_Rot    1                   2                   1.00
+    25   Rhizoctonia_Root_Rot    1                   2                   1.00
+
+
+                                 CLASS = 2 (continued) 
+
+
+
+Case #   diagnosis               time of occurance   plant stand   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+    26   Rhizoctonia_Root_Rot    5                   1                   1.00
+    27   Rhizoctonia_Root_Rot    3                   2                   1.00
+    28   Rhizoctonia_Root_Rot    1                   2                   1.00
+    29   Rhizoctonia_Root_Rot    4                   1                   1.00
+    30   Rhizoctonia_Root_Rot    1                   2                   1.00
+
+
+                                 CLASS = 3  
+
+
+
+Case #   diagnosis               time of occurance   plant stand   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+    31   Phytophthora_Rot        3                   2                   0.99
+                                                                     4   0.01
+    32   Phytophthora_Rot        1                   2                   1.00
+    34   Phytophthora_Rot        3                   2                   1.00
+    37   Phytophthora_Rot        1                   2                   1.00
+    38   Phytophthora_Rot        3                   2                   1.00
+    41   Phytophthora_Rot        1                   2                   1.00
+    42   Phytophthora_Rot        2                   2                   1.00
+    45   Phytophthora_Rot        3                   2                   1.00
+    46   Phytophthora_Rot        1                   2                   0.99
+    47   Phytophthora_Rot        1                   2                   1.00
+
+
+                                 CLASS = 4  
+
+
+
+Case #   diagnosis               time of occurance   plant stand   (Cls  Prob)
+------------------------------------------------------------------------------------------
+
+    33   Phytophthora_Rot        4                   2                   1.00
+    35   Phytophthora_Rot        2                   2                   0.99
+                                                                     3   0.01
+    36   Phytophthora_Rot        2                   2                   1.00
+    39   Phytophthora_Rot        4                   2                   1.00
+    40   Phytophthora_Rot        4                   2                   1.00
+    43   Phytophthora_Rot        2                   2                   1.00
+    44   Phytophthora_Rot        2                   2                   1.00

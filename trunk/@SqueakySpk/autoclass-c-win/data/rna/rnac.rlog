@@ -1,0 +1,700 @@
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 14:49:06 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 14:49:06 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 15:23:11 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 15:29:32 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 15:30:44 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 15:31:03 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 15:33:35 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 15:33:35 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 15:34:44 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 15:34:44 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 15:50:01 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 15:58:32 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:16:59 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:18:09 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:24:16 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:26:47 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:30:45 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:33:29 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:34:20 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 16:34:21 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:40:30 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:41:18 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 16:41:19 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:46:19 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 16:46:19 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:47:04 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:56:04 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 16:59:43 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 16:59:43 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 17:02:51 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 17:02:51 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 17:06:00 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 17:06:00 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 17:16:29 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 17:16:29 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 17:17:44 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 17:21:47 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 17:22:53 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu May 31 17:22:53 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 17:25:27 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu May 31 17:28:57 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Tue Jun  5 17:16:56 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Tue Jun  5 17:24:32 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Tue Jun  5 17:26:28 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Tue Jun  5 17:38:59 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Tue Jun  5 17:38:59 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Wed Jun  6 17:58:43 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Wed Jun  6 17:58:43 2001 
+
+
+
+AUTOCLASS C (version 3.3.4unx) STARTING at Thu Jun  7 11:27:30 2001 
+
+AUTOCLASS -REPORTS default parameters:
+n_clsfs=1; clsf_n_list=(); report_type="all"; report_mode="text"; comment_data_headers_p=false; num_atts_to_list=999; xref_class_report_att_list=(); order_attributes_by_influence_p=true; break_on_warnings_p=true; free_storage_p=true; max_num_xref_class_probs=5; sigma_contours_att_list=()
+
+USER supplied parameters which override the defaults:
+None.
+
+ADVISORY[2]: read 7 attribute defs from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.hd2
+ADVISORY[1]: read 68 datum from 
+             /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.db2
+ADVISORY: loaded 2 classifications from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.results-bin
+ADVISORY: read 4 search trials from 
+          /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.search
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.influ-o-text-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.case-text-1
+
+File written: /home/wtaylor/AC/3.3.4/autoclass-c/data/rna/rnac.class-text-1
+
+
+AUTOCLASS C (version 3.3.4unx) STOPPING at Thu Jun  7 11:27:30 2001 
+

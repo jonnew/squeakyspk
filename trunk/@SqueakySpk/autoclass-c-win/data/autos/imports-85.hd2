@@ -1,0 +1,52 @@
+!#; AutoClass C header file -- extension .hd2
+!#; the following chars in column 1 make the line a comment:
+!#; '!', '#', ';', ' ', and '\n' (empty line)
+
+;   -- Creator/Donor: Jeffrey C. Schlimmer (Jeffrey.Schlimmer@a.gp.cs.cmu.edu)
+;   -- Date: 19 May 1987
+;   -- Sources:
+;     1) 1985 Model Import Car and Truck Specifications, 1985 Ward's
+;        Automotive Yearbook.
+;     2) Personal Auto Manuals, Insurance Services Office, 160 Water
+;        Street, New York, NY 10038 
+;     3) Insurance Collision Report, Insurance Institute for Highway
+;        Safety, Watergate 600, Washington, DC 20037
+
+
+;#! num_db2_format_defs <num of def lines -- min 1, max 4>
+num_db2_format_defs 2
+;; required
+number_of_attributes 26
+;; optional - default values are specified 
+;; separator_char  ' '
+;; comment_char    ';'
+;; unknown_token   '?'
+separator_char  ','
+
+;; <zero-based att#>  <att_type>  <att_sub_type>  <att_description>  <att_param_pairs>
+0 discrete nominal "symboling" range 7 
+1 real scalar "normalized-loses" zero_point 0.0 rel_error 0.01 
+2 discrete nominal "make" range 22
+3 discrete nominal "fuel-type" range 2
+4 discrete nominal "aspiration" range 2
+5 discrete nominal "num-of-doors" range 2
+6 discrete nominal "body-style" range 5
+7 discrete nominal "drive-wheels" range 3
+8 discrete nominal "engine-location" range 2
+9 real scalar "wheel-base" zero_point 0.0 rel_error 0.001
+10 real scalar "length" zero_point 0.0 rel_error 0.001
+11 real scalar "width" zero_point 0.0 rel_error 0.001
+12 real scalar "height" zero_point 0.0 rel_error 0.001
+13 real scalar "curb-weight" zero_point 0.0 rel_error 0.0002
+14 discrete nominal "engine-type" range 7
+15 discrete nominal "num-of-cylinders" range 7
+16 real scalar "engine-size" zero_point 0.0 rel_error 0.01
+17 discrete nominal "fuel-system" range 8
+18 real scalar "bore" zero_point 0.0 rel_error 0.003
+19 real scalar "stroke" zero_point 0.0 rel_error 0.003
+20 real scalar "compression-ratio" zero_point 0.0 rel_error 0.003
+21 real scalar "horse-power" zero_point 0.0 rel_error 0.01
+22 real scalar "peak-rpm" zero_point 0.0 rel_error 0.02
+23 real scalar "city-mpg" zero_point 0.0 rel_error 0.04
+24 real scalar "highway-mpg" zero_point 0.0 rel_error 0.04
+25 real scalar "price" zero_point 0.0 rel_error 0.001
