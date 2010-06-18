@@ -48,9 +48,9 @@ classdef SqueakySpk < handle
             %constructor using only the spike construct (ie, the data to be
             %cleaned)
             SS.clean = true(length(spike.time),1);
-            SS.time = spike.time;
-            SS.channel = spike.channel;
-            SS.waveform = (spike.waveform).*1000; % Assumes data is provided in mV [is this true?];
+            [SS.time ind] = sort(spike.time); % Make sure incoming data
+            SS.channel = spike.channel(ind);
+            SS.waveform = (spike.waveform(:,ind)).*1000; % Assumes data is provided in mV [is this true?];
             SS.unit = [];
             
             % Load stimulus information
@@ -69,10 +69,10 @@ classdef SqueakySpk < handle
                 SS.sp_waveform = [];
                 SS.sp_unit = [];
             else
-                SS.sp_time = spontaneous.time;
-                SS.sp_channel = spontaneous.channel;
-                SS.sp_waveform = spontaneous.waveform*1000;
-                SS.sp_unit = zeros(length(spontaneous.time),1);
+                [SS.sp_time ind] = sort(spontaneous.time);
+                SS.sp_channel = spontaneous.channel(ind);
+                SS.sp_waveform = (spontaneous.waveform(:,ind))*1000;
+                SS.sp_unit = [];
             end % END CONSTRUCTOR
             
         end

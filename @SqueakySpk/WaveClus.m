@@ -36,31 +36,26 @@ end
 
 % ERROR - SOMETHING WRONG WITH MANIPULATION OF DATA INDICIES OR CLEAN
 % ARRAY. SPIKES THAT SHOULD NOT BE CLEANED ARE GETTING CLEANED.
-time = SS.time;%(SS.clean);
-channel = SS.channel;%(SS.clean);
-waveform = SS.waveform;%(:,SS.clean);
+time = SS.time(SS.clean);
+channel = SS.channel(SS.clean);
+waveform = SS.waveform(:,SS.clean);
 uniquechan = unique(channel);
 
 [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
 clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
 finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
 
-
-    SS.time = finresult.time;
-    SS.channel = finresult.channel;
-    SS.waveform = finresult.waveform;
-    SS.unit = finresult.unit;
-    SS.avgwaveform = finresult.meanwave;
-
 % Add dirty data back, but with the 0 unit specification
-% [SS.time tempindex] = sort([finresult.time;SS.time(~SS.clean)]);
-% channel = [finresult.channel;SS.channel(~SS.clean)];
-% SS.channel = channel(tempindex);
-% waveform = [finresult.waveform SS.waveform(:,~SS.clean)];
-% SS.waveform = waveform(:,tempindex);
-% unit = [finresult.unit;zeros(sum(~SS.clean),1)];
-% SS.unit = unit(tempindex);
-% SS.avgwaveform = finresult.meanwave;
+[SS.time tempindex] = sort([finresult.time;SS.time(~SS.clean)]);
+channel = [finresult.channel;SS.channel(~SS.clean)];
+SS.channel = channel(tempindex);
+waveform = [finresult.waveform SS.waveform(:,~SS.clean)];
+SS.waveform = waveform(:,tempindex);
+unit = [finresult.unit;zeros(sum(~SS.clean),1)];
+SS.unit = unit(tempindex);
+clean = [ones(size(finresult.time));zeros(size(SS.time(~SS.clean)))];
+SS.clean = clean(tempindex);
+SS.avgwaveform = finresult.meanwave;
 
 % Waveclus for spontaneous data
 if ~isempty(SS.sp_time)
@@ -73,10 +68,10 @@ if ~isempty(SS.sp_time)
     clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
     finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
     
-    SS.sp_time = finresult.time;
-    SS.sp_channel = finresult.channel;
-    SS.sp_waveform = finresult.waveform;
-    SS.sp_unit = finresult.unit;
+    [SS.sp_time tempindex] = sort(finresult.time);
+    SS.sp_channel = finresult.channel(tempindex);
+    SS.sp_waveform = finresult.waveform(:,tempindex);
+    SS.sp_unit = finresult.unit(tempindex);
     SS.sp_avgwaveform = finresult.meanwave;
 end
 
@@ -385,10 +380,10 @@ end
             features_name = handles.par.features;
             toc
             
-            if print2paper==1;
+            if print2paper == 1;
                 print
             end
-            if print2file ==1;
+            if print2file == 1;
                 set(gcf,'papertype','usletter','paperorientation','portrait','paperunits','inches')
                 set(gcf,'paperposition',[.25 .25 10.5 7.8])
                 eval(['print -djpeg fig2print_' char(file_to_cluster)]);
@@ -401,7 +396,7 @@ end
             clusterresults.(genvarname(file_to_cluster{1})).class = cluster;
             clusterresults.(genvarname(file_to_cluster{1})).waveform = spikes;
             clusterresults.(genvarname(file_to_cluster{1})).meanwave = meanwave;
-            
+
         end
         
         
@@ -436,16 +431,16 @@ end
                     if k == 0 % unsorted case
                         indclus = sortdata.class(:,1) == k;
                         spiketime = [spiketime; sortdata.class(indclus,2)./1000]; % convert back to seconds
-                        spikechannel = [spikechannel;chan*ones(size(indclus))];
+                        spikechannel = [spikechannel;chan*ones(sum(indclus),1)];
                         spikewave = [spikewave sortdata.waveform(indclus,:)'];
-                        unitID = [unitID;zeros(size(indclus))];
+                        unitID = [unitID;zeros(sum(indclus),1)];
                     else % sorted units
                         indclus = sortdata.class(:,1) == k;
                         spiketime = [spiketime; sortdata.class(indclus,2)./1000]; % convert back to seconds
-                        spikechannel = [spikechannel;chan*ones(size(indclus))];
+                        spikechannel = [spikechannel;chan*ones(sum(indclus),1)];
                         spikewave = [spikewave sortdata.waveform(indclus,:)'];
-                        unitID = [unitID;currunit*ones(size(indclus))];
-                        meanwave = [meanwave sortdata.meanwave];
+                        unitID = [unitID; currunit*ones(sum(indclus),1)];
+                        meanwave = [meanwave sortdata.meanwave(:,k)];
                         currunit = currunit+1;
                     end
                 end
@@ -461,10 +456,10 @@ end
         
         result = {};
         
-        [result.time temporalind] = sort(spiketime);
-        result.channel = spikechannel(temporalind);
-        result.waveform = spikewave(:,temporalind);
-        result.unit = unitID(temporalind);
+        result.time = spiketime;
+        result.channel = spikechannel;
+        result.waveform = spikewave;
+        result.unit = unitID;
         result.meanwave = meanwave;
         
     end

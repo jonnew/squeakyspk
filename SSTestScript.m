@@ -1,10 +1,10 @@
 % Load data into data structs
-spkdat = loadspike('20100604_16269_spont.spk');
+spkdat = loadspike('20100604_16269_stim.spk');
 stimdat = loadstim('20100604_16269_stim.stim');
 spontdat = loadspike('20100604_16269_spont.spk');
 
 % Instantiate a SqueakySpk Object
-SStest = SqueakySpk(spkdat,stimdat,spontdat);
+SStest = SqueakySpk(spkdat);
 
 % Remove meaningless channels
 SStest.RemoveChannel();
@@ -23,4 +23,6 @@ SStest.RemoveUnit(0); % remove unsorted data
 % SStest.BioFilt();
 
 % Examime some data to make sure results of sorting and cleaning look good
-SStest.RasterWave_Comp([200 250],'both');
+SStest.RasterWave_Comp([200 210],'both');
+SStest.RasterWave_Comp([200 210],'clean');
+SStest.RasterWave_Comp([200 210],'dirty');
