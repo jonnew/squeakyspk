@@ -68,5 +68,7 @@ for i = 1:max(SS.sp_channel)
     
 end
 
+SS.methodlog = [SS.methodlog '<BioFilt>'];
+
 end
 

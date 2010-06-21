@@ -20,6 +20,9 @@ classdef SqueakySpk < handle
         
     properties (SetAccess = private)
         
+        % Data name
+        name; % String that names the data object
+        
         % properties of data that you are cleaning [MAIN DATA]
         clean = true(length(spike.time),1); % [N BOOL (clean?, spike index)]
         time; % [N DOUBLE (sec, spike index)]
@@ -38,12 +41,18 @@ classdef SqueakySpk < handle
         sp_waveform; % [M DOUBLE x N INT ([uV], spike index)]
         sp_unit; % [N INT (unit #, spike index)]
         sp_avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
+        
+        % Methods log
+        methodlog; % string array that keeps track of the methods run on the SS object
     end
     
     methods
         
         %% BLOCK 1: CONSTRUCTOR
-        function SS = SqueakySpk(spike,stimulus,spontaneous)
+        function SS = SqueakySpk(name,spike,stimulus,spontaneous)
+            
+            % String with name of data
+            SS.name = name; 
             
             %constructor using only the spike construct (ie, the data to be
             %cleaned)
@@ -52,9 +61,10 @@ classdef SqueakySpk < handle
             SS.channel = spike.channel(ind);
             SS.waveform = (spike.waveform(:,ind)).*1000; % Assumes data is provided in mV [is this true?];
             SS.unit = [];
+            SS.methodlog = [];
             
             % Load stimulus information
-            if nargin < 2 || isempty (stimulus)
+            if nargin < 3 || isempty (stimulus)
                 SS.st_time = [];
                 SS.st_channel = [];
             else
@@ -63,7 +73,7 @@ classdef SqueakySpk < handle
             end
             
             % Load spontaneous data
-            if nargin < 3 || isempty (spontaneous)
+            if nargin < 4 || isempty (spontaneous)
                 SS.sp_time = [];
                 SS.sp_channel = [];
                 SS.sp_waveform = [];
@@ -91,6 +101,7 @@ classdef SqueakySpk < handle
             
             tmp = ((max(SS.waveform) - min(SS.waveform)) < threshold);
             SS.clean = SS.clean&(tmp');
+            SS.methodlog = [SS.methodlog '<HardThreshold>'];
         end
         function RemoveSpkWithBlank(SS)
             % REMOVESPKWITHBLANK(SS) Removes all 'spikes' that have more that have 5 or more
@@ -101,6 +112,7 @@ classdef SqueakySpk < handle
             
             tmp = (sum(abs(SS.waveform) <= 0.1,1) >= 5);
             SS.clean = SS.clean&(~tmp');
+            SS.methodlog = [SS.methodlog '<RemoveSpkWithBlank>'];
         end
         function RemoveChannel(SS,channel2remove)
             % REMOVECHANNELS(SS,channel2remove) removes data collected on
@@ -118,6 +130,7 @@ classdef SqueakySpk < handle
            
             tmp = ismember(SS.channel,channel2remove);
             SS.clean = SS.clean&(~tmp);
+            SS.methodlog = [SS.methodlog;'<RemoveChannel>'];
         end
         function RemoveUnit(SS,unit2remove)
             % REMOVEUNIT(unit2remove) removes all a spikes with ID in the 
@@ -134,6 +147,7 @@ classdef SqueakySpk < handle
             
             tmp = ismember(SS.unit,unit2remove);
             SS.clean = SS.clean&(~tmp);
+            SS.methodlog = [SS.methodlog '<RemoveUnit>'];
         end
         function MitraClean(SS)
             % MITRA CLEAN(SS) removes all spikes that have multiple peaks
@@ -202,6 +216,7 @@ classdef SqueakySpk < handle
                 SS.clean = SS.clean&true_wave;
 %                 size(SS.clean)
 %                 size(true_wave)
+            SS.methodlog = [SS.methodlog '<Mitraclean>'];
         end
    
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
@@ -217,6 +232,7 @@ classdef SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% Block 6: SONIFICATION TOOLS
+        
     end
     
 
