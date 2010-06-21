@@ -33,9 +33,6 @@ end
 
 % Waveclus for main data, only perform clustering on clean data all else is
 % not clustered!
-
-% ERROR - SOMETHING WRONG WITH MANIPULATION OF DATA INDICIES OR CLEAN
-% ARRAY. SPIKES THAT SHOULD NOT BE CLEANED ARE GETTING CLEANED.
 time = SS.time(SS.clean);
 channel = SS.channel(SS.clean);
 waveform = SS.waveform(:,SS.clean);
@@ -74,6 +71,8 @@ if ~isempty(SS.sp_time)
     SS.sp_unit = finresult.unit(tempindex);
     SS.sp_avgwaveform = finresult.meanwave;
 end
+
+SS.methodlog = [SS.methodlog '<WaveClus>'];
 
 % Functions called for clustering
     function clusterresults = Do_Clustering(channelparse,chan2anal,maxclus,minspk,plotall)
