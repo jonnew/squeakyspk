@@ -18,7 +18,10 @@ classdef SqueakySpk < handle
     %     4. Advanced Cleaning
     %         a. BioFilt
         
-    properties (SetAccess = private)
+    properties (SetAccess = public)
+        
+        % Data name
+        name; % String that names the data object
         
         % properties of data that you are cleaning [MAIN DATA]
         clean = true(length(spike.time),1); % [N BOOL (clean?, spike index)]
@@ -27,6 +30,7 @@ classdef SqueakySpk < handle
         waveform; % [M DOUBLE x N INT ([uV], spike index)]
         unit; % [N INT (unit #, spike index)]
         avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
+        asdr; % Array-wide spike detection rate vector
         
         % properties of the stimulus given while collecting the main data [STIM DATA]
         st_time; % [N DOUBLE (sec, spike index)]
@@ -46,7 +50,10 @@ classdef SqueakySpk < handle
     methods
         
         %% BLOCK 1: CONSTRUCTOR
-        function SS = SqueakySpk(spike,stimulus,spontaneous)
+        function SS = SqueakySpk(name,spike,stimulus,spontaneous)
+            
+            % String with name of data
+            SS.name = name; 
             
             %constructor using only the spike construct (ie, the data to be
             %cleaned)
@@ -55,10 +62,10 @@ classdef SqueakySpk < handle
             SS.channel = spike.channel(ind);
             SS.waveform = (spike.waveform(:,ind)).*1000; % Assumes data is provided in mV [is this true?];
             SS.unit = [];
-            SS.methodlog = {};
+            SS.methodlog = [];
             
             % Load stimulus information
-            if nargin < 2 || isempty (stimulus)
+            if nargin < 3 || isempty (stimulus)
                 SS.st_time = [];
                 SS.st_channel = [];
             else
@@ -67,7 +74,7 @@ classdef SqueakySpk < handle
             end
             
             % Load spontaneous data
-            if nargin < 3 || isempty (spontaneous)
+            if nargin < 4 || isempty (spontaneous)
                 SS.sp_time = [];
                 SS.sp_channel = [];
                 SS.sp_waveform = [];
@@ -95,7 +102,7 @@ classdef SqueakySpk < handle
             
             tmp = ((max(SS.waveform) - min(SS.waveform)) < threshold);
             SS.clean = SS.clean&(tmp');
-            SS.methodlog = [SS.methodlog;'HardThreshold'];
+            SS.methodlog = [SS.methodlog '<HardThreshold>'];
         end
         function RemoveSpkWithBlank(SS)
             % REMOVESPKWITHBLANK(SS) Removes all 'spikes' that have more that have 5 or more
@@ -106,7 +113,7 @@ classdef SqueakySpk < handle
             
             tmp = (sum(abs(SS.waveform) <= 0.1,1) >= 5);
             SS.clean = SS.clean&(~tmp');
-            SS.methodlog = {SS.methodlog 'RemoveSpkWithBlank'};
+            SS.methodlog = [SS.methodlog '<RemoveSpkWithBlank>'];
         end
         function RemoveChannel(SS,channel2remove)
             % REMOVECHANNELS(SS,channel2remove) removes data collected on
@@ -124,7 +131,7 @@ classdef SqueakySpk < handle
            
             tmp = ismember(SS.channel,channel2remove);
             SS.clean = SS.clean&(~tmp);
-            SS.methodlog = {SS.methodlog 'RemoveChannel'};
+            SS.methodlog = [SS.methodlog;'<RemoveChannel>'];
         end
         function RemoveUnit(SS,unit2remove)
             % REMOVEUNIT(unit2remove) removes all a spikes with ID in the 
@@ -141,7 +148,7 @@ classdef SqueakySpk < handle
             
             tmp = ismember(SS.unit,unit2remove);
             SS.clean = SS.clean&(~tmp);
-            SS.methodlog = {SS.methodlog 'RemoveUnit'};
+            SS.methodlog = [SS.methodlog '<RemoveUnit>'];
         end
         function MitraClean(SS)
             % MITRA CLEAN(SS) removes all spikes that have multiple peaks
@@ -210,7 +217,7 @@ classdef SqueakySpk < handle
                 SS.clean = SS.clean&true_wave;
 %                 size(SS.clean)
 %                 size(true_wave)
-            SS.methodlog = [SS.methodlog 'Mitraclean'];
+            SS.methodlog = [SS.methodlog '<Mitraclean>'];
         end
    
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
@@ -218,20 +225,49 @@ classdef SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% BLOCK 4: ADVANCED CLEANING METHODS (methods that alter the 'clean' array, but have dependences on overloaded input properties)
+        Weed
         BioFilt(SS,alpha)
+        BioFilt1(SS)
         % This method is contained in a separate file.
         
         %% BLOCK 5: VISUALIZATION TOOLS
+        function PlotAvgWaveform(SS)
+            % PLOTAVGWAVEFORM(SS) Plots the average waveforms for each
+            % unit, labeled with the unit number. This is to aid a
+            % supervised deletion of units that are actually recurring
+            % artifacts using the RemoveUnit method.
+            
+            m = ceil(sqrt(size(SS.avgwaveform,2)));
+            n = floor(sqrt(size(SS.avgwaveform,2)));
+            
+            for i = 1:size(SS.avgwaveform,2)
+               subplot(m,n,i)
+               plot(SS.avgwaveform(:,i),'LineWidth',2,'color', [0 0 0])
+               title(['Unit ' num2str(i)])
+            end
+            
+        end
+        
         RasterWave_Comp(SS, bound, what2show, Fs)
         % This method is contained in a separate file.
+        
+        %% Block 7: BASIC DATA PROCESSING TOOLS
+        function ASDR(SS,dt)
+            % ASDR(SS,dt) Array-wide spike detection rate using time window
+            % dt in seconds
+            if nargin < 2 || isempty(dt)
+                dt = 1; %seconds
+            end
+            
+            bins = 0:dt:SS.time(end);
+            SS.asdr = hist(SS.time,bins);
+            
+        end
+            
         
         %% Block 6: SONIFICATION TOOLS
         
     end
-    
 
-
-
-    
 end
 
