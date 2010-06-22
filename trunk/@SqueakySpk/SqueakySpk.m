@@ -18,7 +18,7 @@ classdef SqueakySpk < handle
     %     4. Advanced Cleaning
     %         a. BioFilt
         
-    properties (SetAccess = private)
+    properties (SetAccess = public)
         
         % Data name
         name; % String that names the data object
@@ -30,6 +30,7 @@ classdef SqueakySpk < handle
         waveform; % [M DOUBLE x N INT ([uV], spike index)]
         unit; % [N INT (unit #, spike index)]
         avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
+        asdr; % Array-wide spike detection rate vector
         
         % properties of the stimulus given while collecting the main data [STIM DATA]
         st_time; % [N DOUBLE (sec, spike index)]
@@ -224,20 +225,50 @@ classdef SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% BLOCK 4: ADVANCED CLEANING METHODS (methods that alter the 'clean' array, but have dependences on overloaded input properties)
+        WeedUnitbyWaveform(SS)
+        % This method is contained in a separate file.
         BioFilt(SS,alpha)
+        BioFilt1(SS)
         % This method is contained in a separate file.
         
         %% BLOCK 5: VISUALIZATION TOOLS
+        function PlotAvgWaveform(SS)
+            % PLOTAVGWAVEFORM(SS) Plots the average waveforms for each
+            % unit, labeled with the unit number. This is to aid a
+            % supervised deletion of units that are actually recurring
+            % artifacts using the RemoveUnit method.
+            
+            m = ceil(sqrt(size(SS.avgwaveform,2)));
+            n = floor(sqrt(size(SS.avgwaveform,2)));
+            
+            for i = 1:size(SS.avgwaveform,2)
+               subplot(m,n,i)
+               plot(SS.avgwaveform(:,i),'LineWidth',2,'color', [0 0 0])
+               title(['Unit ' num2str(i)])
+            end
+            
+        end
+        
         RasterWave_Comp(SS, bound, what2show, Fs)
         % This method is contained in a separate file.
+        
+        %% Block 7: BASIC DATA PROCESSING TOOLS
+        function ASDR(SS,dt)
+            % ASDR(SS,dt) Array-wide spike detection rate using time window
+            % dt in seconds
+            if nargin < 2 || isempty(dt)
+                dt = 1; %seconds
+            end
+            
+            bins = 0:dt:SS.time(end);
+            SS.asdr = hist(SS.time,bins);
+            
+        end
+            
         
         %% Block 6: SONIFICATION TOOLS
         
     end
-    
 
-
-
-    
 end
 
