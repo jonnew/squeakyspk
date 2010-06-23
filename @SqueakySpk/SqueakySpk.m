@@ -358,6 +358,20 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq)
         % This method is contained in a separate file.
+        
+        
+        %% Block 7: RETURN CLEAN DATA
+        function cdat = ReturnClean(SS)
+            % CDAT = RETURNCLEAN(SS) return the clean data. Returns an array
+            % of the format of the orginal main data input containing those
+            % data indicies that have survived the cleaning process.
+            
+            cdat = {};
+            cdat.ctime = SS.time(SS.clean);
+            cdat.cchanel = SS.channel(SS.clean);
+            cdat.cwaveform = SS.waveform(:,SS.clean);
+        end
+            
     end
     
 end
