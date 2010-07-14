@@ -49,7 +49,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
     %   look at the testscript and examine the help for each method by
     %   typing help methodname in the command promp.
     
-    properties (SetAccess = private)
+    properties (SetAccess = public)
         
         % Data name and parameters of recording
         name; % String that names the data object
@@ -368,7 +368,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             
             cdat = {};
             cdat.ctime = SS.time(SS.clean);
-            cdat.cchanel = SS.channel(SS.clean);
+            cdat.cchannel = SS.channel(SS.clean);
             cdat.cwaveform = SS.waveform(:,SS.clean);
         end
             
