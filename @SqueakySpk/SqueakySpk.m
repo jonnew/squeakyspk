@@ -180,12 +180,12 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             % apriori are bad for some reason. channelstoremove is a
             % 1-based, linearly indexed set of channel numbers to be
             % removed from the data. The default channels to remove are [1
-            % 8 33 58 64] corresponding to the four unconnected channels
+            % 8 33 57 64] corresponding to the four unconnected channels
             % and the ground on a standard MCS MEA.
             % Written by: JN
             
             if nargin < 2 || isempty(channel2remove)
-                channel2remove = [1 8 33 58 64];
+                channel2remove = [1 8 33 57 64];
             end
             
             
