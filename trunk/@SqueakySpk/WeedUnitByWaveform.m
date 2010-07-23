@@ -1,7 +1,11 @@
 function WeedUnitByWaveform(SS)
-% SIMPLE_GUI2 Select a data set from the pop-up menu, then
-% click one of the plot-type push buttons. Clicking the button
-% plots the selected data in the axes.
+% WEEDUNITBYWAVEFORM Supervised unit deletion by examination of average
+% voltage waveform. Input is an SS object. Requires that the SS object 
+% hase non-empty units and average waveform fields
+
+if ~isempty(SS.unit) || ~isempty(SS.avgwaveform)
+    error('You must perform spike sorting using SS.WaveClus before running this method'
+end
 
 %  Create and then hide the GUI as it is being constructed.
 f = figure('Visible','off','Position',[360,500,750,285]);
