@@ -54,6 +54,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % Data name and parameters of recording
         name; % String that names the data object
         fs;
+        recunit; % Unit that the users data is provided in as a fraction of volts (1-> volts, 0.001 -> millivolts, etc).
         
         % properties of data that you are cleaning [MAIN DATA]
         clean; % [N BOOL (clean?, spike index)]
@@ -84,16 +85,23 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
     methods
         
         %% BLOCK 1: CONSTRUCTOR
-        function SS = SqueakySpk(name,spike,fs,stimulus,spontaneous)
-            % SQUEAKYSPK SS object constructor. The first three arguments are
+        function SS = SqueakySpk(name,fs,recunit,spike,stimulus,spontaneous)
+            % SQUEAKYSPK SS object constructor. The first four arguments are
             % required. They are a name for the object that you are about
-            % to create, the sampling frequency in Hz, fs, and a data
-            % structure, spike, of the form:
+            % to create, the sampling frequency in Hz, fs, fraction of volts
+            % that the waveform data is provided in,and the data structure, spike, of the form:
             %   spike.time = [NX1] vector of spike times in seconds
             %   spike.channel = [NX1] vector of corresponding channels
             %   spike.wavefomr = [NXM] matrix of corresponding spike snip waveforms
-            if nargin < 3
-                error('You must provide (1) a name string, (2) a data struct, and (3) the sampling frequency for that data.')
+            % Addtional arguments for a stimulus data structure of the
+            % form:
+                       %   stimulus.time = [RX1] vector of spike times in seconds
+            % stimulus.channel = [RX1] vector of corresponding channels
+            % And spontanous data taken before and evoked recording,
+            % with the same fields as the spike structure.
+            
+            if nargin < 4
+                error('You must provide (1) a name string, (2) the sampling frequency, (3) units used for recording as a fraction of Volts, and (3) a spike data structure.')
             end
             
             % String with name of data
@@ -101,6 +109,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             
             % Sampling frequency
             SS.fs = fs;
+            
+            % Recording unit
+            SS.recunit = recunit;
             
             %constructor using only the spike construct (ie, the data to be
             %cleaned)
@@ -111,7 +122,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             else
                 SS.channel = spike.channel(ind);
             end
-            SS.waveform = (spike.waveform(:,ind)); % Assumes data is provided in uV [is this true in your case?];
+            SS.waveform = (spike.waveform(:,ind)).*1e-6/SS.recunit; % Assumes data is provided in mV [is this true?];
             SS.unit = [];
             SS.methodlog = [];
             SS.badunit = [];
@@ -141,7 +152,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 else
                     SS.sp_channel = spontaneous.channel(ind);
                 end
-                SS.sp_waveform = (spontaneous.waveform(:,ind));
+                SS.sp_waveform = (spontaneous.waveform(:,ind)).*1e-6/SS.recunit;
                 SS.sp_unit = [];
             end % END CONSTRUCTOR
             
