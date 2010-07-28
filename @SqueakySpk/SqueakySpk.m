@@ -122,7 +122,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             else
                 SS.channel = spike.channel(ind);
             end
-            SS.waveform = (spike.waveform(:,ind)).*1e-6/SS.recunit; % Assumes data is provided in mV [is this true?];
+            SS.waveform = (spike.waveform(:,ind)).*1e6*SS.recunit; % Assumes data is provided in mV [is this true?];
             SS.unit = [];
             SS.methodlog = [];
             SS.badunit = [];
@@ -152,7 +152,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 else
                     SS.sp_channel = spontaneous.channel(ind);
                 end
-                SS.sp_waveform = (spontaneous.waveform(:,ind)).*1e-6/SS.recunit;
+                SS.sp_waveform = (spontaneous.waveform(:,ind)).*1e6*SS.recunit;
                 SS.sp_unit = [];
             end % END CONSTRUCTOR
             
