@@ -131,7 +131,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             
             
             % Load stimulus information
-            if nargin < 4 || isempty (stimulus)
+            if nargin < 5 || isempty (stimulus)
                 SS.st_time = [];
                 SS.st_channel = [];
             else
@@ -140,7 +140,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             end
             
             % Load spontaneous data
-            if nargin < 5 || isempty (spontaneous)
+            if nargin < 6 || isempty (spontaneous)
                 SS.sp_time = [];
                 SS.sp_channel = [];
                 SS.sp_waveform = [];
