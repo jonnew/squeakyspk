@@ -38,6 +38,10 @@ channel = SS.channel(SS.clean);
 waveform = SS.waveform(:,SS.clean);
 uniquechan = unique(channel);
 
+if isempty(time)
+    error('It looks like there are no clean spikes in these data, so there is nothing to sort')
+end
+
 [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
 clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
 finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
