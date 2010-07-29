@@ -4,7 +4,7 @@ function WeedUnitByWaveform(SS)
 % hase non-empty units and average waveform fields
 
 if ~isempty(SS.unit) || ~isempty(SS.avgwaveform)
-    error('You must perform spike sorting using SS.WaveClus before running this method'
+    error('You must perform spike sorting using SS.WaveClus before running this method')
 end
 
 %  Create and then hide the GUI as it is being constructed.
