@@ -128,8 +128,6 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             SS.badunit = [];
             SS.badchannel = [];
             
-            
-            
             % Load stimulus information
             if nargin < 5 || isempty (stimulus)
                 SS.st_time = [];
@@ -381,6 +379,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             cdat.ctime = SS.time(logical(SS.clean));
             cdat.cchannel = SS.channel(logical(SS.clean));
             cdat.cwaveform = SS.waveform(:,logical(SS.clean));
+        end
+        
+        %% Block 8: Save SS object
+        function Save(SS)
+            save([SS.name '.SS'],'SS')
         end
             
     end
