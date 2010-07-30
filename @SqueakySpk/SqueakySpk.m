@@ -378,9 +378,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             % data indicies that have survived the cleaning process.
             
             cdat = {};
-            cdat.ctime = SS.time(SS.clean);
-            cdat.cchannel = SS.channel(SS.clean);
-            cdat.cwaveform = SS.waveform(:,SS.clean);
+            cdat.ctime = SS.time(logical(SS.clean));
+            cdat.cchannel = SS.channel(logical(SS.clean));
+            cdat.cwaveform = SS.waveform(:,logical(SS.clean));
         end
             
     end

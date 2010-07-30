@@ -3,7 +3,7 @@ function WeedUnitByWaveform(SS)
 % voltage waveform. Input is an SS object. Requires that the SS object 
 % hase non-empty units and average waveform fields
 
-if ~isempty(SS.unit) || ~isempty(SS.avgwaveform)
+if isempty(SS.unit) || isempty(SS.avgwaveform)
     error('You must perform spike sorting using SS.WaveClus before running this method')
 end
 
