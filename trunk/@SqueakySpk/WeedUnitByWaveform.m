@@ -34,7 +34,7 @@ align([hgood,hbad,hgoback,hreturn],'Center','None');
 % Initialize the GUI.
 % Change units to normalized so components resize
 % automatically.
-set([f,ha,hinstruct,hgood,hbad,hreturn],...
+set([f,ha,hinstruct,hgood,hbad,hgoback,hreturn],...
     'Units','normalized');
 
 %Storage for bad units
@@ -167,8 +167,7 @@ set(f,'Visible','on');
 
 
     function enterbutton_Callback(source,eventdata)
-        % Display contour plot of the currently selected data.
-        %  Create and then hide the GUI as it is being constructed.
+        % Enter your good/bad picks
         SS.RemoveUnit(badunit);
         SS.methodlog = [SS.methodlog '<WeedUnitbyWaveform>'];
         close all
@@ -177,8 +176,7 @@ set(f,'Visible','on');
     end
 
     function quitbutton_Callback(source,eventdata)
-        % Display contour plot of the currently selected data.
-        %  Create and then hide the GUI as it is being constructed.
+        % Quit the GUI
         close all
         return
     end
