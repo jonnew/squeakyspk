@@ -7,28 +7,30 @@ stimdat = loadstim('20100604_16269_stim.stim');
 spontdat = loadspike('20100604_16269_spont.spk');
 
 % Instantiate a SqueakySpk Object
-SStest = SqueakySpk(spkdat);
+SS = SqueakySpk('20100604_16269_test',25000,1/1200,spkdat,stimdat,spontdat);
 
 % Remove meaningless channels
-SStest.RemoveChannel();
+SS.RemoveChannel();
 
 % Remove spikes with blanks
-SStest.RemoveSpkWithBlank();
+SS.RemoveSpkWithBlank();
 
 % Perform a hard p2p cut at 175 uV
-SStest.HardThreshold(175);
+SS.HardThreshold(175);
 
 % Clustering
-SStest.WaveClus(3,20,'wav',1);
-SStest.RemoveUnit(0); % remove unsorted data
+SS.WaveClus(3,20,'wav',1);
+SS.RemoveUnit(0); % remove unsorted data
 
-% BioFilt
-% SStest.BioFilt();
+% Weed units by average waveforms
+SS.WeedUnitByWaveform();
 
 % Examime some data to make sure results of sorting and cleaning look good
-% SStest.RasterWave_Comp([200 210],'both');
-% SStest.RasterWave_Comp([200 210],'clean');
-% SStest.RasterWave_Comp([200 210],'dirty');
+SS.RasterWave([200 210],'both');
 
-% Save the SStest data object
-save(fid, 'SStest');
+% Save the SS data object
+SS.Save
+
+%% Clear everything and just load the SS object you just saved
+clear all
+load('20100604_16269_test.SS','-mat')

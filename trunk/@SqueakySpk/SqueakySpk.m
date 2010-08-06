@@ -62,7 +62,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         channel; % [N INT (channel #, spike index)]
         waveform; % [M DOUBLE x N INT ([uV], spike index)]
         unit; % [N INT (unit #, spike index)]
-        avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
+        avgwaveform; % {avg:[M DOUBLE x K INT ([uV], unit #)],sd[M DOUBLE x K INT ([uV], unit #)]}
         asdr; % Array-wide spike detection rate matrix [[bins] [count]]
         badunit; % Array of units deemed to be bad after spike sorting
         badchannel; % Array of channels deemed to be bad
@@ -74,7 +74,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % properties of the spontaneous data used for spk verification [SPONT DATA]
         sp_time; % [N DOUBLE (sec, spike index)]
         sp_channel; % [N INT (channel #, spike index)]
-        sp_waveform; % [M DOUBLE x N INT ([uV], spike index)]
+        sp_waveform; % {avg:[M DOUBLE x K INT ([uV], unit #)],sd[M DOUBLE x K INT ([uV], unit #)]}
         sp_unit; % [N INT (unit #, spike index)]
         sp_avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
         
@@ -315,30 +315,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% BLOCK 5: VISUALIZATION TOOLS
-        function PlotAvgWaveform(SS)
-            % PLOTAVGWAVEFORM(SS) Plots the average waveforms for each
-            % unit, labeled with the unit number. Units that will be
-            % removed are colored red.
-            
-            figure()
-            m = ceil(sqrt(size(SS.avgwaveform,2)));
-            n = ceil(sqrt(size(SS.avgwaveform,2)));
-            
-            for i = 1:size(SS.avgwaveform,2)
-                subplot(m,n,i)
-                if ismember(i, SS.badunit)
-                    col = [1 0 0];
-                else
-                    col = [0 0 0];
-                end
-                plot(SS.avgwaveform(:,i),'LineWidth',2,'color', col)
-                title(['Unit ' num2str(i)])
-                axis tight
-            end
-            
-        end
+        PlotAvgWaveform(SS)
+        % This method is contained in a separate file.
         
-        RasterWave_Comp(SS, bound, what2show, Fs)
+        RasterWave(SS, bound, what2show, Fs)
         % This method is contained in a separate file.
         
         %% Block 7: BASIC DATA PROCESSING TOOLS
