@@ -13,7 +13,13 @@ function WaveClus(SS,maxclus,minspk,decompmeth,plotall)
 % 
 % Outputs:
 % A modified unit field in the SqueakySpk object.
-% Written by: JN  
+% 
+%   Created by: Jon Newman (jnewman6 at gatech dot edu)
+%   Location: The Georgia Institute of Technology
+%   Created on: July 30, 2009
+%   Last modified: Aug 05, 2010
+%
+%   Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 if nargin < 5 || isempty(plotall)
     plotall = 1;
@@ -30,6 +36,10 @@ end
 if minspk < 2
     error('Please raise the minimal number of spikes to form a cluster or there may not be enough data on some channels to perform clustering at all.')
 end
+if maxclus >5
+    error('There is a maximum of 5 units per channel.')
+end
+
 
 % Waveclus for main data, only perform clustering on clean data all else is
 % not clustered!
@@ -56,7 +66,8 @@ unit = [finresult.unit;zeros(sum(~SS.clean),1)];
 SS.unit = unit(tempindex);
 clean = [ones(size(finresult.time));zeros(size(SS.time(~SS.clean)))];
 SS.clean = clean(tempindex);
-SS.avgwaveform = finresult.meanwave;
+SS.avgwaveform.avg = finresult.meanwave;
+SS.avgwaveform.std = finresult.sdwave;
 
 % Waveclus for spontaneous data
 if ~isempty(SS.sp_time)
@@ -73,7 +84,8 @@ if ~isempty(SS.sp_time)
     SS.sp_channel = finresult.channel(tempindex);
     SS.sp_waveform = finresult.waveform(:,tempindex);
     SS.sp_unit = finresult.unit(tempindex);
-    SS.sp_avgwaveform = finresult.meanwave;
+    SS.sp_avgwaveform.avg = finresult.meanwave;
+    SS.sp_avgwaveform.std = finresult.sdwave;
 end
 
 SS.methodlog = [SS.methodlog '<WaveClus>'];
@@ -215,7 +227,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
                 if length(class5)>=handles.par.min_clus; classes(class5) = 5; end
                 f_in  = spikes(classes~=0,:);
                 f_out = spikes(classes==0,:);
-                class_in = classes(find(classes~=0),:);
+                class_in = classes(classes~=0);
                 class_out = force_membership_wc(f_in, class_in, f_out, handles);
                 classes(classes==0) = class_out;
                 class0=find(classes==0);
@@ -230,6 +242,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             cluster=zeros(nspk,2);
             cluster(:,2)= index';
             meanwave = [];
+            sdwave = [];
             
             %PLOTS (if requested by user)
             clf
@@ -276,7 +289,9 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             end
             if length(class1) > handles.par.min_clus;
                 meanwave1 = mean(spikes(class1,:),1);
+                sdwave1 = std(spikes(class1,:),1);
                 meanwave = [meanwave meanwave1'];
+                sdwave = [sdwave sdwave1'];
                 clus_pop = [clus_pop length(class1)];
                 subplot(2,5,1);
                 max_spikes=min(length(class1),handles.par.max_spikes);
@@ -303,7 +318,9 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             end
             if length(class2) > handles.par.min_clus;
                 meanwave2 = mean(spikes(class2,:),1);
+                sdwave2 = std(spikes(class2,:),1);
                 meanwave = [meanwave meanwave2'];
+                sdwave = [sdwave sdwave2'];
                 clus_pop = [clus_pop length(class2)];
                 subplot(2,5,1);
                 max_spikes=min(length(class2),handles.par.max_spikes);
@@ -330,7 +347,9 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             end
             if length(class3) > handles.par.min_clus;
                 meanwave3 = mean(spikes(class3,:),1);
+                sdwave3 = std(spikes(class3,:),1);
                 meanwave = [meanwave meanwave3'];
+                sdwave = [sdwave sdwave3'];
                 clus_pop = [clus_pop length(class3)];
                 subplot(2,5,1);
                 max_spikes=min(length(class3),handles.par.max_spikes);
@@ -357,13 +376,17 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             end
             if length(class4) > handles.par.min_clus;
                 meanwave4 = mean(spikes(class4,:),1);
+                sdwave = std(spikes(class4,:),1);
                 meanwave = [meanwave meanwave4'];
+                sdwave = [sdwave sdwave4'];
                 clus_pop = [clus_pop length(class4)];
                 cluster(class4(:),1)=4;
             end
             if length(class5) > handles.par.min_clus;
                 meanwave5 = mean(spikes(class5,:),1);
+                sdwave5 = std(spikes(class1,:),1);
                 meanwave = [meanwave meanwave5'];
+                sdwave = [sdwave sdwave5'];
                 clus_pop = [clus_pop length(class5)];
                 subplot(2,5,1);
                 cluster(class5(:),1)=5;
@@ -399,6 +422,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             clusterresults.(genvarname(file_to_cluster{1})).class = cluster;
             clusterresults.(genvarname(file_to_cluster{1})).waveform = spikes;
             clusterresults.(genvarname(file_to_cluster{1})).meanwave = meanwave;
+            clusterresults.(genvarname(file_to_cluster{1})).sdwave = sdwave;
 
         end
         
@@ -422,6 +446,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
         spikewave = [];
         unitID = [];
         meanwave = [];
+        sdwave = [];
         
         for i = uniquechan'
             
@@ -444,6 +469,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
                         spikewave = [spikewave sortdata.waveform(indclus,:)'];
                         unitID = [unitID; currunit*ones(sum(indclus),1)];
                         meanwave = [meanwave sortdata.meanwave(:,k)];
+                        sdwave = [sdwave sortdata.sdwave(:,k)];
                         currunit = currunit+1;
                     end
                 end
@@ -464,6 +490,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
         result.waveform = spikewave;
         result.unit = unitID;
         result.meanwave = meanwave;
+        result.sdwave = sdwave;
         
     end
     function [chan2anal channelparse] = PepareBatchData(time,channel,waveform,minspk)
