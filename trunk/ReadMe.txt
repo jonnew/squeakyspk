@@ -1,4 +1,4 @@
-	********************************************************************	                     				S Q U E A K Y S P K
+	********************************************************************	                     				S	                        S Q U E A K Y S P K
 	********************************************************************
 	Name: SqueakySpk
 	Authors: Jon Newman <jnewman6 at gatech dot edu>
@@ -48,46 +48,63 @@
 	'channel' and 'waveform' as mentioned above, a typical workflow 
  	for using Squeaky spikes would be as follows:
 
+		% Object ID
+		fid = '20100604_16269_SS';
+
+
+	This example uses the loadspike method that works with the output of
+	John Rolston's NeuroRighter recording and stimulation system.
+	SqueakySpk can be used with any recording system so long as data is
+	entered as a struct with 'time', 'channel', and 'waveform' data fields. 
+	In addition to storage of spiking data, there are overload inputs that
+	can store stimulus data by inputing a stimulus struct with fields 'time'
+	and 'channel' where 'time' is a WX1 vector of stimulus times and 'channel'
+	is a WX1 vector of corresponding stimulus channels.
+
+		% Load data into data structs
+		spkdat = loadspike('20100604_16269_spont.spk');
+		stimdat = loadstim('20100604_16269_stim.stim');
+		spontdat = loadspike('20100604_16269_spont.spk');
+
+	Here spkdat is a struct with fields spkdat.time, spkdat.channel, and
+	spkdat.waveform as mentioned above.
+
+		% Instantiate a SqueakySpk Object
+		SS = SqueakySpk('20100604_16269_test',25000,1/1200,spkdat,stimdat,spontdat);
+
+		% Remove meaningless channels (default is for MCS arrays)
+		SS.RemoveChannel();
+
+		% Remove spikes with blanks due to artifact suppression
+		SS.RemoveSpkWithBlank();
+
+		% Perform a hard p2p cut at 175 uV
+		SS.HardThreshold(175);
+
+		% Clustering
+		SS.WaveClus(3,20,'wav',1);
+		SS.RemoveUnit(0); % remove unsorted data
+
+		% Weed units by average waveforms
+		SS.WeedUnitByWaveform();
+
+		% Examime some data to make sure results of sorting and cleaning look good
+		SS.RasterWave([200 210],'both');
+
+		% Save the SS data object
+		SS.Save
+
+		%% Clear everything and just load the SS object you just saved
+		clear all
+		load('20100604_16269_test.SS','-mat')
+
 		% File ID's
 		SSfid = '20100622_poisstim_wdeletes30_100_16269_SS';
 		spkfid = '20100622_poisstim_wdeletes30_100_16269.spk';
 
 		% Load the data
 		spkdat = loadspike(spkfid);
-	
-	Here spkdat is a struct with fields spkdat.time, spkdat.channel, and
-	spkdat.waveform as mentioned above. Make sure your data fields have
-	these names or the SS constructor with throw an error.
-	
-		% Instantiate a SqueakySpk Object
-		SSobj = SqueakySpk(SSfid,spkdat,25000);
 
-		% Remove meaningless channels
-		SSobj.RemoveChannel();
-
-		% Remove spikes with blanks
-		SSobj.RemoveSpkWithBlank();
-
-		% Perform a hard p2p cut at 175 uV
-		SSobj.HardThreshold(250);
-
-		% Clustering
-		SSobj.WaveClus(4,20,'wav',1);
-		SSobj.RemoveUnit(0); % remove unsorted data
-
-		%% Save the SqueakySpk data object for these data
-		save(SSfid,'SSobj');
-	
-
-	This example uses the loadspike method that works with the output of
-	John Rolston's NeuroRighter recording and stimulation system.
-	SqueakySpk can be used with any recording system so long as data is
-	entered as a struct with 'time', 'channel', and 'waveform' data fields. 
-
-	In addition to storage of spiking data, there are overload inputs that
-	can store stimulus data by inputing a stimulus struct with fields 'time'
-	and 'channel' where 'time' is a WX1 vector of stimulus times and 'channel'
-	is a WX1 vector of corresponding stimulus channels.
 
 	For help on the methods available once you have created a SqueakySpk
 	object, at the command line, enter the name of your SS object:
@@ -102,7 +119,7 @@
 	at the command line to get further help on a given method. 
 
 	For an example of SqueakySpk in action, run the example script that
-	is provided in the main SqueakySpk directory, SS_example.m
+	is provided in the main SqueakySpk directory, SSTestScript.m
 	
 	********************************************************************
 
