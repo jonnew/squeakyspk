@@ -2,9 +2,9 @@
 fid = '20100604_16269_SS';
 
 % Load data into data structs
-spkdat = loadspike('20100604_16269_spont.spk');
-stimdat = loadstim('20100604_16269_stim.stim');
-spontdat = loadspike('20100604_16269_spont.spk');
+spkdat = loadspike('C:\Users\USER\Desktop\2010-07-27_PoisStim_15hz_1800_16549-block.spk');
+stimdat = loadstim('C:\Users\USER\Desktop\2010-07-27_PoisStim_15hz_1800_16549-block.stim');
+spontdat = loadspike('C:\Users\USER\Desktop\16549_14min_spont-block.spk');
 
 % Instantiate a SqueakySpk Object
 SS = SqueakySpk('20100604_16269_test',25000,1/1200,spkdat,stimdat,spontdat);

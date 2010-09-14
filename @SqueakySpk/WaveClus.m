@@ -1,7 +1,7 @@
 function WaveClus(SS,maxclus,minspk,decompmeth,plotall)
 % WAVECLUS ported version of Rodrigo Quian Quiroga's wave-clus
-% combined wavelet/superparamagnetic clustering algorithm. 
-% 
+% combined wavelet/superparamagnetic clustering algorithm.
+%
 % Inputs:
 % maxclus - determines the maximal number of units allowed per channel.
 % minspk - sets the minimal number of spikes within a cluster for the
@@ -10,10 +10,10 @@ function WaveClus(SS,maxclus,minspk,decompmeth,plotall)
 % which is a wavelet decomposition using Haar wavelets. User can also
 % specify principle component analysis using 'pca' (first three dimensions
 % are used in this case).
-% 
+%
 % Outputs:
 % A modified unit field in the SqueakySpk object.
-% 
+%
 %   Created by: Jon Newman (jnewman6 at gatech dot edu)
 %   Location: The Georgia Institute of Technology
 %   Created on: July 30, 2009
@@ -53,21 +53,26 @@ if isempty(time)
 end
 
 [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
-clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
-finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
-
-% Add dirty data back, but with the 0 unit specification
-[SS.time tempindex] = sort([finresult.time;SS.time(~SS.clean)]);
-channel = [finresult.channel;SS.channel(~SS.clean)];
-SS.channel = channel(tempindex);
-waveform = [finresult.waveform SS.waveform(:,~SS.clean)];
-SS.waveform = waveform(:,tempindex);
-unit = [finresult.unit;zeros(sum(~SS.clean),1)];
-SS.unit = unit(tempindex);
-clean = [ones(size(finresult.time));zeros(size(SS.time(~SS.clean)))];
-SS.clean = clean(tempindex);
-SS.avgwaveform.avg = finresult.meanwave;
-SS.avgwaveform.std = finresult.sdwave;
+if isempty(chanparse)
+    warning('It looks like there are very few clean spikes in the evoked data set, so sorting cannot be performed');
+    pause(5);
+else
+    clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
+    finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
+    
+    % Add dirty data back, but with the 0 unit specification
+    [SS.time tempindex] = sort([finresult.time;SS.time(~SS.clean)]);
+    channel = [finresult.channel;SS.channel(~SS.clean)];
+    SS.channel = channel(tempindex);
+    waveform = [finresult.waveform SS.waveform(:,~SS.clean)];
+    SS.waveform = waveform(:,tempindex);
+    unit = [finresult.unit;zeros(sum(~SS.clean),1)];
+    SS.unit = unit(tempindex);
+    clean = [ones(size(finresult.time));zeros(size(SS.time(~SS.clean)))];
+    SS.clean = clean(tempindex);
+    SS.avgwaveform.avg = finresult.meanwave;
+    SS.avgwaveform.std = finresult.sdwave;
+end
 
 % Waveclus for spontaneous data
 if ~isempty(SS.sp_time)
@@ -77,15 +82,19 @@ if ~isempty(SS.sp_time)
     waveform = SS.sp_waveform;
     
     [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
-    clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
-    finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
-    
-    [SS.sp_time tempindex] = sort(finresult.time);
-    SS.sp_channel = finresult.channel(tempindex);
-    SS.sp_waveform = finresult.waveform(:,tempindex);
-    SS.sp_unit = finresult.unit(tempindex);
-    SS.sp_avgwaveform.avg = finresult.meanwave;
-    SS.sp_avgwaveform.std = finresult.sdwave;
+    if isempty(chanparse)
+        warning('It looks like there are very few clean spikes in the spontaneous data set, so sorting cannot be performed');
+    else
+        clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
+        finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
+        
+        [SS.sp_time tempindex] = sort(finresult.time);
+        SS.sp_channel = finresult.channel(tempindex);
+        SS.sp_waveform = finresult.waveform(:,tempindex);
+        SS.sp_unit = finresult.unit(tempindex);
+        SS.sp_avgwaveform.avg = finresult.meanwave;
+        SS.sp_avgwaveform.std = finresult.sdwave;
+    end
 end
 
 SS.methodlog = [SS.methodlog '<WaveClus>'];
@@ -414,7 +423,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
                 set(gcf,'paperposition',[.25 .25 10.5 7.8])
                 eval(['print -djpeg fig2print_' char(file_to_cluster)]);
             end
-           
+            
             drawnow;
             
             %Output
@@ -423,7 +432,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             clusterresults.(genvarname(file_to_cluster{1})).waveform = spikes;
             clusterresults.(genvarname(file_to_cluster{1})).meanwave = meanwave;
             clusterresults.(genvarname(file_to_cluster{1})).sdwave = sdwave;
-
+            
         end
         
         
