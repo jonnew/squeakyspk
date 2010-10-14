@@ -122,7 +122,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             else
                 SS.channel = spike.channel(ind);
             end
-            SS.waveform = (spike.waveform(:,ind)).*1e6*SS.recunit; % Assumes data is provided in mV [is this true?];
+            SS.waveform = (spike.waveform(:,ind)).*1e6*SS.recunit; % Convert to uV
             SS.unit = [];
             SS.methodlog = [];
             SS.badunit = [];
