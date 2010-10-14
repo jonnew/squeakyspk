@@ -446,7 +446,6 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
         delete *.mag
         delete *.edges
         delete *.param
-        delete('Cluster.exe')
         
         currunit = 1;
         j = 1;
@@ -694,6 +693,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
         tree=load([fname '.dg_01']);
         
         delete(sprintf('%s.run',fname));
+        delete *cluster*.exe
         delete *.mag
         delete *.edges
         delete *.param
