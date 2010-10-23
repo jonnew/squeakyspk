@@ -1,6 +1,6 @@
 classdef (ConstructOnLoad = false) SqueakySpk < handle
-    %SQUEAKY SPIKE Data Class and methods for basic preprosessing of data
-    %collected using extracellular, multielectrode arrays.
+    %SQUEAKYSPK data class and methods for basic preprosessing of data
+    %collected using extracellular, multielectrode arrays. 
     %
     %   Properties:
     %   1. Data name
@@ -15,7 +15,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
     %         f. avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
     %         g. asdr; % Array-wide spike detection rate matrix [[bins] [count]]
     %         h. badunit; % Array of units deemed to be bad after spike sorting
-    %         i .badchannel; % Array of channels deemed to be bad
+    %         i  badchannel; % Array of channels deemed to be bad
     %
     %   3. properties of the stimulus given while collecting the main data [STIM DATA]
     %       a. st_time; % [N DOUBLE (sec, spike index)]
@@ -43,7 +43,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
     %     3. Spike Sorting
     %         a. WaveClus
     %     4. Advanced Cleaning
-    %         a. BioFilt
+    %         a. WeedUnitByWaveform
     %
     %   To use SqueakySpk, look at ReadMe.txt that came with this package,
     %   look at the testscript and examine the help for each method by
@@ -334,7 +334,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             % Calculate
             bins = 0:dt:SS.time(end);
             asdr_tmp = hist(SS.time(SS.clean),bins);
-            SS.asdr = [bins' asdr_tmp'];
+            SS.asdr = [bins' asdr_tmp'./dt];
             
             % Plot results
             figure()
