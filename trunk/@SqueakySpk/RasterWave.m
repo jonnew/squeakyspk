@@ -1,6 +1,6 @@
-function RasterWave(SS, bound, what2show, Fs)
+function RasterWave(SS, bound, what2show, yaxischannel, Fs)
 % RASTERWAVE Rasterwave method for the SqeakySpk class.
-% 
+%
 % Plots the a raster image of spike times versus unit and allows
 % the user to click each point to examine the raw voltage waveform it
 % represents. Spikes that will currently be cleaned in the Squeaky spike
@@ -22,8 +22,9 @@ function RasterWave(SS, bound, what2show, Fs)
 %   'dirty']. This determins what type of data is shown in the raster plot.
 %   Those data that will be removed after cleaning ('dirty') those data
 %   that have survived cleaning ('clean') or both types in different
-%   colors. Fs is the sampling frequency of the waveforms provided. Default
-%   value is 25 KHz.
+%   colors. yaxischannel is a logical that will force the ordinate axis of
+%   the raster plot to display channel instead of unit informaiton. Fs is 
+%   the sampling frequency of the waveforms provided. Default value is 25 KHz.
 %
 %   Created by: Jon Newman (jnewman6 at gatech dot edu)
 %   Location: The Georgia Institute of Technology
@@ -34,8 +35,12 @@ function RasterWave(SS, bound, what2show, Fs)
 %
 
 % check number and type of arguments
-if nargin < 4 || isempty(Fs)
+if nargin < 5 || isempty(Fs)
     Fs = 25000; % Default sampling frequecy (Hz)
+end
+% check number and type of arguments
+if nargin < 4 || isempty(yaxischannel)
+    yaxischannel = false; % Default sampling frequecy (Hz)
 end
 if nargin < 3 || isempty(what2show)
     what2show = 'both'; % Default sampling frequecy (Hz)
@@ -46,6 +51,8 @@ end
 if nargin < 1
     error('Need to act on SqueakSpk Object');
 end
+% find stimuli within user bounds
+goodstimind = (SS.st_time > bound(1)&SS.st_time < bound(2));
 
 % find spike times within bound defined by user
 startind = find(SS.time > bound(1),1);
@@ -60,34 +67,64 @@ cleaninterest = SS.clean(startind:endind);
 waveinterest = SS.waveform(:,startind:endind);
 % Has the user sorted yet?
 usechan = isempty(SS.unit);
-if usechan
+if usechan || yaxischannel
     unitinterest = SS.channel(startind:endind);
+    % Set up figure and plot raster array
+    fh = figure('Toolbar','figure');
+    set(fh,'color','k'); % sets the background color to black
+    subplot(211)
+    hold on
+    
+
+        % Plot the raster for spikes in the time bound of interest
+    switch what2show
+        case 'both'
+            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
+            plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
+            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',1);
+        case 'clean'
+            spkinterest = spkinterest(cleaninterest);
+            unitinterest = unitinterest(cleaninterest);
+            waveinterest = waveinterest(:,cleaninterest);
+            plot(spkinterest,unitinterest,'w.','MarkerSize',4);
+            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',1);
+        case 'dirty'
+            spkinterest = spkinterest(~cleaninterest);
+            unitinterest = unitinterest(~cleaninterest);
+            waveinterest = waveinterest(:,~cleaninterest);
+            plot(spkinterest,unitinterest,'r.','MarkerSize',4);
+            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',1);
+    end
 else
     unitinterest = SS.unit(startind:endind);
+    % Set up figure and plot raster array
+    fh = figure('Toolbar','figure');
+    set(fh,'color','k'); % sets the background color to black
+    subplot(211)
+    hold on
+    
+    % Plot the raster for spikes in the time bound of interest
+    switch what2show
+        case 'both'
+            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
+            plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
+            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',1);
+        case 'clean'
+            spkinterest = spkinterest(cleaninterest);
+            unitinterest = unitinterest(cleaninterest);
+            waveinterest = waveinterest(:,cleaninterest);
+            plot(spkinterest,unitinterest,'w.','MarkerSize',4);
+            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',1);
+        case 'dirty'
+            spkinterest = spkinterest(~cleaninterest);
+            unitinterest = unitinterest(~cleaninterest);
+            waveinterest = waveinterest(:,~cleaninterest);
+            plot(spkinterest,unitinterest,'r.','MarkerSize',4);
+            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',1);
+    end
 end
 
-% Set up figure and plot raster array
-fh = figure('Toolbar','figure');
-set(fh,'color','k'); % sets the background color to black
-subplot(211)
-hold on
 
-% Plot the raster for spikes in the time bound of interest
-switch what2show
-    case 'both'
-        plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
-        plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
-    case 'clean'
-        spkinterest = spkinterest(cleaninterest);
-        unitinterest = unitinterest(cleaninterest);
-        waveinterest = waveinterest(:,cleaninterest);
-        plot(spkinterest,unitinterest,'w.','MarkerSize',4);
-    case 'dirty'
-        spkinterest = spkinterest(~cleaninterest);
-        unitinterest = unitinterest(~cleaninterest);
-        waveinterest = waveinterest(:,~cleaninterest);
-        plot(spkinterest,unitinterest,'r.','MarkerSize',4);
-end
 
 axis tight
 h = gca;

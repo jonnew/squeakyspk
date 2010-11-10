@@ -359,6 +359,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             cdat.ctime = SS.time(logical(SS.clean));
             cdat.cchannel = SS.channel(logical(SS.clean));
             cdat.cwaveform = SS.waveform(:,logical(SS.clean));
+<<<<<<< .mine
+<<<<<<< .mine
+<<<<<<< .mine
+            cdat.cunit = SS.unit(logical(SS.clean));
+=======
 
             % Rename the clean units starting from 1
             if ~isempty(SS.unit)
@@ -369,6 +374,21 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 end
                 cdat.cunit = cleanunits;
             end
+=======
+>>>>>>> .r38
+>>>>>>> .r39
+=======
+
+            % Rename the clean units starting from 1
+            if ~isempty(SS.unit)
+                cleanunits = SS.unit(logical(SS.clean));
+                cleanunitvalues = unique(cleanunits);
+                for i = 1:length(cleanunitvalues )
+                    cleanunits(cleanunits == cleanunitvalues(i)) = i;
+                end
+                cdat.cunit = cleanunits;
+            end
+>>>>>>> .r39
         end
         
         %% Block 8: Save SS object
