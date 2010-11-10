@@ -95,7 +95,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             %   spike.wavefomr = [NXM] matrix of corresponding spike snip waveforms
             % Addtional arguments for a stimulus data structure of the
             % form:
-                       %   stimulus.time = [RX1] vector of spike times in seconds
+            %   stimulus.time = [RX1] vector of spike times in seconds
             % stimulus.channel = [RX1] vector of corresponding channels
             % And spontanous data taken before and evoked recording,
             % with the same fields as the spike structure.
@@ -359,13 +359,23 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             cdat.ctime = SS.time(logical(SS.clean));
             cdat.cchannel = SS.channel(logical(SS.clean));
             cdat.cwaveform = SS.waveform(:,logical(SS.clean));
+
+            % Rename the clean units starting from 1
+            if ~isempty(SS.unit)
+                cleanunits = SS.unit(logical(SS.clean));
+                cleanunitvalues = unique(cleanunits);
+                for i = 1:length(cleanunitvalues )
+                    cleanunits(cleanunits == cleanunitvalues(i)) = i;
+                end
+                cdat.cunit = cleanunits;
+            end
         end
         
         %% Block 8: Save SS object
         function Save(SS)
             save([SS.name '.SS'],'SS')
         end
-            
+        
     end
     
 end
