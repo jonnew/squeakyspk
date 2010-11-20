@@ -3,6 +3,10 @@ function PlotAvgWaveform(SS)
 % unit, labeled with the unit number. Units that will be
 % removed are colored red.
 
+if isempty(SS.avgwaveform) || isempty(SS.avgwaveform.avg)
+    error('You have not performed spike sorting yet, or there are no valid units.')
+end
+
 avgfig = figure();
 m = ceil(sqrt(size(SS.avgwaveform.avg,2)));
 n = ceil(sqrt(size(SS.avgwaveform.avg,2)));
