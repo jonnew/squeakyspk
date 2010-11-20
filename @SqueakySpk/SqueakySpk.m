@@ -334,7 +334,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             % Calculate
             bins = 0:dt:SS.time(end);
             asdr_tmp = hist(SS.time(SS.clean),bins);
-            SS.asdr = [bins' asdr_tmp'./dt];
+            if size(asdr_tmp,2) == 1;
+                SS.asdr = [bins' asdr_tmp./dt];
+            else
+                SS.asdr = [bins' asdr_tmp'./dt];
+            end
             
             % Plot results
             figure()
@@ -359,11 +363,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             cdat.ctime = SS.time(logical(SS.clean));
             cdat.cchannel = SS.channel(logical(SS.clean));
             cdat.cwaveform = SS.waveform(:,logical(SS.clean));
-<<<<<<< .mine
-<<<<<<< .mine
-<<<<<<< .mine
             cdat.cunit = SS.unit(logical(SS.clean));
-=======
 
             % Rename the clean units starting from 1
             if ~isempty(SS.unit)
@@ -374,10 +374,6 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 end
                 cdat.cunit = cleanunits;
             end
-=======
->>>>>>> .r38
->>>>>>> .r39
-=======
 
             % Rename the clean units starting from 1
             if ~isempty(SS.unit)
@@ -388,7 +384,6 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 end
                 cdat.cunit = cleanunits;
             end
->>>>>>> .r39
         end
         
         %% Block 8: Save SS object
