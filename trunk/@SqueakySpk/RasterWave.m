@@ -1,4 +1,4 @@
-function RasterWave(SS, bound, what2show, yaxischannel, Fs)
+function RasterWave(SS, bound, what2show, yaxischannel)
 % RASTERWAVE Rasterwave method for the SqeakySpk class.
 %
 % Plots the a raster image of spike times versus unit and allows
@@ -15,7 +15,7 @@ function RasterWave(SS, bound, what2show, yaxischannel, Fs)
 %   an then plots the corresponding raw voltage trace taken from the
 %   SS.waveform matrix.
 %
-%   RASTERWAVE(SS, bound, showdirty, Fs) creates a raster
+%   RASTERWAVE(SS, bound, what2show, yaxischannel, Fs) creates a raster
 %   wave plot for a portion of the full recording specified in bound = [start
 %   stop] measured in whatever the units SS.time are in. what2show is a
 %   string argument that can take three values ['both','clean', or
@@ -23,8 +23,7 @@ function RasterWave(SS, bound, what2show, yaxischannel, Fs)
 %   Those data that will be removed after cleaning ('dirty') those data
 %   that have survived cleaning ('clean') or both types in different
 %   colors. yaxischannel is a logical that will force the ordinate axis of
-%   the raster plot to display channel instead of unit informaiton. Fs is 
-%   the sampling frequency of the waveforms provided. Default value is 25 KHz.
+%   the raster plot to display channel instead of unit informaiton.
 %
 %   Created by: Jon Newman (jnewman6 at gatech dot edu)
 %   Location: The Georgia Institute of Technology
@@ -34,10 +33,6 @@ function RasterWave(SS, bound, what2show, yaxischannel, Fs)
 %   Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 %
 
-% check number and type of arguments
-if nargin < 5 || isempty(Fs)
-    Fs = 25000; % Default sampling frequecy (Hz)
-end
 % check number and type of arguments
 if nargin < 4 || isempty(yaxischannel)
     yaxischannel = false; % Default sampling frequecy (Hz)
@@ -81,19 +76,19 @@ if usechan || yaxischannel
         case 'both'
             plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
             plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',1);
+            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
         case 'clean'
             spkinterest = spkinterest(cleaninterest);
             unitinterest = unitinterest(cleaninterest);
             waveinterest = waveinterest(:,cleaninterest);
             plot(spkinterest,unitinterest,'w.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',1);
+            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
         case 'dirty'
             spkinterest = spkinterest(~cleaninterest);
             unitinterest = unitinterest(~cleaninterest);
             waveinterest = waveinterest(:,~cleaninterest);
             plot(spkinterest,unitinterest,'r.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',1);
+            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
     end
 else
     unitinterest = SS.unit(startind:endind);
@@ -108,19 +103,19 @@ else
         case 'both'
             plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
             plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',1);
+            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
         case 'clean'
             spkinterest = spkinterest(cleaninterest);
             unitinterest = unitinterest(cleaninterest);
             waveinterest = waveinterest(:,cleaninterest);
             plot(spkinterest,unitinterest,'w.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',1);
+            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
         case 'dirty'
             spkinterest = spkinterest(~cleaninterest);
             unitinterest = unitinterest(~cleaninterest);
             waveinterest = waveinterest(:,~cleaninterest);
             plot(spkinterest,unitinterest,'r.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',1);
+            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
     end
 end
 
@@ -168,7 +163,7 @@ while but == 1
         set(h1,'color','y','linewidth',1.2)
         set(h2,'color','y','linewidth',1.2)
         subplot(212)
-        t = 1000/Fs.*(1:size(waveinterest,1));
+        t = 1000/SS.fs.*(1:size(waveinterest,1));
         v = waveinterest(:,ind);
         plot(t,v,'y','linewidth',3)
         set(gca,'color','k','XColor',[1 1 1],'YColor',[1 1 1])
@@ -176,7 +171,7 @@ while but == 1
         ylabel('\textbf{V ($\mu$V)}','fontsize',13,'Interpreter','Latex')
         title('Pick a point above to view voltage waveform...','fontsize',13)
         set(get(gca,'Title'),'Color','white')
-        xlim([1000/Fs (1000/Fs)*size(SS.waveform,1)]) % x-axis in msec
+        xlim([1000/SS.fs (1000/SS.fs)*size(SS.waveform,1)]) % x-axis in msec
     else
         return
     end
