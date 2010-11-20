@@ -157,18 +157,21 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         end
         
         %% BLOCK 2: CLEANING METHODS (methods that alter the 'clean' array)
-        function HardThreshold(SS,threshold)
+        function HardThreshold(SS,highThreshold,lowThreshold)
             % HARDTHRESHOLD(SS,threshold) removes all 'spikes' with P2P amplitude
             % greater than threshold (dependent on whatever units you are
             % measuring AP's with).
             % Written by: JN and RZT
             
-            % Set default threshold if non is provided
-            if nargin < 2 || isempty(threshold)
-                threshold = 175; %uV
+            % Set default thresholds if non are provided
+            if nargin < 2 || isempty(highThreshold)
+                highThreshold = 175; %uV
+            end
+            if nargin < 3 || isempty(lowThreshold)
+                lowThreshold = 0; %uV
             end
             
-            tmp = ((max(SS.waveform) - min(SS.waveform)) < threshold);
+            tmp = ((max(SS.waveform) - min(SS.waveform)) < highThreshold & (max(SS.waveform) - min(SS.waveform)) > lowThreshold);
             SS.clean = SS.clean&(tmp');
             SS.methodlog = [SS.methodlog '<HardThreshold>'];
         end
@@ -306,6 +309,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             
         end
         
+        
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
         WaveClus(SS,maxclusters,minspk,decompmeth,plotbool)
         % This method is contained in a separate file.
@@ -388,7 +392,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         %% Block 8: Save SS object
         function Save(SS)
-            save([SS.name '.SS'],'SS')
+            save([SS.name '.SS'],'SS','-v7.3')
         end
         
     end

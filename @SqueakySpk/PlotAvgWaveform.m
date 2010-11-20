@@ -22,12 +22,16 @@ for it = 1:size(SS.avgwaveform.avg,2)
         SS.avgwaveform.avg(:,it),...
         SS.avgwaveform.std(:,it),...
         SS.avgwaveform.std(:,it),...
-        'LineWidth',2,'color', col)
+        'LineWidth',2,'color', col);
     title(['Unit ' num2str(it)])
     axis tight
     [min_amp min_ind] = min(SS.avgwaveform.avg(:,it));
     [max_amp max_ind] = max(SS.avgwaveform.avg(:,it));
     ylim([min_amp-SS.avgwaveform.std(min_ind,it)-2 max_amp+SS.avgwaveform.std(max_ind,it)+2])
+    
+    if ceil(it/n) <= (m-1)
+        set(gca,'XTickLabel',[])
+    end
 end
 
 [ax1,h1] = suplabel('Time (msec)');
@@ -117,13 +121,19 @@ set(h2,'FontSize',16);
         
         H = [p, a1, a2];
         
-        if (nargout>1)
+        if (nargout==1)
             varargout{1} = H;
+        end
+        if (nargout>1)
+            varargout{2} = a1;
+        end
+        if (nargout>2)  
+            varargout{3} = a2;
         end;
         
     end
     function [ax,h]=suplabel(text,whichLabel,supAxes)
-        % PLaces text as a title, xlabel, or ylabel on a group of subplots.
+        % Places text as a title, xlabel, or ylabel on a group of subplots.
         % Returns a handle to the label and a handle to the axis.
         %  [ax,h]=suplabel(text,whichLabel,supAxes)
         % returns handles to both the axis and the label.
