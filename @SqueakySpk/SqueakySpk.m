@@ -1,3 +1,4 @@
+
 classdef (ConstructOnLoad = false) SqueakySpk < handle
     %SQUEAKYSPK data class and methods for basic preprosessing of data
     %collected using extracellular, multielectrode arrays. 
@@ -322,7 +323,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotAvgWaveform(SS)
         % This method is contained in a separate file.
         
-        RasterWave(SS, bound, what2show, Fs)
+        RasterPlot(SS, bound, what2show, yaxischannel)
+        % This method is contained in a separate file.
+        
+        RasterWave(SS, bound, what2show, yaxischannel)
         % This method is contained in a separate file.
         
         %% Block 7: BASIC DATA PROCESSING TOOLS
