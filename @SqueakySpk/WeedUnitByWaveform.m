@@ -118,7 +118,7 @@ set(f,'Visible','on');
         % Append badunit vector
         badunit = [badunit waveind];
         
-        if waveind+1 == size(SS.avgwaveform.avg,2)
+        if waveind == size(SS.avgwaveform.avg,2)
             returnbutton_Callback()
         else
             % Plot the next unit waveform
