@@ -1,4 +1,4 @@
-	********************************************************************	                     				S	                        S Q U E A K Y S P K
+	********************************************************************	                     	                        S Q U E A K Y S P K
 	********************************************************************
 	Name: SqueakySpk
 	Authors: Jon Newman <jnewman6 at gatech dot edu>
@@ -48,8 +48,8 @@
 	'channel' and 'waveform' as mentioned above, a typical workflow 
  	for using Squeaky spikes would be as follows:
 
-		% Object ID
-		fid = '20100604_16269_SS';
+            	% Object FID
+            	fid = 'SS_example';
 
 
 	This example uses the loadspike method that works with the output of
@@ -61,49 +61,40 @@
 	and 'channel' where 'time' is a WX1 vector of stimulus times and 'channel'
 	is a WX1 vector of corresponding stimulus channels.
 
-		% Load data into data structs
-		spkdat = loadspike('20100604_16269_spont.spk');
-		stimdat = loadstim('20100604_16269_stim.stim');
-		spontdat = loadspike('20100604_16269_spont.spk');
+            	% Load data into data structs
+            	spkdat = loadspike([pwd '\example-data.spk']);
+            	stimdat = loadstim([pwd '\example-data.stim']);
 
 	Here spkdat is a struct with fields spkdat.time, spkdat.channel, and
 	spkdat.waveform as mentioned above.
 
-		% Instantiate a SqueakySpk Object
-		SS = SqueakySpk('20100604_16269_test',25000,1/1200,spkdat,stimdat,spontdat);
+            	% Instantiate a SqueakySpk Object
+            	SS = SqueakySpk(fid,25000,1,spkdat,stimdat);
 
-		% Remove meaningless channels (default is for MCS arrays)
-		SS.RemoveChannel();
+            	% Remove meaningless channels
+            	SS.RemoveChannel();
 
-		% Remove spikes with blanks due to artifact suppression
-		SS.RemoveSpkWithBlank();
+            	% Remove spikes with blanks
+            	SS.RemoveSpkWithBlank();
 
-		% Perform a hard p2p cut at 175 uV
-		SS.HardThreshold(175);
+            	% Perform a hard p2p cut at 250 uV
+            	SS.HardThreshold(250);
 
-		% Clustering
-		SS.WaveClus(3,20,'wav',1);
-		SS.RemoveUnit(0); % remove unsorted data
+            	% Clustering
+            	SS.WaveClus(3,20,'wav',1);
+            	SS.RemoveUnit(0); % remove unsorted data
 
-		% Weed units by average waveforms
-		SS.WeedUnitByWaveform();
+           	%% Weed units by average waveforms
+            	SS.WeedUnitByWaveform();
 
-		% Examime some data to make sure results of sorting and cleaning look good
-		SS.RasterWave([200 210],'both');
+            	%% Calculate ASDR
+            	SS.ASDR
 
-		% Save the SS data object
-		SS.Save
+            	%% Examime some data to make sure results of sorting and cleaning look good
+            	SS.RasterWave;
 
-		%% Clear everything and just load the SS object you just saved
-		clear all
-		load('20100604_16269_test.SS','-mat')
-
-		% File ID's
-		SSfid = '20100622_poisstim_wdeletes30_100_16269_SS';
-		spkfid = '20100622_poisstim_wdeletes30_100_16269.spk';
-
-		% Load the data
-		spkdat = loadspike(spkfid);
+            	%% Save the SS data object
+            	SS.Save
 
 
 	For help on the methods available once you have created a SqueakySpk
