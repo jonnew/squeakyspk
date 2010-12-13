@@ -67,6 +67,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         asdr; % Array-wide spike detection rate matrix [[bins] [count]]
         badunit; % Array of units deemed to be bad after spike sorting
         badchannel; % Array of channels deemed to be bad
+        psh; % Peri-stimulus histogram 
         
         % properties of the stimulus given while collecting the main data [STIM DATA]
         st_time; % [N DOUBLE (sec, spike index)]
@@ -309,8 +310,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             SS.methodlog = [SS.methodlog '<ResetClean>'];
             
         end
-        
-        
+            
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
         WaveClus(SS,maxclusters,minspk,decompmeth,plotbool)
         % This method is contained in a separate file.
@@ -327,6 +327,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         RasterWave(SS, bound, what2show, yaxischannel)
+        % This method is contained in a separate file.
+        
+        PlotPeriStimHistogram(SS)
         % This method is contained in a separate file.
         
         %% Block 7: BASIC DATA PROCESSING TOOLS
@@ -355,6 +358,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             ylabel(['(' num2str(dt) 's)^-1'])
             
         end
+        
+        PeriStimHistogram(SS,dt,bound);
+        % This method is contained in a separate file.
         
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq)

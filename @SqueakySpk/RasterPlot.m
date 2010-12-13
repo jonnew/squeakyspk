@@ -64,7 +64,7 @@ usechan = isempty(SS.unit);
 if usechan || yaxischannel
     unitinterest = SS.channel(startind:endind);
     % Set up figure and plot raster array
-    fh = figure()
+    fh = figure();
     set(fh,'color','k'); % sets the background color to black
     hold on
     
