@@ -1,8 +1,8 @@
-function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq)
+function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale)
 % NEUROSOUND audio output event-based recording that really makes a
 % SqueakySpk Squeak.
 %
-% NS = NEUROSOUND(SS,PBSPEED,AMPSCALE,BASEFREQ)
+% NS = NEUROSOUND(SS,PBSPEED,AMPSCALE,BASEFREQ, yo momma)
 %
 %       Inputs:
 %       SS = SqueakySpk object
@@ -36,6 +36,13 @@ function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq)
 %       Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 % check number and type of arguments
+
+        
+
+
+        
+        
+
 if( nargin < 3)|| isempty(tbound)
     tbound = [];
 end
@@ -46,18 +53,47 @@ if(nargin < 4) || isempty(ampscale)
     ampscale = 1;
 end
 if(nargin < 5) || isempty(basefreq)
-    basefreq = 110;
+    basefreq = 20;
+end
+if (nargin <6) || isempty(scale)
+    scale = 'major';
 end
 
-if isempty(SS.unit)
+
+diminished = [2 1 2 1 2 1 2 1];
+major = [2 2 1 2 2 2 1];
+minor = [1 2 2 2 1 2 2];
+pentatonic = [ 2 2 2 2 2 2];
+chromatic = [1 1 1 1 1 1 1 1 1 1 1 1];
+scalename = '';
+switch scale
+    case 'diminished'
+        chosenscale = diminished;
+        scalename = scale;
+    case 'major'
+        chosenscale = major;
+        scalename = scale;
+    case 'minor'
+        chosenscale = minor;
+        scalename = scale;
+    case 'pentatonic'
+        chosenscale = pentatonic;
+        scalename = scale;
+    otherwise
+        chosenscale = chromatic;
+        scalename = 'chromatic';
+end
+
+
+%if isempty(SS.unit)
     chan = SS.channel(SS.clean);
     spktime = SS.time(SS.clean);
     tonerep = 'channels';
-else
-    chan = SS.unit(SS.clean&SS.unit~=0);
-    spktime = SS.time(SS.clean);
-    tonerep = 'units';
-end
+%else
+%     chan = SS.unit(SS.clean&SS.unit~=0);
+%     spktime = SS.time(SS.clean);
+%     tonerep = 'units';
+% end
 
 % Create continuous waveform from the discrete events
 if isempty(tbound)
@@ -67,31 +103,49 @@ else
     sortedtimes = sortedtimes - min(sortedtimes);
 end
 sortedtimes(sortedtimes==0) = []; % get rid of any time that is zero
-maxT = sortedtimes(end) + 1; % length of sound will be the time of the final event + 1 sec
-
-N = ceil(SS.fs*maxT);
+maxT = sortedtimes(end)*1.1; % length of sound will be the time of the final event + 1 sec
+outrate = 44100;
+N = ceil(outrate*maxT/pbspeed);
 wave = zeros(N,1);
 
-eventInd = ceil(SS.fs*sortedtimes);
+eventInd = ceil(outrate*sortedtimes/pbspeed);
 
 % Create 10 ms tone snips for each channel
 numchan = max(chan);
-snip = zeros(numchan,length(1/SS.fs:1/SS.fs:pbspeed*0.1));
+
+snip = zeros(numchan,length(1/outrate:1/outrate:0.1));
+multiple = 1;
+note = 1;
+
 for k = 1:numchan
-    snip(k,:) = sin((basefreq*2^(k-1)/12)/pbspeed*2*pi*(1/SS.fs:1/SS.fs:pbspeed*0.1));
+    snip(k,:) = sin(basefreq*2^((multiple-1)/12)*pi*(1/outrate:1/outrate:0.1));
+    lastlow = find(snip(k,:)<0,1,'last');
+    snip(k,lastlow:length(1/outrate:1/outrate:0.1)) = 0;
+    multiple = multiple+chosenscale(note);
+    note = note +1;
+    if note>length(chosenscale)
+        note = 1;
+    end
 end
 
+%figure;mesh(snip)
 for k = 1:length(eventInd)
-    wave(eventInd(k):eventInd(k)+length(snip)-1) = snip(chan(k),:);
+%     size(wave(eventInd(k):eventInd(k)+length(snip)-1))
+%     size(snip(chan(k),:))
+    wave(eventInd(k):eventInd(k)+length(snip)-1) = snip(chan(k),:)'+ wave(eventInd(k):eventInd(k)+length(snip)-1);
 end
-
-ns = audioplayer(wave,SS.fs*pbspeed);
+wave = wave./max(wave)*ampscale;
+figure;
+subplot(3,1,[1 2]);plot(eventInd,chan(1:length(eventInd)),'r.');axis tight;
+subplot(3,1,3);plot(wave(1:max(eventInd)));axis tight;
+ns = audioplayer(wave,outrate);
 
 % Instructions for use
 disp(' ');
 disp('You have created a neurosound object with the following properties:');
 disp(['Playback speed: ' num2str(pbspeed) ' X real-time']);
 disp(['Amplitude scale factor: ' num2str(ampscale)]);
+disp(['scale is ' scalename 'with base note of ' num2str(basefreq) 'hz']);
 disp(['Tones represent different' tonerep])
 disp(' ');
 disp('Use the following commands to control playback: ');
