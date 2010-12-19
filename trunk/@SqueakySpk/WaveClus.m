@@ -49,7 +49,7 @@ waveform = SS.waveform(:,SS.clean);
 uniquechan = unique(channel);
 
 % handle for this waveclus session
-hand = num2str(round(100000000000*rand));
+hand = ['tmp-waveclus_' num2str(round(100000000000*rand))];
 mkdir(hand)
 
 if isempty(time)
@@ -73,7 +73,7 @@ else
     unit = [finresult.unit;zeros(sum(~SS.clean),1)];
     SS.unit = unit(tempindex);
     clean = [ones(size(finresult.time));zeros(size(SS.time(~SS.clean)))];
-    SS.clean = clean(tempindex);
+    SS.clean = logical(clean(tempindex));
     SS.avgwaveform.avg = finresult.meanwave;
     SS.avgwaveform.std = finresult.sdwave;
 end

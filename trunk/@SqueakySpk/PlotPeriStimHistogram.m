@@ -1,6 +1,6 @@
 function PlotPeriStimHistogram(SS)
 % PLOTPERISTIMHISTOGRAM(SS) Plots the psh that was caclulated in
-% SS.PeriStimHistogram
+% SS.PeriStimHistogramm for each channel and as a grand-average response
 
 if isempty(SS.psh) || isempty(SS.psh.hist)
     error('You have not created the psh yet.')
@@ -9,18 +9,12 @@ end
 figure();
 m = ceil(sqrt(size(SS.psh.hist,1)));
 
-% Grand average PSH
-subplot(m+1,m,1:m)
+rowsavg = 3; % number of rows for grand average PSH
 
-    plot(SS.psh.t.*1000,mean(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:)),...
-        'LineWidth',2,'color', [0 0 0]);
-    title([num2str(sum(SS.psh.stimcount)) ' stimuli over all channels'])
-    axis tight
-    ylim([0 max(max(mean(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:))))])
-    
 % PSH by channel
 for it = 1:size(SS.psh.hist,1)
-    subplot(m+1,m,it+m)
+
+    subplot(m + rowsavg, m, rowsavg*m + it )
     
     confplot(SS.psh.t.*1000,...
         SS.psh.hist(it,:),...
@@ -35,6 +29,18 @@ for it = 1:size(SS.psh.hist,1)
         set(gca,'XTickLabel',[])
     end
 end
+
+% Grand average PSH
+subplot(m + rowsavg, m,[1 rowsavg*m])
+
+    confplot(SS.psh.t.*1000,...
+            mean(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:)),...
+            std(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:)),...
+            std(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:)),...
+            'LineWidth',2,'color', [0 0 0]);
+    title([num2str(sum(SS.psh.stimcount)) ' stimuli over all channels'])
+    axis tight
+    ylim([0 max(max(mean(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:))))])
 
 [ax1,h1] = suplabel('Time (msec)');
 [ax2,h2] = suplabel('ASDR (s^{-1})','y');
