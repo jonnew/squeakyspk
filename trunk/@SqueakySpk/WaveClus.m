@@ -40,21 +40,21 @@ if maxclus >5
     error('There is a maximum of 5 units per channel.')
 end
 
-
 % Waveclus for main data, only perform clustering on clean data all else is
-% not clustered!
+% not clustered
 time = SS.time(SS.clean);
 channel = SS.channel(SS.clean);
 waveform = SS.waveform(:,SS.clean);
 uniquechan = unique(channel);
 
+if isempty(time)
+    warning('It looks like there are no clean spikes in these data, so there is nothing to sort. Exiting WaveClus')
+    return
+end
+
 % handle for this waveclus session
 hand = ['tmp-waveclus_' num2str(round(100000000000*rand))];
 mkdir(hand)
-
-if isempty(time)
-    error('It looks like there are no clean spikes in these data, so there is nothing to sort')
-end
 
 [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
 if isempty(chanparse)
@@ -103,6 +103,7 @@ end
 
 rmdir(hand,'s');
 
+% Add waveclus to method log
 SS.methodlog = [SS.methodlog '<WaveClus>'];
 
 % Functions called for clustering

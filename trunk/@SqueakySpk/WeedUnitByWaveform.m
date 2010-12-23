@@ -52,21 +52,7 @@ goodunit = [];
 waveind = 1;
 
 % Plot the first unit waveform
-current_data_avg = SS.avgwaveform.avg(:,waveind);
-current_data_sd = SS.avgwaveform.std(:,waveind);
-confplot(1:length(current_data_avg),...
-    current_data_avg,...
-    current_data_sd,...
-    current_data_sd,...
-    'k','LineWidth',2);
-hold on
-plot([0 length(current_data_avg)],[0 0],'k--')
-xlabel('time (samp.)')
-ylabel('uV')
-text(length(current_data_avg)-10,min(current_data_avg),['# ' num2str(waveind) ' of ' num2str(size(SS.avgwaveform.avg,2))])
-[min_amp min_ind] = min(current_data_avg);
-[max_amp max_ind] = max(current_data_avg);
-axis([1 length(current_data_avg) min_amp-current_data_sd(min_ind)-2 max_amp+current_data_sd(max_ind)+2]);
+plotWaveform(SS,waveind);
 
 % Assign the GUI a name to appear in the window title.
 set(f,'Name','Supervised Unit Deletion by Average Waveform')
@@ -87,28 +73,14 @@ set(f,'Visible','on');
         % Append goodunit vector
         goodunit = [goodunit waveind];
         
-        if waveind+1 == size(SS.avgwaveform.avg,2)
+        if waveind == size(SS.avgwaveform.avg,2)
             returnbutton_Callback()
         else
             % Plot the next unit waveform
             cla
             waveind = waveind+1;
-            current_data_avg = SS.avgwaveform.avg(:,waveind);
-            current_data_sd = SS.avgwaveform.std(:,waveind);
-
-            confplot(1:length(current_data_avg),...
-                current_data_avg,...
-                current_data_sd,...
-                current_data_sd,...
-                'k','LineWidth',2);
-            hold on 
-            plot([0 length(current_data_avg)],[0 0],'k--')
-            xlabel('time (samp.)')
-            ylabel('uV')
-            text(length(current_data_avg)-10,min(current_data_avg),['# ' num2str(waveind) ' of ' num2str(size(SS.avgwaveform.avg,2))])
-            [min_amp min_ind] = min(current_data_avg);
-            [max_amp max_ind] = max(current_data_avg);
-            axis([1 length(current_data_avg) min_amp-current_data_sd(min_ind)-2 max_amp+current_data_sd(max_ind)+2]);
+            plotWaveform(SS,waveind);
+            
         end
         
     end
@@ -124,26 +96,7 @@ set(f,'Visible','on');
             % Plot the next unit waveform
             cla
             waveind = waveind+1;
-            current_data_avg = SS.avgwaveform.avg(:,waveind);
-            current_data_sd = SS.avgwaveform.std(:,waveind);
-            confplot(1:length(current_data_avg),...
-                current_data_avg,...
-                current_data_sd,...
-                current_data_sd,...
-                'k','LineWidth',2);
-            confplot(1:length(current_data_avg),...
-                current_data_avg,...
-                current_data_sd,...
-                current_data_sd,...
-                'k','LineWidth',2);
-            hold on 
-            plot([0 length(current_data_avg)],[0 0],'k--')
-            xlabel('time (samp.)')
-            ylabel('uV')
-            text(length(current_data_avg)-10,min(current_data_avg),['# ' num2str(waveind) ' of ' num2str(size(SS.avgwaveform.avg,2))])
-            [min_amp min_ind] = min(current_data_avg);
-            [max_amp max_ind] = max(current_data_avg);
-            axis([1 length(current_data_avg) min_amp-current_data_sd(min_ind)-2 max_amp+current_data_sd(max_ind)+2]);
+            plotWaveform(SS,waveind);
         end
         
     end
@@ -155,28 +108,10 @@ set(f,'Visible','on');
             badunit(badunit==waveind) = [];
             goodunit(badunit==waveind) = [];
             
-            % Plot the old unit waveform
+            % Plot the next unit waveform
             cla
-            current_data_avg = SS.avgwaveform.avg(:,waveind);
-            current_data_sd = SS.avgwaveform.std(:,waveind);
-            confplot(1:length(current_data_avg),...
-                current_data_avg,...
-                current_data_sd,...
-                current_data_sd,...
-                'k','LineWidth',2);
-            confplot(1:length(current_data_avg),...
-                current_data_avg,...
-                current_data_sd,...
-                current_data_sd,...
-                'k','LineWidth',2);
-            hold on 
-            plot([0 length(current_data_avg)],[0 0],'k--')
-            xlabel('time (samp.)')
-            ylabel('uV')
-            text(length(current_data_avg)-10,min(current_data_avg),['# ' num2str(waveind) ' of ' num2str(size(SS.avgwaveform.avg,2))])
-            [min_amp min_ind] = min(current_data_avg);
-            [max_amp max_ind] = max(current_data_avg);
-            axis([1 length(current_data_avg) min_amp-current_data_sd(min_ind)-2 max_amp+current_data_sd(max_ind)+2]);
+            waveind = waveind+1;
+            plotWaveform(SS,waveind);
         else
             disp('Cannot go back because you are at the first waveform!')
         end
@@ -205,13 +140,11 @@ set(f,'Visible','on');
         
     end
 
-
     function enterbutton_Callback(source,eventdata)
         % Enter your good/bad picks
         SS.RemoveUnit(badunit);
         SS.methodlog = [SS.methodlog '<WeedUnitbyWaveform>'];
         close all
-        SS.PlotAvgWaveform();
         return
     end
 
@@ -221,90 +154,390 @@ set(f,'Visible','on');
         return
     end
 
-    function varargout = confplot(varargin)
-        %CONFPLOT Linear plot with continuous confidence/error boundaries.
-        %
-        %   CONFPLOT(X,Y,L,U) plots the graph of vector X vs. vector Y with
-        %   'continuous' confidence/error boundaries specified by the vectors
-        %   L and U.  L and U contain the lower and upper error ranges for each
-        %   point in Y. The vectors X,Y,L and U must all be the same length.
-        %
-        %   CONFPLOT(X,Y,E) or CONFPLOT(Y,E) plots Y with error bars [Y-E Y+E].
-        %   CONFPLOT(...,'LineSpec') uses the color and linestyle specified by
-        %   the string 'LineSpec'.  See PLOT for possibilities.
-        %
-        %   H = CONFPLOT(...) returns a vector of line handles.
-        %
-        %   For example,
-        %      x = 1:0.1:10;
-        %      y = sin(x);
-        %      e = std(y)*ones(size(x));
-        %      confplot(x,y,e)
-        %   draws symmetric continuous confidence/error boundaries of unit standard deviation.
-        %
-        %   See also ERRORBAR, SEMILOGX, SEMILOGY, LOGLOG, PLOTYY, GRID, CLF, CLC, TITLE,
-        %   XLABEL, YLABEL, AXIS, AXES, HOLD, COLORDEF, LEGEND, SUBPLOT, STEM.
-        %
-        %     © 2002 - Michele Giugliano, PhD (http://www.giugliano.info) (Bern, Monday Nov 4th, 2002 - 19:02)
-        %    (bug-reports to michele@giugliano.info)
-        %   $Revision: 1.0 $  $Date: 2002/11/11 14:36:08 $
-        %
+    function plotWaveform(SS,waveind)
         
-        if (nargin<2)
-            disp('ERROR: not enough input arguments!');
-            return;
-        end % if
+        % plot the waveform
+        current_data = SS.waveform(:,SS.unit == waveind);
+        if length(current_data) > 500
+            rp = randperm(length(current_data));
+            current_data = current_data(:,rp(1:500));
+        end
         
-        x = [];  y = [];  z1 = [];  z2 = [];  spec = '';
+        current_data_avg = SS.avgwaveform.avg(:,waveind);
+        current_data_sd = SS.avgwaveform.std(:,waveind);
+
+        hold on
         
-        switch nargin
-            case 2
-                y  = varargin{1};
-                z1 = y + varargin{2};
-                z2 = y - varargin{2};
-                x  = 1:length(y);
-            case 3
-                x  = varargin{1};
-                y  = varargin{2};
-                z1 = y + varargin{3};
-                z2 = y - varargin{3};
-            case 4
-                x  = varargin{1};
-                y  = varargin{2};
-                z1 = y + varargin{4};
-                z2 = y - varargin{3};
-        end % switch
+        plot([0 length(current_data_avg)],[0 0],'k--')
+        plot(current_data)
+        [hl hp] = boundedline(1:length(current_data_avg),...
+            current_data_avg,...
+            current_data_sd);
+        set(hl,'LineWidth',3,'Color',[0 0 0]);
         
-        if (nargin >= 5)
-            x  = varargin{1};
-            y  = varargin{2};
-            z1 = y + varargin{4};
-            z2 = y - varargin{3};
-            spec = 'ok';
-        end %
-        
-        
-        p = plot(x,y,x,z1,x,z2);    YLIM = get(gca,'YLim');    delete(p);
-        a1 = area(x,z1,min(YLIM));
-        hold on;
-        set(a1,'LineStyle','none');     set(a1,'FaceColor',[0.8 0.8 0.8]);
-        a2 = area(x,z2,min(YLIM));
-        set(a2,'LineStyle','none');     set(a2,'FaceColor',[1 1 1]);
-        if (~isempty(spec)),
-            spec = sprintf('p = plot(x,y,varargin{5}');
-            for i=6:nargin,  spec = sprintf('%s,varargin{%d}',spec,i); end % for
-            spec = sprintf('%s);',spec);
-            eval(spec);
-        else                     p = plot(x,y);
-        end;
-        hold off;
-        
-        set(gca,'Layer','top');
-        
-        if (nargout>1)
-            varargout{1} = H;
-        end;
-        
+        xlabel('time (samp.)')
+        ylabel('uV')
+        text(length(current_data_avg)-10,min(current_data_avg),['# ' num2str(waveind) ' of ' num2str(size(SS.avgwaveform.avg,2))])
+        axis([1 length(current_data_avg) min(min(current_data)) max(max(current_data))]);
     end
 
+    function varargout = boundedline(varargin)
+        %BOUNDEDLINE Plot a line with shaded error/confidence bounds
+        %
+        % [hl, hp] = boundedline(x, y, b)
+        % [hl, hp] = boundedline(x, y, b, linespec)
+        % [hl, hp] = boundedline(x1, y1, b1, linespec1,  x2, y2, b2, linespec2)
+        % [hl, hp] = boundedline(..., 'alpha')
+        % [hl, hp] = boundedline(..., ax)
+        % [hl, hp] = boundedline(..., 'transparency', trans)
+        % [hl, hp] = boundedline(..., 'orientation', orient)
+        % [hl, hp] = boundedline(..., 'cmap', cmap)
+        %
+        % Input variables:
+        %
+        %   x, y:       x and y values, either vectors of the same length, matrices
+        %               of the same size, or vector/matrix pair where the row or
+        %               column size of the array matches the length of the vector
+        %               (same requirements as for plot function).
+        %
+        %   b:          npoint x nsize x nline array.  Distance from line to
+        %               boundary, for each point along the line (dimension 1), for
+        %               each side of the line (lower/upper or left/right, depending
+        %               on orientation) (dimension 2), and for each plotted line
+        %               described by the preceding x-y values (dimension 3).  If
+        %               size(b,1) == 1, the bounds will be the same for all points
+        %               along the line.  If size(b,2) == 1, the bounds will be
+        %               symmetrical on both sides of the lines.  If size(b,3) == 1,
+        %               the same bounds will be applied to all lines described by
+        %               the preceding x-y arrays (only applicable when either x or
+        %               y is an array).  Bounds cannot include Inf, -Inf, or NaN,
+        %
+        %   linespec:   line specification that determines line type, marker
+        %               symbol, and color of the plotted lines for the preceding
+        %               x-y values.
+        %
+        %   'alpha':    if included, the bounded area will be rendered with a
+        %               partially-transparent patch the same color as the
+        %               corresponding line(s).  If not included, the bounded area
+        %               will be an opaque patch with a lighter shade of the
+        %               corresponding line color.
+        %
+        %   ax:         handle of axis where lines will be plotted.  If not
+        %               included, the current axis will be used.
+        %
+        %   trans:      Scalar between 0 and 1 indicating with the transparency or
+        %               intensity of color of the bounded area patch. Default is
+        %               0.2.
+        %
+        %   orient:     'vert': add bounds in vertical (y) direction (default)
+        %               'horiz': add bounds in horizontal (x) direction
+        %
+        %   cmap:       n x 3 colormap array.  If included, lines will be colored
+        %               (in order of plotting) according to this colormap,
+        %               overriding any linespec or default colors.
+        %
+        % Output variables:
+        %
+        %   hl:         handles to line objects
+        %
+        %   hp:         handles to patch objects
+        %
+        % Example:
+        %
+        % x = linspace(0, 2*pi, 50);
+        % y1 = sin(x);
+        % y2 = cos(x);
+        % e1 = rand(size(y1))*.5+.5;
+        % e2 = [.25 .5];
+        %
+        % subplot(2,2,1);
+        % boundedline(x, y1, e1, '-b*', x, y2, e2, '--ro');
+        %
+        % subplot(2,2,2);
+        % boundedline(x, [y1;y2], rand(length(y1),2,2)*.5+.5, 'alpha');
+        %
+        % subplot(2,2,3);
+        % boundedline([y1;y2], x, e1(1), 'orientation', 'horiz')
+        %
+        % subplot(2,2,4)
+        % boundedline(x, repmat(y1, 4,1), permute(0.5:-0.1:0.2, [3 1 2]), ...
+        %             'cmap', cool(4), 'transparency', 0.5);
+        
+        
+        % Copyright 2010 Kelly Kearney
+        
+        %--------------------
+        % Parse input
+        %--------------------
+        
+        % Alpha flag
+        
+        isalpha = cellfun(@(x) ischar(x) && strcmp(x, 'alpha'), varargin);
+        if any(isalpha)
+            usealpha = true;
+            varargin = varargin(~isalpha);
+        else
+            usealpha = false;
+        end
+        
+        % Axis
+        
+        isax = cellfun(@(x) isscalar(x) && ishandle(x) && strcmp('axes', get(x,'type')), varargin);
+        if any(isax)
+            hax = varargin{isax};
+            varargin = varargin(~isax);
+        else
+            hax = gca;
+        end
+        
+        % Transparency
+        
+        [found, trans, varargin] = parseparam(varargin, 'transparency');
+        
+        if ~found
+            trans = 0.2;
+        end
+        
+        if ~isscalar(trans) || trans < 0 || trans > 1
+            error('Transparency must be scalar between 0 and 1');
+        end
+        
+        % Orientation
+        
+        [found, orient, varargin] = parseparam(varargin, 'orientation');
+        
+        if ~found
+            orient = 'vert';
+        end
+        
+        if strcmp(orient, 'vert')
+            isvert = true;
+        elseif strcmp(orient, 'horiz')
+            isvert = false;
+        else
+            error('Orientation must be ''vert'' or ''horiz''');
+        end
+        
+        
+        % Colormap
+        
+        [hascmap, cmap, varargin] = parseparam(varargin, 'cmap');
+        
+        
+        % X, Y, E triplets, and linespec
+        
+        [x,y,err,linespec] = deal(cell(0));
+        while ~isempty(varargin)
+            if length(varargin) < 3
+                error('Unexpected input: should be x, y, bounds triplets');
+            end
+            if all(cellfun(@isnumeric, varargin(1:3)))
+                x = [x varargin(1)];
+                y = [y varargin(2)];
+                err = [err varargin(3)];
+                varargin(1:3) = [];
+            else
+                error('Unexpected input: should be x, y, bounds triplets');
+            end
+            if ~isempty(varargin) && ischar(varargin{1})
+                linespec = [linespec varargin(1)];
+                varargin(1) = [];
+            else
+                linespec = [linespec {[]}];
+            end
+        end
+        
+        %--------------------
+        % Reformat x and y
+        % for line and patch
+        % plotting
+        %--------------------
+        
+        % Calculate y values for bounding lines
+        
+        plotdata = cell(0,7);
+        
+        htemp = figure('visible', 'off');
+        for ix = 1:length(x)
+            
+            % Get full x, y, and linespec data for each line (easier to let plot
+            % check for properly-sized x and y and expand values than to try to do
+            % it myself)
+            
+            try
+                if isempty(linespec{ix})
+                    hltemp = plot(x{ix}, y{ix});
+                else
+                    hltemp = plot(x{ix}, y{ix}, linespec{ix});
+                end
+            catch
+                close(htemp);
+                error('X and Y matrices and/or linespec not appropriate for line plot');
+            end
+            
+            linedata = get(hltemp, {'xdata', 'ydata', 'marker', 'linestyle', 'color'});
+            
+            nline = size(linedata,1);
+            
+            % Expand bounds matrix if necessary
+            
+            if nline > 1
+                if ndims(err{ix}) == 3
+                    err2 = squeeze(num2cell(err{ix},[1 2]));
+                else
+                    err2 = repmat(err(ix),nline,1);
+                end
+            else
+                err2 = err(ix);
+            end
+            
+            % Figure out upper and lower bounds
+            
+            [lo, hi] = deal(cell(nline,1));
+            for iln = 1:nline
+                
+                x2 = linedata{iln,1};
+                y2 = linedata{iln,2};
+                nx = length(x2);
+                
+                if isvert
+                    lineval = y2;
+                else
+                    lineval = x2;
+                end
+                
+                sz = size(err2{iln});
+                
+                if isequal(sz, [nx 2])
+                    lo{iln} = lineval - err2{iln}(:,1)';
+                    hi{iln} = lineval + err2{iln}(:,2)';
+                elseif isequal(sz, [nx 1])
+                    lo{iln} = lineval - err2{iln}';
+                    hi{iln} = lineval + err2{iln}';
+                elseif isequal(sz, [1 2])
+                    lo{iln} = lineval - err2{iln}(1);
+                    hi{iln} = lineval + err2{iln}(2);
+                elseif isequal(sz, [1 1])
+                    lo{iln} = lineval - err2{iln};
+                    hi{iln} = lineval + err2{iln};
+                elseif isequal(sz, [2 nx]) % not documented, but accepted anyways
+                    lo{iln} = lineval - err2{iln}(:,1);
+                    hi{iln} = lineval + err2{iln}(:,2);
+                elseif isequal(sz, [1 nx]) % not documented, but accepted anyways
+                    lo{iln} = lineval - err2{iln};
+                    hi{iln} = lineval + err2{iln};
+                elseif isequal(sz, [2 1]) % not documented, but accepted anyways
+                    lo{iln} = lineval - err2{iln}(1);
+                    hi{iln} = lineval + err2{iln}(2);
+                else
+                    error('Error bounds must be npt x nside x nline array');
+                end
+                
+            end
+            
+            % Combine all data
+            
+            plotdata = [plotdata; linedata lo hi];
+            
+        end
+        close(htemp);
+        
+        % Override colormap
+        
+        if hascmap
+            nd = size(plotdata,1);
+            cmap = repmat(cmap, ceil(nd/size(cmap,1)), 1);
+            cmap = cmap(1:nd,:);
+            plotdata(:,5) = num2cell(cmap,2);
+        end
+        
+        
+        %--------------------
+        % Plot
+        %--------------------
+        
+        % Setup of x and y, plus line and patch properties
+        
+        nline = size(plotdata,1);
+        [xl, yl, xp, yp, marker, lnsty, lncol, ptchcol, alpha] = deal(cell(nline,1));
+        
+        for iln = 1:nline
+            xl{iln} = plotdata{iln,1};
+            yl{iln} = plotdata{iln,2};
+            if isvert
+                xp{iln} = [plotdata{iln,1} fliplr(plotdata{iln,1})];
+                yp{iln} = [plotdata{iln,6} fliplr(plotdata{iln,7})];
+            else
+                xp{iln} = [plotdata{iln,6} fliplr(plotdata{iln,7})];
+                yp{iln} = [plotdata{iln,2} fliplr(plotdata{iln,2})];
+            end
+            
+            marker{iln} = plotdata{iln,3};
+            lnsty{iln} = plotdata{iln,4};
+            
+            if usealpha
+                lncol{iln} = plotdata{iln,5};
+                ptchcol{iln} = plotdata{iln,5};
+                alpha{iln} = trans;
+            else
+                lncol{iln} = plotdata{iln,5};
+                ptchcol{iln} = interp1([0 1], [1 1 1; lncol{iln}], trans);
+                alpha{iln} = 1;
+            end
+        end
+        
+        % Plot patches and lines
+        
+        [hp,hl] = deal(zeros(nline,1));
+        
+        axes(hax);
+        hold on;
+        
+        for iln = 1:nline
+            hp(iln) = patch(xp{iln}, yp{iln}, ptchcol{iln}, 'facealpha', alpha{iln}, 'edgecolor', 'none');
+        end
+        
+        for iln = 1:nline
+            hl(iln) = line(xl{iln}, yl{iln}, 'marker', marker{iln}, 'linestyle', lnsty{iln}, 'color', lncol{iln});
+        end
+        
+        %--------------------
+        % Assign output
+        %--------------------
+        
+        nargchk(0, 2, nargout);
+        
+        if nargout >= 1
+            varargout{1} = hl;
+        end
+        
+        if nargout == 2
+            varargout{2} = hp;
+        end
+        
+        %--------------------
+        % Parse optional
+        % parameters
+        %--------------------
+        
+        function [found, val, vars] = parseparam(vars, param)
+            
+            isvar = cellfun(@(x) ischar(x) && strcmpi(x, param), vars);
+            
+            if sum(isvar) > 1
+                error('Parameters can only be passed once');
+            end
+            
+            if any(isvar)
+                found = true;
+                idx = find(isvar);
+                val = vars{idx+1};
+                vars([idx idx+1]) = [];
+            else
+                found = false;
+                val = [];
+            end
+        end
+        
+    end
 end
