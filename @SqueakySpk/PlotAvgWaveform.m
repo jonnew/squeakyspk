@@ -7,9 +7,12 @@ if isempty(SS.avgwaveform) || isempty(SS.avgwaveform.avg)
     error('You have not performed spike sorting yet, or there are no valid units.')
 end
 
-avgfig = figure();
+figure();
 m = ceil(sqrt(size(SS.avgwaveform.avg,2)));
 n = ceil(sqrt(size(SS.avgwaveform.avg,2)));
+
+min_amp = min(min(SS.avgwaveform.avg)) - max(max(SS.avgwaveform.std));
+max_amp = max(max(SS.avgwaveform.avg)) + max(max(SS.avgwaveform.std));
 
 for it = 1:size(SS.avgwaveform.avg,2)
     subplot(m,n,it)
@@ -25,10 +28,7 @@ for it = 1:size(SS.avgwaveform.avg,2)
         'LineWidth',2,'color', col);
     title(['Unit ' num2str(it)])
     axis tight
-    [min_amp min_ind] = min(SS.avgwaveform.avg(:,it));
-    [max_amp max_ind] = max(SS.avgwaveform.avg(:,it));
-    ylim([min_amp-SS.avgwaveform.std(min_ind,it)-2 max_amp+SS.avgwaveform.std(max_ind,it)+2])
-    
+    ylim([min_amp max_amp])
     if ceil(it/n) <= (m-1)
         set(gca,'XTickLabel',[])
     end

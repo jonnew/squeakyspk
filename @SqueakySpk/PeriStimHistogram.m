@@ -25,7 +25,8 @@ end
 
 % Make sure the data actual has stimulation entries
 if isempty(SS.st_time)
-    error('You must provide stimulus timing information to form a peristimulus histogram.')
+    warning('You must provide stimulus timing information to form a peristimulus histogram. Now exiting...')
+    return
 end
 
 % Make sure the data actual has stimulation entries
@@ -82,6 +83,9 @@ end
 SS.psh = psh;
 
 SS.PlotPeriStimHistogram;
+
+% Add psh to method log
+SS.methodlog = [SS.methodlog '<PeriStimHistogram>'];
 
 end
 
