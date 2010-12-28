@@ -384,7 +384,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% Block 6: SONIFICATION TOOLS
-        ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale)
+        ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,savewav)
         % This method is contained in a separate file.
         
         
