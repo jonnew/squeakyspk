@@ -58,7 +58,7 @@ end
 
 spkinterest = SS.time(startind:endind);
 cleaninterest = SS.clean(startind:endind);
-waveinterest = SS.waveform(:,startind:endind);
+
 % Has the user sorted yet?
 usechan = isempty(SS.unit);
 if usechan || yaxischannel
@@ -68,8 +68,8 @@ if usechan || yaxischannel
     set(fh,'color','k'); % sets the background color to black
     hold on
     
-
-        % Plot the raster for spikes in the time bound of interest
+    
+    % Plot the raster for spikes in the time bound of interest
     switch what2show
         case 'both'
             plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
@@ -77,14 +77,12 @@ if usechan || yaxischannel
             plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
         case 'clean'
             spkinterest = spkinterest(cleaninterest);
-            unitinterest = unitinterest(cleaninterest);
-            waveinterest = waveinterest(:,cleaninterest);
+            unitinterest = unitinterest(cleaninterest);            
             plot(spkinterest,unitinterest,'w.','MarkerSize',4);
             plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
         case 'dirty'
             spkinterest = spkinterest(~cleaninterest);
-            unitinterest = unitinterest(~cleaninterest);
-            waveinterest = waveinterest(:,~cleaninterest);
+            unitinterest = unitinterest(~cleaninterest);            
             plot(spkinterest,unitinterest,'r.','MarkerSize',4);
             plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
     end
@@ -103,14 +101,12 @@ else
             plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
         case 'clean'
             spkinterest = spkinterest(cleaninterest);
-            unitinterest = unitinterest(cleaninterest);
-            waveinterest = waveinterest(:,cleaninterest);
+            unitinterest = unitinterest(cleaninterest);           
             plot(spkinterest,unitinterest,'w.','MarkerSize',4);
             plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
         case 'dirty'
             spkinterest = spkinterest(~cleaninterest);
             unitinterest = unitinterest(~cleaninterest);
-            waveinterest = waveinterest(:,~cleaninterest);
             plot(spkinterest,unitinterest,'r.','MarkerSize',4);
             plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
     end
