@@ -45,6 +45,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
     %         a. WaveClus
     %     4. Advanced Cleaning
     %         a. WeedUnitByWaveform
+    %     5. Analysis
+    %     6. Sonification
+    %     7. Returning clean data
+    %     8. Saving
     %
     %   To use SqueakySpk, look at ReadMe.txt that came with this package,
     %   look at the testscript and examine the help for each method by
@@ -82,6 +86,22 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         % Methods log
         methodlog; % string array that keeps track of the methods run on the SS object
+        
+        % Stuff filled by running xcorrs 
+        xcorrmat;%[N x M x P xQ double (timeslice, 'causal' channel, 'effect' channel, offset (ms)] 
+            %cross correlation between spikes on different channels and
+            %stimuli on different channels.  Each cross correlation is
+            %calculated using XBIN seconds of data (a 'timeslice').  
+            
+        xcount;%[N x M int (timeslice, 'causal' channel count)]
+            %the number of times this channel was active.  Stimulating
+            %electrodes are index +64
+            
+        xbin;%[INT (length of each timeslice in s)]
+            %the duration of a timeslice, in seconds
+            
+        xrez;%[DOUBLE (resolution of offsets, in ms)]
+            %the resolution of the cross correlation
     end
     
     methods
@@ -124,7 +144,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             else
                 SS.channel = spike.channel(ind);
             end
-            SS.waveform = (spike.waveform(:,ind)).*1e6*SS.recunit; % Convert to uV
+            if size(spike.waveform,2)>0 %allow for spike files with no waveforms to be uploaded
+                SS.waveform = (spike.waveform(:,ind)).*1e6*SS.recunit; % Convert to uV
+            end
             SS.unit = [];
             SS.methodlog = [];
             SS.badunit = [];
@@ -382,6 +404,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         PeriStimHistogram(SS,dt,bound);
         % This method is contained in a separate file.
+        
+        [result counts]= xcorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez)
+        
+        xcorrfilm(SS,tasks);
         
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,savewav)
