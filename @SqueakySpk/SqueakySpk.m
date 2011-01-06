@@ -407,7 +407,8 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         [result counts]= xcorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez)
         
-        xcorrfilm(SS,tasks);
+        
+        xcorrfilm(SS,name,tasks, fps);
         
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,savewav)
