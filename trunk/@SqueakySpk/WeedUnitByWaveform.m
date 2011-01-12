@@ -106,11 +106,10 @@ set(f,'Visible','on');
         if waveind > 1
             waveind = waveind - 1;
             badunit(badunit==waveind) = [];
-            goodunit(badunit==waveind) = [];
+            goodunit(goodunit==waveind) = [];
             
             % Plot the next unit waveform
             cla
-            waveind = waveind+1;
             plotWaveform(SS,waveind);
         else
             disp('Cannot go back because you are at the first waveform!')
