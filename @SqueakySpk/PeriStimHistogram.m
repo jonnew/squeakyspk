@@ -1,23 +1,27 @@
-function PeriStimHistogram(SS,dt,histrange,bound)
+function PeriStimHistogram(SS,dt,histrange,bound,ploton)
 %PERISTIMTIMEHISTOGRAM create the PSH for an SS object.
 %
-%   PERISTIMTIMEHISTOGRAM(SS, dt,histrange,bound) calculates the
+%   PERISTIMTIMEHISTOGRAM(SS, dt,histrange,bound,ploton) calculates the
 %   peristimulus histogram with time resolution dt (msec) for a time window around
 %   the conditioning stimulus event defined by histrange = [t1 t2] in
 %   milliseconds, the range of data in seconds supplied by bound = [T1 T2]
 %   in seconds. The PSH is caculated for each channel and stored in the [N
 %   x M] matrix psh.hist which represend the M sample long psh for each of
-%   N channels.
+%   N channels. Ploton controls whether or not the PSH is plotted after the
+%   comptuation has finished.
 
 % check number and type of arguments
+if nargin < 5 || isempty(ploton)
+    ploton = 1; % Whole recording
+end
 if nargin < 4 || isempty(bound)
     bound = [0 max(SS.time)]; % Whole recording
 end
 if nargin < 3 || isempty(histrange)
-    histrange = [-100 500]; % Default range of histogram
+    histrange = [-100 500]; % Default range of histogram (msec)
 end
 if nargin < 2 || isempty(dt)
-    dt = 5; % Default time resolution of 1 ms
+    dt = 5; % Default time resolution of 5 msec
 end
 if nargin < 1
     error('Need to act on SqueakSpk Object');
@@ -82,7 +86,10 @@ end
 % Save the psh
 SS.psh = psh;
 
-SS.PlotPeriStimHistogram;
+% Plot if the user wants it
+if ploton
+    SS.PlotPeriStimHistogram;
+end
 
 % Add psh to method log
 SS.methodlog = [SS.methodlog '<PeriStimHistogram>'];

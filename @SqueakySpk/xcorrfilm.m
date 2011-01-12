@@ -19,7 +19,10 @@ k = figure('Position',[scrsz(3)*1/8 scrsz(4)*1/8 scrsz(3)*6/8 scrsz(4)*6/8]);
   for i = 1:size(SS.xcorrmat,1)
       for j = 1:length(tasks)
           subplot(side,side,j);
-          imagesc(reshape(SS.xcorrmat(i,tasks(j),:,:),64,201)./SS.xcount(i,tasks(j)),[0 1]); ylabel('channel');xlabel('time (ms)');colorbar;
+          imagesc(reshape(SS.xcorrmat(i,tasks(j),:,:),64,201)./SS.xcount(i,tasks(j)),[0 1]);
+          ylabel('channel');
+          xlabel('time (ms)');
+          colorbar;
           set(gca,'XTick',0:50:200);
 set(gca,'XTickLabel',{'-100','-50','0','50','100'});
           title(['conditioned on ' num2str(tasks(j))]);
