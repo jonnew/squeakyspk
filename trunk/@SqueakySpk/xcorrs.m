@@ -1,7 +1,7 @@
 function [result counts] = xcorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez)
 
 xc_length = ceil(xcorlength*1000/xcorrez)*2+1;
-channels_used = unique(SS.channel);
+channels_used = 1:64;%unique(SS.channel);
 explength =ceil((maxtime-mintime)/binlength);
 cause = length(channels_used)*2;
 effect = length(channels_used);
@@ -31,7 +31,7 @@ fullspiketime = SS.time;
 fullspikechannel=SS.channel;
 fullstimtime=SS.st_time;
 fullstimchannel=SS.st_channel;
-parfor t=1:size(result,1)
+for t=1:size(result,1)
     subresult = zeros(cause,effect , xc_length);
     %convert
     starttime = (t-1)*binlength+mintime;
@@ -57,7 +57,7 @@ parfor t=1:size(result,1)
     stimtime = stimtime - timestart;
     
     timeend = max([spiketime; stimtime']);
-    tseries_mat = NaN(channels_used*2, timeend);
+    tseries_mat = NaN(length(channels_used)*2, timeend);
     
     for x=1:length(channels_used)
         spks = convert2tseries(spiketime(spikechannel == x), xcorrez);
@@ -153,7 +153,7 @@ parfor t=1:size(result,1)
 end
 SS.xcorrmat = result;
 SS.xcount = counts;
-SS.xauto = autoc;
+%SS.xauto = autoc;
 SS.xbin = binlength;
 SS.xrez = xcorrez;
 % close(h);

@@ -102,6 +102,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             
         xrez;%[DOUBLE (resolution of offsets, in ms)]
             %the resolution of the cross correlation
+        xauto;
     end
     
     methods
@@ -402,7 +403,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             
         end
         
-        PeriStimHistogram(SS,dt,bound);
+        PeriStimHistogram(SS,dt,histrange,bound,ploton);
         % This method is contained in a separate file.
         
         [result counts]= xcorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez)
@@ -413,7 +414,6 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,savewav)
         % This method is contained in a separate file.
-        
         
         %% Block 7: RETURN CLEAN DATA
         function sqycln = ReturnClean(SS)
