@@ -5,15 +5,15 @@ channels_used = 1:64;%unique(SS.channel);
 explength =ceil((maxtime-mintime)/binlength);
 cause = length(channels_used)*2;
 effect = length(channels_used);
-result = NaN(explength, cause,effect , xc_length); 
+result = NaN(explength, cause,effect , xc_length);
 counts = NaN(explength,cause);
 tasks = NaN(length(channels_used)^2*1.5,3);
 index = 0;
 %stim on spikes
 for i = 1:length(channels_used)
     tasks(index+(1:length(channels_used)),1) = channels_used(i);
-  
-   
+    
+    
     tasks(index+(1:length(channels_used)),3) = channels_used;
     index = index+length(channels_used);
 end
@@ -39,7 +39,7 @@ for t=1:size(result,1)
     
     spiketime = fullspiketime((fullspiketime >starttime)&(fullspiketime <stoptime));
     spikechannel = fullspikechannel((fullspiketime>starttime)&(fullspiketime<stoptime));
-
+    
     stimtime = fullstimtime((fullstimtime>starttime)&(fullstimtime<stoptime));
     stimchannel = fullstimchannel((fullstimtime>starttime)&(fullstimtime<stoptime));
     
@@ -51,7 +51,7 @@ for t=1:size(result,1)
         spiketime = NaN;
         spikechannel = NaN;
     end
-  
+    
     timestart = min([spiketime; stimtime']);
     spiketime = spiketime - timestart;
     stimtime = stimtime - timestart;
@@ -65,24 +65,24 @@ for t=1:size(result,1)
         tseries_mat(x, 1:length(spks)) = spks;
         tseries_mat(x+size(channels_used,1), 1:length(stms)) = stms;
     end
-%     figure;plot(spiketime,spikechannel,'.');hold on; plot(stimtime,stimchannel,'.r');
+    %     figure;plot(spiketime,spikechannel,'.');hold on; plot(stimtime,stimchannel,'.r');
     %run tasks
-   
-%     figure;imagesc(tseries_mat);set(gca,'YDir','normal');hold on;
-%      plot(spiketime.*1000, spikechannel, '.y');hold on;plot(stimtime.*1000,stimchannel+64,'.r');
-%      pause
-%waitbar(0,h,['running timeslice ' num2str(t)]);
+    
+    %     figure;imagesc(tseries_mat);set(gca,'YDir','normal');hold on;
+    %      plot(spiketime.*1000, spikechannel, '.y');hold on;plot(stimtime.*1000,stimchannel+64,'.r');
+    %      pause
+    %waitbar(0,h,['running timeslice ' num2str(t)]);
     for x=1:size(tasks, 1)
-%       disp(num2str(tasks(x,:)))
-      
+        %       disp(num2str(tasks(x,:)))
+        
         if isnan(tasks(x, 2))
             %stim on spike
-%             sum(tseries_mat(tasks(x, 3)+length(channels_used), :))
-%             figure(3);subplot(1,2,1);plot(tseries_mat(tasks(x, 1), :),'g');hold on;
-%             plot(tseries_mat(tasks(x, 3)+length(channels_used), :),'r');hold off
-%             title(num2str(tasks(x,[1,3])));
-
-
+            %             sum(tseries_mat(tasks(x, 3)+length(channels_used), :))
+            %             figure(3);subplot(1,2,1);plot(tseries_mat(tasks(x, 1), :),'g');hold on;
+            %             plot(tseries_mat(tasks(x, 3)+length(channels_used), :),'r');hold off
+            %             title(num2str(tasks(x,[1,3])));
+            
+            
             causal_index = tasks(x, 1)+length(channels_used);
             effect_index = tasks(x, 3);
             reflexive = false;
@@ -96,52 +96,52 @@ for t=1:size(result,1)
         
         if ((sum(causal_series)>0)&...
                 (sum(effect_series)>0))
-
+            
             xc = xcorr( effect_series,causal_series);
-            if length(xc)<xc_length 
+            if length(xc)<xc_length
                 xstart = 1;
                 xstop = length(xc);
                 sstart = (xc_length-1)/2+1-floor(xc_length /2);
                 sstop = (xc_length-1)/2+1+floor(xc_length /2);
             else
                 xstart = (length(xc)-1)/2+1-floor(xc_length /2);
-
+                
                 xstop = (length(xc)-1)/2+1+floor(xc_length /2);
                 sstart = 1;
                 sstop = xc_length;
             end
-%                 xc_length
-%                 length(xc)
-%                 sstart
-%                 sstop
-%                 xstart
-%                 xstop
-%                 size(subresult(tasks(x, 1), tasks(x, 3), sstart:sstop))
-%                 size(xc(xstart:xstop))
-%             if tasks(x,1) ==tasks(x,3)
-%                 figure(3);title(num2str(tasks(x,1)));
-%                 subplot(3,1,1);
-%                 plot(tseries_mat(tasks(x, 1)+length(channels_used), :),'r');
-%                 hold on; plot(tseries_mat(tasks(x, 3),:));hold off;
-%                 subplot(3,1,2);
-%                 plot(xc(xstart:xstop));axis tight;
-%                 subplot(3,1,3);
-%                 plot(xc)
-%                 pause
-%             end
+            %                 xc_length
+            %                 length(xc)
+            %                 sstart
+            %                 sstop
+            %                 xstart
+            %                 xstop
+            %                 size(subresult(tasks(x, 1), tasks(x, 3), sstart:sstop))
+            %                 size(xc(xstart:xstop))
+            %             if tasks(x,1) ==tasks(x,3)
+            %                 figure(3);title(num2str(tasks(x,1)));
+            %                 subplot(3,1,1);
+            %                 plot(tseries_mat(tasks(x, 1)+length(channels_used), :),'r');
+            %                 hold on; plot(tseries_mat(tasks(x, 3),:));hold off;
+            %                 subplot(3,1,2);
+            %                 plot(xc(xstart:xstop));axis tight;
+            %                 subplot(3,1,3);
+            %                 plot(xc)
+            %                 pause
+            %             end
             subresult(causal_index, effect_index, sstart:sstop) = xc(xstart:xstop);
             if reflexive
                 subresult(effect_index, causal_index, sstart:sstop) = xc(xstop:-1:xstart);
             end
-%              figure(3);subplot(1,2,2);plot(xc);
+            %              figure(3);subplot(1,2,2);plot(xc);
         end
-     
-       
+        
+        
         %waitbar(x/size(tasks,1),h);
     end
     
     %find activity autocorrelation during this period
-
+    
     result(t,:,:,:) = subresult;
     counts(t,:) = sum(tseries_mat,2);
     totalspikes = sum(tseries_mat);
@@ -157,4 +157,28 @@ SS.xcount = counts;
 SS.xbin = binlength;
 SS.xrez = xcorrez;
 % close(h);
+
+
+    function tseries = convert2tseries(spikes, rez)
+        %CONVERT2TSERIES converts an array of spike times into tseries
+        %   SPIKES is an array of spike times in seconds
+        %   REZ is resolution of array in ms
+        %   TSERIES is an array of length ALENGTH which is created by sorting
+        %   spikes into a specific 'time bin', which is a length of time that is
+        %   calculated by dividing the length of TSERIES by the max time in
+        %   SPIKES.
+        
+        if isempty(spikes)
+            tseries = zeros(1);
+            return;
+        end
+        s = max(spikes);
+        tseries = zeros(1, floor(s*1000/rez)+1);
+        
+        temp = floor(spikes*1000/rez)+1;
+        for x=1:length(temp)
+            tseries(temp(x)) = tseries(temp(x)) + 1;
+        end
+        
+    end
 end
