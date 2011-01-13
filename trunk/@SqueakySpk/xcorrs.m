@@ -6,7 +6,7 @@ explength =ceil((maxtime-mintime)/binlength);
 cause = length(channels_used)*2;
 effect = length(channels_used);
 result = NaN(explength, cause,effect , xc_length);
-counts = NaN(explength,cause);
+counts = zeros(explength,cause);
 tasks = NaN(length(channels_used)^2*1.5,3);
 index = 0;
 %stim on spikes
@@ -27,21 +27,23 @@ for i = 1:length(channels_used)
     used = used+1;
 end
 %h= waitbar(0,['running timeslice ' num2str(1)]);
-fullspiketime = SS.time;
-fullspikechannel=SS.channel;
+fullspiketime = SS.time(SS.clean);
+fullspikechannel=SS.channel(SS.clean);
+%size(fullspiketime)
 fullstimtime=SS.st_time;
 fullstimchannel=SS.st_channel;
+autoc = NaN(size(result,1),xc_length);
 for t=1:size(result,1)
     subresult = zeros(cause,effect , xc_length);
     %convert
     starttime = (t-1)*binlength+mintime;
     stoptime = t*binlength+mintime;
     
-    spiketime = fullspiketime((fullspiketime >starttime)&(fullspiketime <stoptime));
-    spikechannel = fullspikechannel((fullspiketime>starttime)&(fullspiketime<stoptime));
-    
-    stimtime = fullstimtime((fullstimtime>starttime)&(fullstimtime<stoptime));
-    stimchannel = fullstimchannel((fullstimtime>starttime)&(fullstimtime<stoptime));
+    spiketime = fullspiketime((fullspiketime >=starttime)&(fullspiketime <stoptime));
+    spikechannel = fullspikechannel((fullspiketime>=starttime)&(fullspiketime<stoptime));
+    %size(spiketime )
+    stimtime = fullstimtime((fullstimtime>=starttime)&(fullstimtime<stoptime));
+    stimchannel = fullstimchannel((fullstimtime>=starttime)&(fullstimtime<stoptime));
     
     if isempty(stimtime)
         stimtime = NaN;
@@ -57,14 +59,24 @@ for t=1:size(result,1)
     stimtime = stimtime - timestart;
     
     timeend = max([spiketime; stimtime']);
-    tseries_mat = NaN(length(channels_used)*2, timeend);
-    
+    tseries_mat = zeros(length(channels_used)*2, timeend);
+    %tmp_count = 0;
     for x=1:length(channels_used)
+        %disp(x)
+        %sum(spikechannel==x)
         spks = convert2tseries(spiketime(spikechannel == x), xcorrez);
+        %disp(sum(spks))
+        %disp(sum(stimchannel == x))
+        %tmp_count= tmp_count+sum(spks);
         stms = convert2tseries(stimtime(stimchannel == x), xcorrez);
+        %disp(sum(stms))
         tseries_mat(x, 1:length(spks)) = spks;
         tseries_mat(x+size(channels_used,1), 1:length(stms)) = stms;
+                counts(t,x) = sum(spks);
+        counts(t,x+64) = sum(stms);
+        %disp(['channel ' num2str(x) ' spks: ' num2str(sum(spks)) ' stms: ' num2str(sum(stms))]);
     end
+    %tmp_count
     %     figure;plot(spiketime,spikechannel,'.');hold on; plot(stimtime,stimchannel,'.r');
     %run tasks
     
@@ -143,17 +155,22 @@ for t=1:size(result,1)
     %find activity autocorrelation during this period
     
     result(t,:,:,:) = subresult;
-    counts(t,:) = sum(tseries_mat,2);
+    %counts(t,:) = sum(tseries_mat,2);
     totalspikes = sum(tseries_mat);
+   % sum(totalspikes)
+    %figure;subplot(2,1,1);plot(totalspikes);subplot(2,1,2);imagesc(tseries_mat);
     xc = xcorr(totalspikes,totalspikes);
+    %figure;plot(xc);
     xstart = (length(xc)-1)/2+1-floor(xc_length /2);
     xstop = (length(xc)-1)/2+1+floor(xc_length /2);
+    
     autoc(t,:) = xc(xstart:xstop);
+    %figure;imagesc(autoc);
     disp(t);
 end
 SS.xcorrmat = result;
 SS.xcount = counts;
-%SS.xauto = autoc;
+SS.xauto = autoc;
 SS.xbin = binlength;
 SS.xrez = xcorrez;
 % close(h);
@@ -167,7 +184,9 @@ SS.xrez = xcorrez;
         %   spikes into a specific 'time bin', which is a length of time that is
         %   calculated by dividing the length of TSERIES by the max time in
         %   SPIKES.
-        
+       % disp('test');
+       %length(spikes)
+       
         if isempty(spikes)
             tseries = zeros(1);
             return;
@@ -176,9 +195,11 @@ SS.xrez = xcorrez;
         tseries = zeros(1, floor(s*1000/rez)+1);
         
         temp = floor(spikes*1000/rez)+1;
-        for x=1:length(temp)
-            tseries(temp(x)) = tseries(temp(x)) + 1;
+        %length(temp)
+        for ind=1:length(temp)
+            tseries(temp(ind)) = tseries(temp(ind)) + 1;
         end
-        
+        %sum(tseries)
+        %pause
     end
 end
