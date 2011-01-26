@@ -1,7 +1,7 @@
 
 classdef (ConstructOnLoad = false) SqueakySpk < handle
     %SQUEAKYSPK data class and methods for basic preprosessing of data
-    %collected using extracellular, multielectrode arrays. 
+    %collected using extracellular, multielectrode arrays.
     %
     %   Properties:
     %   1. Data name
@@ -69,9 +69,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         unit; % [N INT (unit #, spike index)]
         avgwaveform; % {avg:[M DOUBLE x K INT ([uV], unit #)],sd[M DOUBLE x K INT ([uV], unit #)]}
         asdr; % Array-wide spike detection rate matrix [[bins] [count]]
+        bi; % burstiness index as defined by Wagenaar
         badunit; % Array of units deemed to be bad after spike sorting
         badchannel; % Array of channels deemed to be bad
-        psh; % Peri-stimulus histogram 
+        psh; % Peri-stimulus histogram
         
         % properties of the stimulus given while collecting the main data [STIM DATA]
         st_time; % [N DOUBLE (sec, spike index)]
@@ -87,21 +88,21 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % Methods log
         methodlog; % string array that keeps track of the methods run on the SS object
         
-        % Stuff filled by running xcorrs 
-        xcorrmat;%[N x M x P xQ double (timeslice, 'causal' channel, 'effect' channel, offset (ms)] 
-            %cross correlation between spikes on different channels and
-            %stimuli on different channels.  Each cross correlation is
-            %calculated using XBIN seconds of data (a 'timeslice').  
-            
+        % Stuff filled by running xcorrs
+        xcorrmat;%[N x M x P xQ double (timeslice, 'causal' channel, 'effect' channel, offset (ms)]
+        %cross correlation between spikes on different channels and
+        %stimuli on different channels.  Each cross correlation is
+        %calculated using XBIN seconds of data (a 'timeslice').
+        
         xcount;%[N x M int (timeslice, 'causal' channel count)]
-            %the number of times this channel was active.  Stimulating
-            %electrodes are index +64
-            
+        %the number of times this channel was active.  Stimulating
+        %electrodes are index +64
+        
         xbin;%[INT (length of each timeslice in s)]
-            %the duration of a timeslice, in seconds
-            
+        %the duration of a timeslice, in seconds
+        
         xrez;%[DOUBLE (resolution of offsets, in ms)]
-            %the resolution of the cross correlation
+        %the resolution of the cross correlation
         xauto;
     end
     
@@ -183,8 +184,8 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         %% BLOCK 2: CLEANING METHODS (methods that alter the 'clean' array)
         function HardThreshold(SS,highThreshold,lowThreshold)
-            % HARDTHRESHOLD(SS,highThreshold,lowThreshold) removes all 'spikes' 
-            % with P2P amplitude greater/less than high/low threshold 
+            % HARDTHRESHOLD(SS,highThreshold,lowThreshold) removes all 'spikes'
+            % with P2P amplitude greater/less than high/low threshold
             % (dependent on whatever units you are measuring AP's with).
             % Written by: JN and RZT
             
@@ -196,8 +197,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 lowThreshold = 0; %uV
             end
             
-            tmp = ((max(SS.waveform) - min(SS.waveform)) < highThreshold & (max(SS.waveform) - min(SS.waveform)) > lowThreshold);
-            SS.clean = SS.clean&(tmp');
+            dirty = ((max(SS.waveform) - min(SS.waveform)) > highThreshold | (max(SS.waveform) - min(SS.waveform)) < lowThreshold);
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty');
+            end
+            
             SS.methodlog = [SS.methodlog '<HardThreshold>'];
         end
         function RemoveBySymmetry(SS,maxWaveSymmetry)
@@ -217,8 +221,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             minAmplitude = abs(min(SS.waveform,[],1)  - meanAmplitude);
             numeratorOverDenominator = sort([maxAmplitude; minAmplitude],1);
             symRatio = numeratorOverDenominator(1,:)./numeratorOverDenominator(2,:);
-            tmp = symRatio > maxWaveSymmetry;          
-            SS.clean = SS.clean&(~tmp');
+            dirty = symRatio > maxWaveSymmetry;
+            
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty');
+            end
             SS.methodlog = [SS.methodlog '<RemoveBySymmetry>'];
         end
         function RemoveSpkWithBlank(SS)
@@ -228,8 +235,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             % unlikely otherwise.
             % Written by: JN
             
-            tmp = (sum(abs(SS.waveform) <= 0.1,1) >= 5);
-            SS.clean = SS.clean&(~tmp');
+            dirty = (sum(abs(SS.waveform) <= 0.1,1) >= 5);
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty');
+            end
             SS.methodlog = [SS.methodlog '<RemoveSpkWithBlank>'];
         end
         function RemoveChannel(SS,channel2remove)
@@ -246,12 +255,14 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 channel2remove = [1 8 33 57 64];
             end
             
-            
             % Append the badchannel vector
             SS.badchannel = [SS.badchannel channel2remove];
             
-            tmp = ismember(SS.channel,channel2remove);
-            SS.clean = SS.clean&(~tmp);
+            dirty = ismember(SS.channel,channel2remove)';
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty');
+            end
+            
             SS.methodlog = [SS.methodlog '<RemoveChannel>'];
         end
         function RemoveUnit(SS,unit2remove)
@@ -270,8 +281,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             % Append the badunit vector
             SS.badunit = [SS.badunit unit2remove];
             
-            tmp = ismember(SS.unit,unit2remove);
-            SS.clean = SS.clean&(~tmp);
+            dirty = ismember(SS.unit,unit2remove);
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty');
+            end
             SS.methodlog = [SS.methodlog '<RemoveUnit>'];
         end
         function MitraClean(SS)
@@ -354,7 +367,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             SS.methodlog = [SS.methodlog '<ResetClean>'];
             
         end
-            
+        
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
         WaveClus(SS,maxclusters,minspk,decompmeth,plotbool)
         % This method is contained in a separate file.
@@ -377,11 +390,14 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% Block 7: BASIC DATA PROCESSING TOOLS
-        function ASDR(SS,dt)
+        function ASDR(SS,dt,shouldplot)
             % ASDR(SS,dt) Array-wide spike detection rate using time window
             % dt in seconds. This analysis is only performed on clean
             % spikes.
             
+            if nargin < 3 || isempty(shouldplot)
+                shouldplot = 1;
+            end
             if nargin < 2 || isempty(dt)
                 dt = 1; %seconds
             end
@@ -396,18 +412,40 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             end
             
             % Plot results
-            figure()
-            plot(SS.asdr(:,1),SS.asdr(:,2),'k');
-            xlabel('Time (sec)')
-            ylabel(['(' num2str(dt) 's)^-1'])
+            if(shouldplot)
+                figure()
+                plot(SS.asdr(:,1),SS.asdr(:,2),'k');
+                xlabel('Time (sec)')
+                ylabel(['(' num2str(dt) 's)^-1'])
+            end
             
+        end
+        function BI(SS)
+            % BI(SSt) Burstiness index as described in Wagenaar et al
+            % (2006) J. Neurosci 25(3): 680–68
+            
+            if isempty(SS.asdr)
+                warning('You need to calculate the ASDR before calculating the BI');
+                return;
+            end
+            
+            sASDR = sort(SS.asdr(:,2),'descend');
+            l15 = ceil(0.15*length(SS.asdr));
+            f15n = sum(sASDR(1:l15));
+            f15d = sum(sASDR);
+            f15 = f15n/f15d;
+            
+            if isnan(f15) || isinf(f15) || f15d == f15n;
+                SS.bi = 'NA';
+            else
+                SS.bi = (f15 - 0.15)/0.85;
+            end
         end
         
         PeriStimHistogram(SS,dt,histrange,bound,ploton);
         % This method is contained in a separate file.
         
         [result counts]= xcorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez)
-        
         
         xcorrfilm(SS,name,tasks, fps);
         
@@ -425,8 +463,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             sqycln.time = SS.time(logical(SS.clean));
             sqycln.channel = SS.channel(logical(SS.clean));
             sqycln.waveform = SS.waveform(:,logical(SS.clean));
-            sqycln.unit = SS.unit(logical(SS.clean));
-
+            
             % Rename the clean units starting from 1
             if ~isempty(SS.unit)
                 cleanunits = SS.unit(logical(SS.clean));
@@ -436,12 +473,12 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 end
                 sqycln.unit = cleanunits;
             end
-
+            
         end
         
         %% Block 8: Save SS object
         function Save(SS)
-            save([SS.name '.SS'],'SS','-v7.3')
+            save([SS.name '.SS'],'SS')
         end
         
     end
