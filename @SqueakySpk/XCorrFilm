@@ -1,4 +1,4 @@
-function xcorrfilm(SS,name,tasks, fps)
+function XCorrFilm(SS,name,tasks, fps)
   %using the results of SS.xcorrs, create movie so you can watch the xcorrs
   %change over time
   %name is the file name

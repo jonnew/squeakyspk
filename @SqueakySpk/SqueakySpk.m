@@ -283,7 +283,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             
             dirty = ismember(SS.unit,unit2remove);
             if ~isempty(dirty)
-                SS.clean = SS.clean&(~dirty');
+                SS.clean = SS.clean&(~dirty);
             end
             SS.methodlog = [SS.methodlog '<RemoveUnit>'];
         end
@@ -389,65 +389,27 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotPeriStimHistogram(SS)
         % This method is contained in a separate file.
         
-        %% Block 7: BASIC DATA PROCESSING TOOLS
-        function ASDR(SS,dt,shouldplot)
-            % ASDR(SS,dt) Array-wide spike detection rate using time window
-            % dt in seconds. This analysis is only performed on clean
-            % spikes.
-            
-            if nargin < 3 || isempty(shouldplot)
-                shouldplot = 1;
-            end
-            if nargin < 2 || isempty(dt)
-                dt = 1; %seconds
-            end
-            
-            % Calculate
-            bins = 0:dt:SS.time(end);
-            asdr_tmp = hist(SS.time(SS.clean),bins);
-            if size(asdr_tmp,2) == 1;
-                SS.asdr = [bins' asdr_tmp./dt];
-            else
-                SS.asdr = [bins' asdr_tmp'./dt];
-            end
-            
-            % Plot results
-            if(shouldplot)
-                figure()
-                plot(SS.asdr(:,1),SS.asdr(:,2),'k');
-                xlabel('Time (sec)')
-                ylabel(['(' num2str(dt) 's)^-1'])
-            end
-            
-        end
-        function BI(SS)
-            % BI(SSt) Burstiness index as described in Wagenaar et al
-            % (2006) J. Neurosci 25(3): 680–68
-            
-            if isempty(SS.asdr)
-                warning('You need to calculate the ASDR before calculating the BI');
-                return;
-            end
-            
-            sASDR = sort(SS.asdr(:,2),'descend');
-            l15 = ceil(0.15*length(SS.asdr));
-            f15n = sum(sASDR(1:l15));
-            f15d = sum(sASDR);
-            f15 = f15n/f15d;
-            
-            if isnan(f15) || isinf(f15) || f15d == f15n;
-                SS.bi = 'NA';
-            else
-                SS.bi = (f15 - 0.15)/0.85;
-            end
-        end
+        RandScat(SS,bound,forcechannel)
+        % This method is contained in a separate file.
         
+        CSDR(SS)
+        % This method is contained in a separate file.
+        
+        %% Block 7: BASIC DATA PROCESSING TOOLS
+        ASDR(SS,dt,shouldplot);
+        % This method is contained in a separate file.
+ 
+        BI(SS);
+        % This method is contained in a separate file.
+
         PeriStimHistogram(SS,dt,histrange,bound,ploton);
         % This method is contained in a separate file.
         
-        [result counts]= xcorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez)
+        [result counts]=XCorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez);
+        % This method is contained in a separate file.
         
-        xcorrfilm(SS,name,tasks, fps);
+        XCorrFilm(SS,name,tasks, fps);
+        % This method is contained in a separate file.
         
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,savewav)
@@ -473,7 +435,6 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 end
                 sqycln.unit = cleanunits;
             end
-            
         end
         
         %% Block 8: Save SS object

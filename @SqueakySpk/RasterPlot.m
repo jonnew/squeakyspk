@@ -117,11 +117,11 @@ h = gca;
 set(h,'color','k','XColor',[1 1 1],'YColor',[1 1 1],'ylim',[0 max(unitinterest)+1])
 title('Spike Raster','fontsize',13)
 set(get(h,'Title'),'Color','white')
-xlabel('\textbf{time (sec)}','fontsize',13,'Interpreter','Latex')
+xlabel('Time (sec)','fontsize',14)
 if usechan
-    ylabel('\textbf{channel}','fontsize',13,'Interpreter','Latex')
+    ylabel('Channel','fontsize',14)
 else
-    ylabel('\textbf{unit}','fontsize',13,'Interpreter','Latex')
+    ylabel('Unit','fontsize',14)
 end
 hold off
 
