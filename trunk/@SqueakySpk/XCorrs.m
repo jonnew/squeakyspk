@@ -1,4 +1,4 @@
-function [result counts] = xcorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez)
+function [result counts] = XCorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez)
 
 xc_length = ceil(xcorlength*1000/xcorrez)*2+1;
 channels_used = 1:64;%unique(SS.channel);
