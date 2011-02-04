@@ -28,7 +28,7 @@ end
 
 % Blur the image with a Gaussian Filter
 q = imagesc(img);
-c = colorbar()
+c = colorbar();
 ylabel(c,'Firing Rate (Hz)')
 colormap(cmp);
 
