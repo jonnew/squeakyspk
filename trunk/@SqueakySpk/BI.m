@@ -7,7 +7,7 @@ if isempty(SS.asdr)
     return;
 end
 
-sASDR = sort(sum(SS.asdr(:,2:end),2),'descend');
+sASDR = sort(SS.asdr(:,2),'descend');
 l15 = ceil(0.15*length(SS.asdr));
 f15n = sum(sASDR(1:l15));
 f15d = sum(sASDR);

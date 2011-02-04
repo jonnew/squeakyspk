@@ -1,4 +1,3 @@
-
 classdef (ConstructOnLoad = false) SqueakySpk < handle
     %SQUEAKYSPK data class and methods for basic preprosessing of data
     %collected using extracellular, multielectrode arrays.
@@ -69,6 +68,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         unit; % [N INT (unit #, spike index)]
         avgwaveform; % {avg:[M DOUBLE x K INT ([uV], unit #)],sd[M DOUBLE x K INT ([uV], unit #)]}
         asdr; % Array-wide spike detection rate matrix [[bins] [count]]
+        csdr; % Channel spike detection rate matrix [[bins] [count_1] [count_2] ...]
         bi; % burstiness index as defined by Wagenaar
         badunit; % Array of units deemed to be bad after spike sorting
         badchannel; % Array of channels deemed to be bad
@@ -256,7 +256,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             end
             
             % Append the badchannel vector
-            SS.badchannel = [SS.badchannel channel2remove];
+            SS.badchannel = unique([SS.badchannel channel2remove]);
             
             dirty = ismember(SS.channel,channel2remove)';
             if ~isempty(dirty)
@@ -393,6 +393,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         CSDR(SS)
+        % This method is contained in a separate file.
+        
+        q = PlotRandomWaveform(SS,N,rangeV)
         % This method is contained in a separate file.
         
         %% Block 7: BASIC DATA PROCESSING TOOLS

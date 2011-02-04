@@ -14,20 +14,24 @@ end
 
 % Calculate
 bins = 0:dt:SS.time(end);
-SS.asdr = zeros(length(bins),max(SS.channel)+1);
-SS.asdr(:,1) = bins';
+SS.csdr = zeros(length(bins),max(SS.channel)+1);
+SS.csdr(:,1) = bins';
 for i = 1:max(SS.channel)
     asdr_tmp = hist(SS.time(SS.clean&SS.channel==i),bins);
     if size(asdr_tmp,2) == 1;
-        SS.asdr(:,i+1) = asdr_tmp./dt;
+        SS.csdr(:,i+1) = asdr_tmp./dt;
     else
-        SS.asdr(:,i+1) = asdr_tmp'./dt;
+        SS.csdr(:,i+1) = asdr_tmp'./dt;
     end
 end
+
+% Calculate ASDR
+SS.asdr = [bins' sum(SS.csdr(:,2:end),2)];
+
 % Plot results
 if(shouldplot)
     figure()
-    plot(SS.asdr(:,1),sum(SS.asdr(:,2:end),2),'k');
+    plot(SS.asdr(:,1),SS.asdr(:,2),'k');
     xlabel('Time (sec)')
     ylabel(['(' num2str(dt) 's)^-1'])
 end
