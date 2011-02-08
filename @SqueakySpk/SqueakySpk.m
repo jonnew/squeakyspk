@@ -398,6 +398,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         q = PlotRandomWaveform(SS,N,rangeV)
         % This method is contained in a separate file.
         
+        DemarseActivityPlot(SS,t,tau,dilation,name)
+        %contained in a separate file- t is a 2d vector containing the
+        %start and stop times, tau is the time constant of the image,
+        %dilation is the time dilation
+        
         %% Block 7: BASIC DATA PROCESSING TOOLS
         ASDR(SS,dt,shouldplot);
         % This method is contained in a separate file.
