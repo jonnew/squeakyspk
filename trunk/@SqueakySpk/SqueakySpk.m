@@ -116,7 +116,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             % that the waveform data is provided in,and the data structure, spike, of the form:
             %   spike.time = [NX1] vector of spike times in seconds
             %   spike.channel = [NX1] vector of corresponding channels
-            %   spike.wavefomr = [NXM] matrix of corresponding spike snip waveforms
+            %   spike.waveform = [NXM] matrix of corresponding spike snip waveforms
             % Addtional arguments for a stimulus data structure of the
             % form:
             %   stimulus.time = [RX1] vector of spike times in seconds
@@ -392,7 +392,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         RandScat(SS,bound,forcechannel)
         % This method is contained in a separate file.
         
-        CSDR(SS)
+        CSDR(SS,frmax)
         % This method is contained in a separate file.
         
         q = PlotRandomWaveform(SS,N,rangeV)
@@ -404,7 +404,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         %dilation is the time dilation
         
         %% Block 7: BASIC DATA PROCESSING TOOLS
-        ASDR(SS,dt,shouldplot);
+        ASDR(SS,dt,shouldplot,loglin,ymax);
         % This method is contained in a separate file.
  
         BI(SS);

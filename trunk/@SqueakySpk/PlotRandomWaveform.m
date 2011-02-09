@@ -38,11 +38,11 @@ chs = (dat.channel(r))';
 n = ceil(sqrt(max(dat.channel)));
 
 % Calculate position of the waveforms
-yoff = rangeV.*(n-ceil(chs/n)+0.5);
+yoff = rangeV.*(n-ceil(chs'/n)+0.5);
 W = W + yoff(ones(size(W,1),1),:);
 
 % Calculate posisitions of time axes
-xoff = T(end,1)*mod(chs-1,8);
+xoff = T(end,1)*mod(chs'-1,8);
 T = T + xoff(ones(size(W,1),1),:);
 
 % Create grid
