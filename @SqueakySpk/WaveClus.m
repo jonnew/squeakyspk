@@ -692,11 +692,11 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
                 end
                 dos(sprintf('.\\%s\\Cluster.exe %s.run',hand,fname));
             case {'MAC'}
-                directory = which('cluster_linux.exe');
+                directory = which('cluster_mac.exe');
                 run_mac = sprintf([directory ' %s.run'],fname);
                 unix(run_mac);
-            case {'MACI'}
-                directory = which('cluster_linux.exe');
+            case {'MACI','MACI64'}
+                directory = which('cluster_maci.exe');
                 run_maci = sprintf([directory ' %s.run'],fname);
                 unix(run_maci);
             otherwise  %(GLNX86, GLNXA64, GLNXI64 correspond to linux)
