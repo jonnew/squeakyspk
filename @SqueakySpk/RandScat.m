@@ -20,11 +20,11 @@ dat = SS.ReturnClean;
 idx = dat.time>=bound(1)&dat.time<bound(2);
 
 figure()
-if isempty(SS.unit) || forcechannel
-    p=plot(SS.time(idx), SS.channel(idx) + 0.7*rand(size(SS.channel(idx))) - 0.35,'k.');
+if ~isfield(dat,'unit') || forcechannel
+    p=plot(dat.time(idx), dat.channel(idx) + 0.7*rand(size(dat.channel(idx))) - 0.35,'k.');
     ylabel 'Channel'
 else
-    p=plot(SS.time(idx), SS.unit(idx) + 0.7*rand(size(SS.unit(idx))) -.35,'k.');
+    p=plot(dat.time(idx), dat.unit(idx) + 0.7*rand(size(dat.unit(idx))) -.35,'k.');
     ylabel 'Unit'
 end
 
