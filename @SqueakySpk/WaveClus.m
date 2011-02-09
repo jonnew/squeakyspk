@@ -112,6 +112,9 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
         print2file = 0;                             %for saving printouts.
         print2paper = 0;                            %For printing to a .jpg
         
+        [str,maxsize,endian]=computer;
+        handles.par.system=str;                     % Find out what type of OS we are on
+        
         handles.par.w_pre=22;                       %number of pre-event data points stored
         handles.par.w_post=52;                      %number of post-event data points stored
         handles.par.detection = 'pos';              %type of threshold
@@ -144,17 +147,24 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
         handles.par.stab = 0.8;                     %stability condition for selecting the temperature
         handles.par.SWCycles = 256;                 %number of montecarlo iterations
         handles.par.KNearNeighb = 11;               %number of nearest neighbors
-        handles.par.randomseed = 0;                 % if 0, random seed is taken as the clock value
-        handles.par.fname_in = ['.\' char(hand) '\temp_data'];          % temporary filename used as input for SPC
+        handles.par.randomseed = 0;                % if 0, random seed is taken as the clock value
         
-        handles.par.min_clus_abs = minspk;              %minimum cluster size (absolute value)
+        switch handles.par.system
+            case {'PCWIN','PCWIN64'}
+                handles.par.fname_in = [pwd '\' char(hand) '\temp_data'];
+            case {'MAC','MACI'}
+                handles.par.fname_in = ['./' char(hand) '/temp_data'];
+            otherwise  %(GLNX86, GLNXA64, GLNXI64 correspond to linux)
+                handles.par.fname_in = ['./' char(hand) '/temp_data'];
+        end
+        
+        handles.par.min_clus_abs = minspk;          %minimum cluster size (absolute value)
         handles.par.min_clus_rel = 0.005;           %minimum cluster size (relative to the total nr. of spikes)
         handles.par.temp_plot = 'log';              %temperature plot in log scale
         handles.par.force_auto = 'n';               %automatically force membership if temp>3. % JN: MAY WANT TO MAKE NO SO THAT NON-SPIKES GET EXCLUDED MORE
         handles.par.max_spikes = 5000;              %maximum number of spikes to plot.
         
         handles.par.sr = 24000;                     %sampling frequency, in Hz.
-        
         
         parsefieldnames = fieldnames(channelparse);
         clusterresults = {};
@@ -168,7 +178,14 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             % LOAD SC DATA
             spikes = channelparse.(genvarname(file_to_cluster{1})).spikes;
             index = channelparse.(genvarname(file_to_cluster{1})).index;
-            handles.par.fname = ['.\' char(hand) '\data_' char(file_to_cluster{1})];   %filename for interaction with SPC
+            switch handles.par.system
+                case {'PCWIN','PCWIN64'}
+                    handles.par.fname = [pwd '\' char(hand) '\data_' char(file_to_cluster{1})];
+                case {'MAC','MACI'}
+                    handles.par.fname = ['./' char(hand) '/data_' char(file_to_cluster{1})];
+                otherwise  %(GLNX86, GLNXA64, GLNXI64 correspond to linux)
+                    handles.par.fname = ['./' char(hand) '/data_' char(file_to_cluster{1})];  %filename for interaction with SPC
+            end
             nspk = size(spikes,1);
             handles.par.min_clus = max(handles.par.min_clus_abs,handles.par.min_clus_rel*nspk);
             
@@ -189,36 +206,30 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             [temp] = find_temp(tree,handles);
             
             %DEFINE CLUSTERS
+            class1 = [];
+            class2 = [];
+            class3 = [];
+            class4 = [];
+            class5 = [];
             switch maxclus
                 case 1
                     class1=find(clu(temp,3:end)==0);
-                    class2 = [];
-                    class3 = [];
-                    class4 = [];
-                    class5 = [];
                     class0=setdiff(1:size(spikes,1), sort(class1));
                 case 2
                     class1=find(clu(temp,3:end)==0);
                     class2=find(clu(temp,3:end)==1);
-                    class3 = [];
-                    class4 = [];
-                    class5 = [];
                     class0=setdiff(1:size(spikes,1), sort([class1 class2]));
                 case 3
                     class1=find(clu(temp,3:end)==0);
                     class2=find(clu(temp,3:end)==1);
                     class3=find(clu(temp,3:end)==2);
-                    class4 = [];
-                    class5 = [];
                     class0=setdiff(1:size(spikes,1), sort([class1 class2 class3]));
                 case 4
                     class1=find(clu(temp,3:end)==0);
                     class2=find(clu(temp,3:end)==1);
                     class3=find(clu(temp,3:end)==2);
                     class4=find(clu(temp,3:end)==3);
-                    class5 = [];
                     class0=setdiff(1:size(spikes,1), sort([class1 class2 class3 class4]));
-                    
                 case 5
                     class1=find(clu(temp,3:end)==0);
                     class2=find(clu(temp,3:end)==1);
@@ -442,15 +453,15 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             end
             
             drawnow;
-        
-        
-        %Output
-        clusterresults.(genvarname(file_to_cluster{1})).spkindex = inspk;
-        clusterresults.(genvarname(file_to_cluster{1})).class = cluster;
-        clusterresults.(genvarname(file_to_cluster{1})).waveform = spikes;
-        clusterresults.(genvarname(file_to_cluster{1})).meanwave = meanwave;
-        clusterresults.(genvarname(file_to_cluster{1})).sdwave = sdwave;
-        
+            
+            
+            %Output
+            clusterresults.(genvarname(file_to_cluster{1})).spkindex = inspk;
+            clusterresults.(genvarname(file_to_cluster{1})).class = cluster;
+            clusterresults.(genvarname(file_to_cluster{1})).waveform = spikes;
+            clusterresults.(genvarname(file_to_cluster{1})).meanwave = meanwave;
+            clusterresults.(genvarname(file_to_cluster{1})).sdwave = sdwave;
+            
         end
     end
     function result = Populate_Results(uniquechan, channels2anal,clusterresults,time,channel,waveform)
@@ -673,8 +684,6 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
         end
         fclose(fid);
         
-        [str,maxsize,endian]=computer;
-        handles.par.system=str;
         switch handles.par.system
             case {'PCWIN','PCWIN64'}
                 if exist([pwd '\cluster.exe'])==0
@@ -683,25 +692,16 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
                 end
                 dos(sprintf('.\\%s\\Cluster.exe %s.run',hand,fname));
             case {'MAC'}
-                if exist([pwd '/cluster_mac.exe'])==0
-                    directory = which('cluster_mac.exe');
-                    copyfile(directory,pwd);
-                end
-                run_mac = sprintf('./cluster_mac.exe %s.run',fname);
+                directory = which('cluster_linux.exe');
+                run_mac = sprintf([directory ' %s.run'],fname);
                 unix(run_mac);
             case {'MACI'}
-                if exist([pwd '/cluster_maci.exe'])==0
-                    directory = which('cluster_maci.exe');
-                    copyfile(directory,pwd);
-                end
-                run_maci = sprintf('./cluster_maci.exe %s.run',fname);
+                directory = which('cluster_linux.exe');
+                run_maci = sprintf([directory ' %s.run'],fname);
                 unix(run_maci);
             otherwise  %(GLNX86, GLNXA64, GLNXI64 correspond to linux)
-                if exist([pwd '/cluster_linux.exe'])==0
-                    directory = which('cluster_linux.exe');
-                    copyfile(directory,pwd);
-                end
-                run_linux = sprintf('./cluster_linux.exe %s.run',fname);
+                directory = which('cluster_linux.exe');
+                run_linux = sprintf([directory ' %s.run'],fname);
                 unix(run_linux);
         end
         
