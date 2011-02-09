@@ -2,6 +2,13 @@ function PlotAvgWaveform(SS)
 % PLOTAVGWAVEFORM(SS) Plots the average waveforms for each
 % unit, labeled with the unit number. Units that will be
 % removed are colored red.
+%
+%       Created by: Jon Newman (jnewman6 at gatech dot edu)
+%       Location: The Georgia Institute of Technology
+%       Created on: Aug 2, 2010
+%       Last modified: Aug 2, 2010
+% 	Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
+
 
 if isempty(SS.avgwaveform) || isempty(SS.avgwaveform.avg)
     error('You have not performed spike sorting yet, or there are no valid units.')

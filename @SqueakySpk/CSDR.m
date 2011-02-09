@@ -1,13 +1,14 @@
-function q = CSDR(SS,frmax)
-% CSDR(SS) Channel Spike Detection Rate. Takes information from the asdr
-% property the SDR for each channel. Data is displayed as an image and the
-% plot handle is returned.
+function PlotCSDR(SS,frmax)
+% CSDR(SS,FRMAX) Channel Spike Detection Rate. Takes information from the csdr
+% property to display data as image wherein the firing rate on each channel
+% is shown in grey scale from 0 to FRMAX Hz. FRMAX is set to the maximal detected
+% firing rate by default.
 %
-% p = RandScat(SS) returns the plot handle.
-%
-% This function is ported from:
-% matlab/randscat88.m: part of meabench, an MEA recording and analysis tool
-% Copyright (C) 2000-2002  Daniel Wagenaar (wagenaar@caltech.edu)
+%       Created by: Jon Newman (jnewman6 at gatech dot edu)
+%       Location: The Georgia Institute of Technology
+%       Created on: Feb 2, 2011
+%       Last modified: Feb 2, 2011
+% 	Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 if isempty(SS.asdr)
     warning('You need to calculate the ASDR before calculating the CSDR');

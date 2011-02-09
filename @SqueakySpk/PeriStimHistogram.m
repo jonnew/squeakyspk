@@ -1,14 +1,20 @@
 function PeriStimHistogram(SS,dt,histrange,bound,ploton)
 %PERISTIMTIMEHISTOGRAM create the PSH for an SS object.
 %
-%   PERISTIMTIMEHISTOGRAM(SS, dt,histrange,bound,ploton) calculates the
-%   peristimulus histogram with time resolution dt (msec) for a time window around
-%   the conditioning stimulus event defined by histrange = [t1 t2] in
-%   milliseconds, the range of data in seconds supplied by bound = [T1 T2]
-%   in seconds. The PSH is caculated for each channel and stored in the [N
-%   x M] matrix psh.hist which represend the M sample long psh for each of
-%   N channels. Ploton controls whether or not the PSH is plotted after the
-%   comptuation has finished.
+%   	PERISTIMTIMEHISTOGRAM(SS, dt,histrange,bound,ploton) calculates the
+%   	peristimulus histogram with time resolution dt (msec) for a time window around
+%   	the conditioning stimulus event defined by histrange = [t1 t2] in
+%   	milliseconds, the range of data in seconds supplied by bound = [T1 T2]
+%   	in seconds. The PSH is caculated for each channel and stored in the [N
+%   	x M] matrix psh.hist which represend the M sample long psh for each of
+%   	N channels. Ploton controls whether or not the PSH is plotted after the
+%   	comptuation has finished.
+%
+%       Created by: Jon Newman (jnewman6 at gatech dot edu)
+%       Location: The Georgia Institute of Technology
+%       Created on: Feb 2, 2011
+%       Last modified: Feb 2, 2011
+% 	Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 % check number and type of arguments
 if nargin < 5 || isempty(ploton)

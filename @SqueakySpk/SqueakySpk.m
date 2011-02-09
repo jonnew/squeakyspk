@@ -392,10 +392,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         RandScat(SS,bound,forcechannel)
         % This method is contained in a separate file.
         
-        CSDR(SS,frmax)
+        PlotCSDR(SS,frmax)
         % This method is contained in a separate file.
         
-        q = PlotRandomWaveform(SS,N,rangeV)
+        PlotRandomWaveform(SS,N,rangeV)
         % This method is contained in a separate file.
         
         DemarseActivityPlot(SS,t,tau,dilation,name)
