@@ -1,7 +1,8 @@
 function WeedUnitByWaveform(SS)
 % WEEDUNITBYWAVEFORM Supervised unit deletion by examination of average
 % voltage waveform. Input is an SS object. Requires that the SS object
-% hase non-empty units and average waveform fields
+% hase non-empty units and average waveform fields. This can be acheived
+% by running WAVECLUS.
 %
 %   Created by: Jon Newman (jnewman6 at gatech dot edu)
 %   Location: The Georgia Institute of Technology

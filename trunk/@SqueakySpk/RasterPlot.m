@@ -30,7 +30,7 @@ function RasterPlot(SS, bound, what2show, yaxischannel)
 %   Last modified: Aug 05, 2010
 %
 %   Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
-%
+
 
 % check number and type of arguments
 if nargin < 4 || isempty(yaxischannel)
