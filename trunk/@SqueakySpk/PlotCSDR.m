@@ -11,7 +11,7 @@ function PlotCSDR(SS,frmax)
 % 	Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 if isempty(SS.asdr)
-    warning('You need to calculate the ASDR before calculating the CSDR');
+    warning('You need to calculate the ASDR before plotting the CSDR');
     return;
 end
 

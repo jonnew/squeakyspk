@@ -1,9 +1,9 @@
 % Object FID
 fid = 'SS_example';
 
-% Load data into data structs
-spkdat = loadspike([pwd '\example-data.spk']);
-stimdat = loadstim([pwd '\example-data.stim']);
+% Load data into data structs (change path for windoze machine)
+spkdat = loadspike([pwd '/example-data.spk']);
+stimdat = loadstim([pwd '/example-data.stim']);
 
 % Instantiate a SqueakySpk Object
 SS = SqueakySpk(fid,25000,1,spkdat,stimdat);
