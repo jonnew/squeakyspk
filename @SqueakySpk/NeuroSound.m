@@ -1,4 +1,4 @@
-function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale, savewav)
+function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale, fid)
 % NEUROSOUND audio output event-based recording that really makes a
 % SqueakySpk Squeak.  Each channel is given a different key on a
 % synthesizer- whenever an action potential is detected on that electrode,
@@ -33,8 +33,8 @@ function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale, savewav)
 %       scale, even if they use the same BASEFREQ.  Make sure you aren't
 %       hitting notes that can't be heard or can't be processed by your
 %       sound system!
-%       SAVEWAV = boolean- do you want to save your neurosound object as a
-%       .WAV file or not?  
+%       FID = optional file name argument if you want to save your
+%       neurosound as a .WAV file 
 %
 %       Outputs:
 %       NS = Neurosound audio object. This oject has the following methods
@@ -49,7 +49,7 @@ function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale, savewav)
 %       gatech dot edu)
 %       Location: The Georgia Institute of Technology
 %       Created on: Apr 24, 2010
-%       Last modified: Dec 28, 2010
+%       Last modified: Feb 10, 2011
 %
 %       Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
@@ -70,9 +70,7 @@ end
 if (nargin <6) || isempty(scale)
     scale = 'major';
 end
-if (nargin <7) || isempty(savewav)
-    savewav = false;
-end
+
 
 %intervals between notes for different scales
 %a little crash course in music theory (from someone who took a class in 
@@ -122,47 +120,75 @@ end
 
 % Create continuous waveform from the discrete events
 if isempty(tbound)
-    sortedtimes = sort(spktime); % sorted times, in seconds, referenced to t=0.
+    times = spktime; % sorted times, in seconds, referenced to t=0.
 else
-    sortedtimes = sort(spktime(spktime>tbound(1)&spktime<tbound(2)));% sorted times, in seconds, referenced to t=0.
-    sortedtimes = sortedtimes - min(sortedtimes);
+    times = spktime(spktime>tbound(1)&spktime<tbound(2));% sorted times, in seconds, referenced to t=0.
+    times = times - tbound(1);
+    chan = chan(spktime>tbound(1)&spktime<tbound(2));
 end
-sortedtimes(sortedtimes==0) = []; % get rid of any time that is zero
-maxT = sortedtimes(end)*1.1; % length of sound will be the time of the final event + 1 sec
+%sortedtimes(sortedtimes==0) = []; % get rid of any time that is zero
+%maxT = tbound(2); % length of sound will be the time of the final event + 1 sec
 outrate = 44100;
-N = ceil(outrate*maxT/pbspeed);
-wave = zeros(N,1);
 
-eventInd = ceil(outrate*sortedtimes/pbspeed);
+
+eventInd = ceil(outrate*times/pbspeed);
 
 % Create 10 ms tone snips for each channel
-numchan = max(chan);
+numchan = 64;%max(chan);
 
-snip = zeros(numchan,length(1/outrate:1/outrate:0.1));
+snip = zeros(numchan,length(1/outrate:1/outrate:0.1),2);
+tmp = zeros(length(1/outrate:1/outrate:0.1),1);
+N = ceil(outrate*(tbound(2)-tbound(1))/pbspeed);
+wave = zeros(N,2);
+
+
 multiple = 1;
 note = 1;
-
+left = 0.1;
+right = 1;
 for k = 1:numchan
-    snip(k,:) = sin(basefreq*2^((multiple-1)/12)*pi*(1/outrate:1/outrate:0.1));
+    c_freq = basefreq*2^((multiple-1)/12);
+    c_amp = 2^-((multiple-1)/12);
+    tmp = sin(c_freq*pi*(1/outrate:1/outrate:0.1))*c_amp;
     lastlow = find(snip(k,:)<0,1,'last');
-    snip(k,lastlow:length(1/outrate:1/outrate:0.1)) = 0;
+    tmp(lastlow:length(1/outrate:1/outrate:0.1)) = 0;
     multiple = multiple+chosenscale(note);
     note = note +1;
     if note>length(chosenscale)
         note = 1;
     end
-end
+    c = ceil(k/8);
+    r = k-(c-1)*8;
 
+    left = ((c-8)^2 + (r-8)^2)^0.5;
+    right = ((c-1)^2 + (r-1)^2)^0.5;
+    snip(k,:,1) = tmp*right;
+    snip(k,:,2) = tmp*left;
+    
+end
+%figure;plot(reshape(snip,64
 %figure;mesh(snip)
+
+
 for k = 1:length(eventInd)
 %     size(wave(eventInd(k):eventInd(k)+length(snip)-1))
 %     size(snip(chan(k),:))
-    wave(eventInd(k):eventInd(k)+length(snip)-1) = snip(chan(k),:)'+ wave(eventInd(k):eventInd(k)+length(snip)-1);
+   start = eventInd(k);
+   stop = eventInd(k)+length(snip)-1;
+   if stop>length(wave) 
+       stop = length(wave);
+   end
+  % start
+  % stop
+  % k
+    wave(start:stop,:) = reshape(snip(chan(k),1:stop-start+1,:),stop-start+1,2)+ wave(start:stop,:);
 end
-wave = wave./max(wave)*ampscale;
-if (savewav)
-    filename = [SS.name num2str(tbound(1)) 'to' num2str(tbound(2)) 'at' num2str(pbspeed) 'in' scale '.wav'];
-    wavwrite(wave,outrate,filename)
+wave(:,1) = wave(:,1)./max(wave(:,1))*ampscale;
+wave(:,2) = wave(:,2)./max(wave(:,2))*ampscale;
+if ((nargin >=7) && ~isempty(fid))
+    
+   % filename = [SS.name num2str(tbound(1)) 'to' num2str(tbound(2)) 'at' num2str(pbspeed) 'in' scale '.wav'];
+    wavwrite(wave,outrate,fid)
 end
 
 figure;
@@ -186,4 +212,3 @@ disp('[3]: "pause(ns)" to pause the playback');
 disp('[4]: "resume(ns)" to resume the playback');
 
 end
-
