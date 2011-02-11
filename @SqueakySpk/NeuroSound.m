@@ -135,8 +135,8 @@ eventInd = ceil(outrate*times/pbspeed);
 
 % Create 10 ms tone snips for each channel
 numchan = 64;%max(chan);
-
-snip = zeros(numchan,length(1/outrate:1/outrate:0.1),2);
+snipdur =length(1/outrate:1/outrate:0.1);
+snip = zeros(numchan,snipdur,2);
 tmp = zeros(length(1/outrate:1/outrate:0.1),1);
 N = ceil(outrate*(tbound(2)-tbound(1))/pbspeed);
 wave = zeros(N,2);
@@ -146,9 +146,13 @@ multiple = 1;
 note = 1;
 left = 0.1;
 right = 1;
+
+
+envelope = pdf('chi2',(1:snipdur)/snipdur*10,3);%pdf('Normal',-5:10/snipdur:5-1/snipdur,0,2);
+
 for k = 1:numchan
     c_freq = basefreq*2^((multiple-1)/12);
-    c_amp = 2^-((multiple-1)/12);
+    c_amp = 2^-((multiple-1)/24);
     tmp = sin(c_freq*pi*(1/outrate:1/outrate:0.1))*c_amp;
     lastlow = find(snip(k,:)<0,1,'last');
     tmp(lastlow:length(1/outrate:1/outrate:0.1)) = 0;
@@ -162,8 +166,9 @@ for k = 1:numchan
 
     left = ((c-8)^2 + (r-8)^2)^0.5;
     right = ((c-1)^2 + (r-1)^2)^0.5;
-    snip(k,:,1) = tmp*right;
-    snip(k,:,2) = tmp*left;
+    envelope = pdf('chi2',(1:snipdur)/snipdur*10,2);
+    snip(k,:,1) = tmp*right.*envelope;
+    snip(k,:,2) = tmp*left.*envelope;
     
 end
 %figure;plot(reshape(snip,64
@@ -185,6 +190,9 @@ for k = 1:length(eventInd)
 end
 wave(:,1) = wave(:,1)./max(wave(:,1))*ampscale;
 wave(:,2) = wave(:,2)./max(wave(:,2))*ampscale;
+
+%wave = logscale(wave);
+
 if ((nargin >=7) && ~isempty(fid))
     
    % filename = [SS.name num2str(tbound(1)) 'to' num2str(tbound(2)) 'at' num2str(pbspeed) 'in' scale '.wav'];
@@ -211,4 +219,12 @@ disp('[2]: "stop(ns)" to stop the playback');
 disp('[3]: "pause(ns)" to pause the playback');
 disp('[4]: "resume(ns)" to resume the playback');
 
+end
+
+
+function out = logscale(in)
+sign = in./abs(in);
+
+out = log(abs(in)*20+1).*sign/10;
+out(out==NaN) =0;
 end
