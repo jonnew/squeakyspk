@@ -1,4 +1,4 @@
-function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale, fid)
+function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,env,sniplength, fid)
 % NEUROSOUND audio output event-based recording that really makes a
 % SqueakySpk Squeak.  Each channel is given a different key on a
 % synthesizer- whenever an action potential is detected on that electrode,
@@ -33,6 +33,13 @@ function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale, fid)
 %       scale, even if they use the same BASEFREQ.  Make sure you aren't
 %       hitting notes that can't be heard or can't be processed by your
 %       sound system!
+%       ENV= envelope type.  choices are 'gaus' for a gaussian envelope
+%       (sounds like whistling), 'buzz' for a square envelope (sounds like
+%       electronic buzzer), 'plink' for a chi squared envelope (sounds like
+%       plinking), 'wave' for an envelope based on the waveform for that
+%       spike (sounds like mush)
+%       SNIPLENGTH = length of each sound.  default is 0.1 seconds.
+%       shorter is more staccato.
 %       FID = optional file name argument if you want to save your
 %       neurosound as a .WAV file 
 %
@@ -70,7 +77,12 @@ end
 if (nargin <6) || isempty(scale)
     scale = 'major';
 end
-
+if (nargin <7) || isempty(env)
+    env = 'gaus';
+end
+if (nargin <8) || isempty(sniplength)
+    sniplength = 0.1;
+end
 
 %intervals between notes for different scales
 %a little crash course in music theory (from someone who took a class in 
@@ -112,6 +124,9 @@ end
     chan = SS.channel(SS.clean);
     spktime = SS.time(SS.clean);
     tonerep = 'channels';
+    if strcmp(env,'wave')
+        waveforms = SS.waveform(:,SS.clean);
+    end
 %else
 %     chan = SS.unit(SS.clean&SS.unit~=0);
 %     spktime = SS.time(SS.clean);
@@ -125,6 +140,9 @@ else
     times = spktime(spktime>tbound(1)&spktime<tbound(2));% sorted times, in seconds, referenced to t=0.
     times = times - tbound(1);
     chan = chan(spktime>tbound(1)&spktime<tbound(2));
+    if strcmp(env,'wave')
+        waveforms = waveforms(:,spktime>tbound(1)&spktime<tbound(2));
+    end
 end
 %sortedtimes(sortedtimes==0) = []; % get rid of any time that is zero
 %maxT = tbound(2); % length of sound will be the time of the final event + 1 sec
@@ -135,9 +153,9 @@ eventInd = ceil(outrate*times/pbspeed);
 
 % Create 10 ms tone snips for each channel
 numchan = 64;%max(chan);
-snipdur =length(1/outrate:1/outrate:0.1);
+snipdur =length(1/outrate:1/outrate:sniplength);
 snip = zeros(numchan,snipdur,2);
-tmp = zeros(length(1/outrate:1/outrate:0.1),1);
+%tmp = zeros(length(1/outrate:1/outrate:0.1),1);
 N = ceil(outrate*(tbound(2)-tbound(1))/pbspeed);
 wave = zeros(N,2);
 
@@ -147,15 +165,24 @@ note = 1;
 left = 0.1;
 right = 1;
 
+switch env
+    case 'plink'
+    envelope = pdf('chi2',(1:snipdur)/snipdur*10,3);
+    
+    case 'gaus'
+    envelope =pdf('Normal',-5:10/snipdur:5-1/snipdur,0,2);
 
-envelope = pdf('chi2',(1:snipdur)/snipdur*10,3);%pdf('Normal',-5:10/snipdur:5-1/snipdur,0,2);
+    otherwise
+    envelope = ones(1,snipdur);
+    
+end
 
 for k = 1:numchan
     c_freq = basefreq*2^((multiple-1)/12);
     c_amp = 2^-((multiple-1)/24);
-    tmp = sin(c_freq*pi*(1/outrate:1/outrate:0.1))*c_amp;
+    tmp = sin(c_freq*pi*(1/outrate:1/outrate:sniplength))*c_amp;
     lastlow = find(snip(k,:)<0,1,'last');
-    tmp(lastlow:length(1/outrate:1/outrate:0.1)) = 0;
+    tmp(lastlow:length(1/outrate:1/outrate:snip_length)) = 0;
     multiple = multiple+chosenscale(note);
     note = note +1;
     if note>length(chosenscale)
@@ -166,15 +193,16 @@ for k = 1:numchan
 
     left = ((c-8)^2 + (r-8)^2)^0.5;
     right = ((c-1)^2 + (r-1)^2)^0.5;
-    envelope = pdf('chi2',(1:snipdur)/snipdur*10,2);
+   % envelope = pdf('chi2',(1:snipdur)/snipdur*10,2);
     snip(k,:,1) = tmp*right.*envelope;
     snip(k,:,2) = tmp*left.*envelope;
     
 end
 %figure;plot(reshape(snip,64
 %figure;mesh(snip)
-
-
+if strcmp(env,'wave')
+    interpindices = (((1:snipdur)/snipdur)*(size(SS.waveform,1)-1)+1);
+ end
 for k = 1:length(eventInd)
 %     size(wave(eventInd(k):eventInd(k)+length(snip)-1))
 %     size(snip(chan(k),:))
@@ -186,14 +214,29 @@ for k = 1:length(eventInd)
   % start
   % stop
   % k
-    wave(start:stop,:) = reshape(snip(chan(k),1:stop-start+1,:),stop-start+1,2)+ wave(start:stop,:);
+  tmp = reshape(snip(chan(k),:,:),snipdur,2);
+  
+  if strcmp(env,'wave')
+      wv = interp1(waveforms(:,k),interpindices);%interpolate wave vector to snip size
+      wv = wv./max(wv);%normalize wave size
+     % figure;plot(wv);
+     % figure;plot(tmp);
+    %  size(wv)
+     % size(tmp)
+      tmp(:,1) = tmp(:,1).*wv';
+      tmp(:,2) = tmp(:,2).*wv';
+     % figure;plot(wv);
+     % figure;plot(tmp);
+      %pause
+  end
+    wave(start:stop,:) = tmp(1:stop-start+1,:)+ wave(start:stop,:);
 end
 wave(:,1) = wave(:,1)./max(wave(:,1))*ampscale;
 wave(:,2) = wave(:,2)./max(wave(:,2))*ampscale;
 
 %wave = logscale(wave);
 
-if ((nargin >=7) && ~isempty(fid))
+if ((nargin >=9) && ~isempty(fid))
     
    % filename = [SS.name num2str(tbound(1)) 'to' num2str(tbound(2)) 'at' num2str(pbspeed) 'in' scale '.wav'];
     wavwrite(wave,outrate,fid)

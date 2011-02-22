@@ -45,7 +45,7 @@ end
 
 % Make sure the data actual has stimulation entries
 if isempty(SS.st_time)
-    warning('You must provide stimulus timing information to form a peristimulus histogram. Now exiting...')
+    warning('You must provide stimulus timing information to form a peristimulus raster. Now exiting...')
     return
 end
 if all
