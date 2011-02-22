@@ -413,6 +413,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PeriStimHistogram(SS,dt,histrange,bound,ploton);
         % This method is contained in a separate file.
         
+        PeriStimRaster(SS,bounds,dur,ch);
+        % This method is contained in a separate file.
+        
         [result counts]=XCorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez);
         % This method is contained in a separate file.
         
