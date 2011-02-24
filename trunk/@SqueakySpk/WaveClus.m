@@ -151,7 +151,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
         
         switch handles.par.system
             case {'PCWIN','PCWIN64'}
-                handles.par.fname_in = [pwd '\' char(hand) '\temp_data'];
+                handles.par.fname_in = ['.\' char(hand) '\temp_data'];
             case {'MAC','MACI'}
                 handles.par.fname_in = ['./' char(hand) '/temp_data'];
             otherwise  %(GLNX86, GLNXA64, GLNXI64 correspond to linux)
@@ -180,7 +180,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             index = channelparse.(genvarname(file_to_cluster{1})).index;
             switch handles.par.system
                 case {'PCWIN','PCWIN64'}
-                    handles.par.fname = [pwd '\' char(hand) '\data_' char(file_to_cluster{1})];
+                    handles.par.fname = ['.\' char(hand) '\data_' char(file_to_cluster{1})];  
                 case {'MAC','MACI'}
                     handles.par.fname = ['./' char(hand) '/data_' char(file_to_cluster{1})];
                 otherwise  %(GLNX86, GLNXA64, GLNXI64 correspond to linux)
