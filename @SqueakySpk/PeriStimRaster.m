@@ -25,8 +25,8 @@ function[] = PeriStimRaster(SS,bound,dur,ch)
 
 tic
 %
-h = figure;
-set(h,'visible','off');
+
+%set(h,'visible','off');
 if nargin < 1
     error('Need to act on SqueakSpk Object');
 end
@@ -59,50 +59,103 @@ st_chan = SS.st_channel(goodstim);
 goodspike = find((SS.time >= bound(1) & SS.time <= bound(2))&SS.clean);
 sp_time = SS.time(goodspike);
 sp_chan = SS.channel(goodspike);
-colors = zeros(64,3);
 
-for i = 1:64
-    if all
-        subplot(8,8,i); axis([0 dur bound(1) bound(2)]);
-    end
+
+ i = 1:64;
+%     if all
+%         subplot(8,8,i); axis([0 dur bound(1) bound(2)]);
+%     end
     r = ceil(i/8);
     c = ceil(mod(i-1,8))+1;
-    colors(i,:) = [c/8 1-r/8 1-c/8];
+    colors = [c/8 ;1-r/8 ;1-c/8]';
 %     plot(1,10,'*','markersize',45,'color',colors(i,:));
     
-end
-if ~all
-axis([0 dur bound(1) bound(2)]);
-end
+
+% if ~all
+% axis([0 dur bound(1) bound(2)]);
+% end
 
 %looking at responses to just one channel
 h2 = waitbar(0,'generating peristimulus raster');
+xoffset = dur;
+yoffset = bound(2)-bound(1);
+
+
+x = NaN(length(sp_time),1);
+y = NaN(length(sp_time),1);
+cl = NaN(length(sp_time),1);
+ind = 1;
 for i = 1:length(st_time)
-    figure(h);set(h,'visible','off');
-    if all
-        subplot(8,8,st_chan(i));
-    end
-    hold on;
-    tmp = sp_time((sp_time-st_time(i)<dur/1000) & (sp_time-st_time(i)>0));
-    tmp = tmp-st_time(i);
-    tmpc = sp_chan((sp_time-st_time(i)<dur/1000) & (sp_time-st_time(i)>0));
-    for j = 1:length(tmp)
+    
+   
+    
+    tmpx = sp_time((sp_time-st_time(i)<dur/1000) & (sp_time-st_time(i)>0));
+
+    if ~isempty(tmpx)
         if all
-            plot((tmp(j))*1000,st_time(i),'.','markersize',3,'color',colors(tmpc(j),:));
+            tmpy = st_time(i)+yoffset*(r(st_chan(i))-1)-bound(1);
+            tmpx = tmpx-st_time(i);
+            tmpx = tmpx*1000+xoffset*(c(st_chan(i))-1);
+            tmpc = sp_chan((sp_time-st_time(i)<dur/1000) & (sp_time-st_time(i)>0));
         else
-            plot((tmp(j))*1000,st_time(i),'.','markersize',10,'color',colors(tmpc(j),:));
+            tmpy = st_time(i)-bound(1);
+            tmpx = tmpx-st_time(i);
+            tmpx = tmpx*1000;
+            tmpc = sp_chan((sp_time-st_time(i)<dur/1000) & (sp_time-st_time(i)>0));
         end
-    %         st_time(i)
-    %         st_chan(i)
-    %         (tmp(j))*1000
-    %         tmpc(j)
-    %         pause
+        %set(h,);
+        %colors(tmpc,:)
+        
+       % [tmp'*1000;tmp'*1000]
+       % tmpx*ones(2,length(tmpc))
+      % x
+      % tmpx
+      x(ind:ind-1+length(tmpx)) =tmpx';
+     % y
+     % tmpy*ones(1,length(tmpc))
+      y(ind:ind-1+length(tmpx)) = tmpy*ones(1,length(tmpc));
+      cl(ind:ind-1+length(tmpx)) = tmpc';
+      ind = ind+length(tmpx);
+        %set(b,'ColorOrder',colors(tmpc,:));
+        
+        %line([tmpx';tmpx'],tmpy*ones(2,length(tmpc)));
+        
     end
+
     if (mod(i,40)==0)
         waitbar(i/length(st_time),h2);
     end
 %pause
 end
+toc
+h = figure;
+set(h,'visible','off');%hold on;
+if all
+    b = axes('XLim',[0 8*xoffset],'YLim',[0 8*yoffset]);
+else
+    b = axes('XLim',[0 xoffset],'YLim',[0 yoffset]);
+end
+
+set(b,'ColorOrder',colors(cl(1:ind-1),:));
+%,'.','markersize',1
+lout =line([x(1:ind-1)';x(1:ind-1)'],[y(1:ind-1)';y(1:ind-1)']);
+set(lout,'MarkerSize',1,'LineStyle','.');
+
+if all
+    n=8;
+    xgridy = [yoffset*(1:n);yoffset*(1:n)];
+    xgridx = [zeros(1,n); xoffset*n*ones(1,n)];
+
+    ygridx = [xoffset*(1:n);xoffset*(1:n)];
+    ygridy = [yoffset*n*ones(1,n);zeros(1,n)];
+
+    line(ygridx,ygridy,'color',[0 0 0]);
+    line(xgridx,xgridy,'color',[0 0 0]);
+end
+set(gca,'XTick',[0 xoffset],'YTick',[0 yoffset],'YTickLabel',bound);
+xlabel('msec post stimulus')
+ylabel('seconds into experiment')
+title('PeriStimulus Rasterplot');
 set(h,'visible','on');
 close(h2);
 
