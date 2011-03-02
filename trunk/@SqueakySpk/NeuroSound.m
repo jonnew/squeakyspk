@@ -4,7 +4,7 @@ function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,env,sniplengt
 % synthesizer- whenever an action potential is detected on that electrode,
 % the key is depressed for a 10th of a second and a note is played.
 %
-% NS = NEUROSOUND(SS,tbound,pbspeed,ampscale,basefreq,scale)
+% NS = NEUROSOUND(SS,tbound,pbspeed,ampscale,basefreq,scale,env,sniplength, fid)
 %
 %       Inputs:
 %       SS = SqueakySpk object
@@ -182,7 +182,7 @@ for k = 1:numchan
     c_amp = 2^-((multiple-1)/24);
     tmp = sin(c_freq*pi*(1/outrate:1/outrate:sniplength))*c_amp;
     lastlow = find(snip(k,:)<0,1,'last');
-    tmp(lastlow:length(1/outrate:1/outrate:snip_length)) = 0;
+    tmp(lastlow:length(1/outrate:1/outrate:sniplength)) = 0;
     multiple = multiple+chosenscale(note);
     note = note +1;
     if note>length(chosenscale)
