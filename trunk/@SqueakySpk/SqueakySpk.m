@@ -65,6 +65,8 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         time; % [N DOUBLE (sec, spike index)]
         channel; % [N INT (channel #, spike index)]
         waveform; % [M DOUBLE x N INT ([uV], spike index)]
+        waveform_us;% [M DOUBLE x N INT ([uV], spike index)], upsampled waveforms, dirty indices are 0's
+        waveform_us_t;% [N DOUBLE (microseconds from peak for upsampled waveforms)]
         unit; % [N INT (unit #, spike index)]
         avgwaveform; % {avg:[M DOUBLE x K INT ([uV], unit #)],sd[M DOUBLE x K INT ([uV], unit #)]}
         asdr; % Array-wide spike detection rate matrix [[bins] [count]]
@@ -438,6 +440,54 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             SS.clean = SS.clean&(tmp');
             SS.methodlog = [SS.methodlog '<PkVelocity>'];
         end
+        function UpSamp(SS,us,pkalign,tpre,tpost)
+            % UPSAMP(SS,us,pkalign,tpre,tpost)
+            % upsample waveforms by integer factor and optionally
+            % change snippet time after align to (new) peaks
+            % us: upsampling rate, integer factor, default of 2
+            % pkalign: realign to peaks after upsampling
+            %           todo: need to take into account threshold, pos/neg peaks and pre/post wf time
+            %                     used by the user's recording system
+            % tpre: time preceding peak in usec
+            % tpost: time after peak in usec
+            % Written by: NK
+            disp('upsampling waveforms')
+            if nargin < 3, pkalign = 0;end
+            if nargin == 3,
+                tpre = 200;tpost = 600;%usec, should provide integer multiple samples of 1/SS.fs
+            end
+            if nargin < 2,      us = 2;end
+            default_peak_index = 25*us+1;
+            % do only clean waveforms for to improve speed, need separate matrix though
+            SS.waveform_us = zeros(size(SS.waveform,1)*us,size(SS.waveform(:,SS.clean),2));
+            if pkalign
+                wfpre   = SS.fs*tpre*1e-6;wfpost = SS.fs*tpost*1e-6;
+                nwfpts  = (wfpre+wfpost)*us+1;
+                wftime  = linspace(-tpre,tpost,nwfpts);%final, upsampled time, usecs
+                wf      = zeros(nwfpts,size(SS.waveform_us,2));
+            end
+            cleanwfs = find(SS.clean);
+            for k = 1:length(cleanwfs)
+                SS.waveform_us(:,k) = interp(SS.waveform(:,cleanwfs(k)),us);
+                if pkalign
+                    wftmp = SS.waveform_us(:,k);
+                    [dum pkind] = max(abs(wftmp));
+                    try
+                        wf(:,k) = wftmp(pkind-wfpre*us:pkind+wfpost*us);
+                    catch %todo: make this relevant
+                        wf(:,k) = wftmp(default_peak_index-wfpre*us:default_peak_index+wfpost*us);
+                    end
+                end
+            end
+            if pkalign
+                SS.waveform_us = wf;
+                SS.waveform_us_t = wftime;
+            end
+            tmp = SS.waveform_us;
+            SS.waveform_us = zeros(nwfpts,size(SS.waveform,2));
+            SS.waveform_us(:,SS.clean) = tmp;
+            SS.methodlog = [SS.methodlog '<UpSamp>'];
+        end
         function MUA(SS)
             % MUA(SS) all units on the same channel are combined to create
             % Multi-Unit Activity (MUA)
@@ -513,10 +563,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         %% Block 7: BASIC DATA PROCESSING TOOLS
         ASDR(SS,dt,shouldplot,loglin,ymax);
         % This method is contained in a separate file.
- 
+        
         BI(SS);
         % This method is contained in a separate file.
-
+        
         PeriStimHistogram(SS,dt,histrange,bound,ploton);
         % This method is contained in a separate file.
         
@@ -531,6 +581,8 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,env,sniplength, fid)
+        % This method is contained in a separate file.
+        dh = DishHRTF(SS,fs,pbloc,times,chind)
         % This method is contained in a separate file.
         
         %% Block 7: RETURN CLEAN DATA
