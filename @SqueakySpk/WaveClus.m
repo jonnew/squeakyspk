@@ -690,6 +690,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
                     directory = which('cluster.exe');
                     copyfile(directory,[pwd '\' char(hand)]);
                 end
+%                    display('.\\%s\\Cluster.exe %s.run',hand,fname);
                 dos(sprintf('.\\%s\\Cluster.exe %s.run',hand,fname));
             case {'MAC'}
                 directory = which('cluster_mac.exe');

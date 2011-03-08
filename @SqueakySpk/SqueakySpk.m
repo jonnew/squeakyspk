@@ -573,6 +573,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PeriStimRaster(SS,bounds,dur,ch);
         % This method is contained in a separate file.
         
+        PeriSpikeRaster(SS,unit,bounds,dur);
+        % This method is contained in a separate file.
+        
         [result counts]=XCorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez);
         % This method is contained in a separate file.
         
