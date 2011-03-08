@@ -10,7 +10,7 @@ function PlotAvgWaveform(SS)
 % 	Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 
-if isempty(SS.avgwaveform) || isempty(SS.avgwaveform.avg)
+if isempty(SS.avgwaveform) %|| isempty(SS.avgwaveform.avg)
     error('You have not performed spike sorting yet, or there are no valid units.')
 end
 

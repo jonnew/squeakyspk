@@ -65,7 +65,7 @@ sp_chan = SS.channel(goodspike);
 %     if all
 %         subplot(8,8,i); axis([0 dur bound(1) bound(2)]);
 %     end
-    r = ceil(i/8);
+    r = 9-ceil(i/8);
     c = ceil(mod(i-1,8))+1;
     colors = [c/8 ;1-r/8 ;1-c/8]';
 %     plot(1,10,'*','markersize',45,'color',colors(i,:));
@@ -139,7 +139,11 @@ end
 set(b,'ColorOrder',colors(cl(1:ind-1),:));
 %,'.','markersize',1
 lout =line([x(1:ind-1)';x(1:ind-1)'],[y(1:ind-1)';y(1:ind-1)']);
-set(lout,'MarkerSize',1,'LineStyle','.');
+if all
+    set(lout,'MarkerSize',1,'LineStyle','.');
+else
+    set(lout,'MarkerSize',6,'LineStyle','.');
+end
 
 if all
     n=8;
@@ -155,8 +159,16 @@ end
 set(gca,'XTick',[0 xoffset],'YTick',[0 yoffset],'YTickLabel',bound);
 xlabel('msec post stimulus')
 ylabel('seconds into experiment')
-title('PeriStimulus Rasterplot');
+if ~all
+    title(['PeriStimulus Rasterplot, stimulus on channel ' num2str(ch)]);
+else
+    title('PeriStimulus Rasterplot');
+end
 set(h,'visible','on');
+
+
+
+
 close(h2);
 
 toc
