@@ -46,7 +46,7 @@ st_chan = SS.st_channel(goodstim);
 if ~isempty(SS.unit)
     goodspike = find((SS.time >= bound(1) & SS.time <= bound(2))&(SS.unit==unit));
 else
-    goodspike = find((SS.time >= bound(1) & SS.time <= bound(2))&(SS.channel==unit));
+    goodspike = find((SS.time >= bound(1) & SS.time <= bound(2))&(SS.channel==unit)&(SS.clean));
 end
 
 sp_time = SS.time(goodspike);
@@ -118,22 +118,22 @@ end
 toc
 h = figure;
 set(h,'visible','off');%hold on;
-subplot(1,3,3);
-if ~isempty(SS.unit)
-    tmp = find(SS.unit==unit);
-else
-    tmp = find(SS.channel ==unit);
-end
-waves = SS.waveform(:,tmp(ceil(rand(30,1)*length(tmp))));
-plot(waves);hold on;
-if ~isempty(SS.avgwaveform)
-plot(SS.avgwaveform(:,unit),'linewidth',4,'color','k');
-end
-axis tight;
-xlabel('sample no.')
-ylabel('uV')
+% subplot(1,3,3);
+% if ~isempty(SS.unit)
+%     tmp = find(SS.unit==unit);
+% else
+%     tmp = find((SS.channel ==unit)&SS.clean);
+% end
+% waves = SS.waveform(:,tmp(ceil(rand(30,1)*length(tmp))));
+% plot(waves);hold on;
+% if (~isempty(SS.avgwaveform)&~isempty(SS.unit))
+% plot(SS.avgwaveform(:,unit),'linewidth',4,'color','k');
+% end
+% axis tight;
+% xlabel('sample no.')
+% ylabel('uV')
 
-b = subplot(1,3,[1 2]);
+b = subplot(1,3,[1 2 3]);
 
     set(b,'XLim',[-xoffset 0],'YLim',[0 yoffset]);
 
@@ -150,8 +150,11 @@ set(gca,'XTick',[-xoffset 0],'YTick',[0 yoffset],'YTickLabel',bound);
 xlabel('msec before spike')
 ylabel('seconds into experiment')
 
-
+if ~isempty(SS.unit)
     title(['PeriSpike Rasterplot, response on unit ' num2str(unit)]);
+else
+    title(['PeriSpike Rasterplot, response on channel ' num2str(unit)]);
+end
 
 
 set(h,'visible','on');

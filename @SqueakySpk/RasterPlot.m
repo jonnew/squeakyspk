@@ -96,8 +96,8 @@ else
     % Plot the raster for spikes in the time bound of interest
     switch what2show
         case 'both'
-            plot(spkinterest(cleaninterest),unitinterest(cleaninterest)+0.75*rand(size(unitinterest(cleaninterest))),'w.','MarkerSize',4);
-            plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest)+0.75*rand(size(unitinterest(~cleaninterest))),'r.','MarkerSize',4);
+            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
+            plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
             plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
         case 'clean'
             spkinterest = spkinterest(cleaninterest);

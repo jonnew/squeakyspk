@@ -130,10 +130,11 @@ end
 toc
 h = figure;
 set(h,'visible','off');%hold on;
+b = subplot(1,3,[1 2]);
 if all
     b = axes('XLim',[0 8*xoffset],'YLim',[0 8*yoffset]);
 else
-    b = axes('XLim',[0 xoffset],'YLim',[0 yoffset]);
+    set(b,'XLim',[0 xoffset],'YLim',[0 yoffset]);
 end
 
 set(b,'ColorOrder',colors(cl(1:ind-1),:));
@@ -164,6 +165,11 @@ if ~all
 else
     title('PeriStimulus Rasterplot');
 end
+subplot(1,3,3);
+asdrp = SS.asdr(SS.asdr(:,2)>0,:);
+        plot(asdrp(:,2),asdrp(:,1),'k');axis tight;
+ xlabel(['(' num2str(0.1) 's)^-1']);xtick(0:3000:6000);
+    %ylabel()
 set(h,'visible','on');
 
 
