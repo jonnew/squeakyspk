@@ -130,11 +130,11 @@ end
 toc
 h = figure;
 set(h,'visible','off');%hold on;
-b = subplot(1,3,[1 2]);
+
 if all
     b = axes('XLim',[0 8*xoffset],'YLim',[0 8*yoffset]);
 else
-    set(b,'XLim',[0 xoffset],'YLim',[0 yoffset]);
+    b= axes('XLim',[0 xoffset],'YLim',[0 yoffset]);
 end
 
 set(b,'ColorOrder',colors(cl(1:ind-1),:));
@@ -157,7 +157,11 @@ if all
     line(ygridx,ygridy,'color',[0 0 0]);
     line(xgridx,xgridy,'color',[0 0 0]);
 end
-set(gca,'XTick',[0 xoffset],'YTick',[0 yoffset],'YTickLabel',bound);
+if all
+    set(gca,'XTick',[0 xoffset],'YTick',[0 yoffset],'YTickLabel',bound);
+else
+    set(gca,'YTick',[0  yoffset/2 yoffset],'YTickLabel',[bound(1) bound(2)/2+bound(1)/2 bound(2)]);
+end
 xlabel('msec post stimulus')
 ylabel('seconds into experiment')
 if ~all
@@ -165,11 +169,11 @@ if ~all
 else
     title('PeriStimulus Rasterplot');
 end
-subplot(1,3,3);
-asdrp = SS.asdr(SS.asdr(:,2)>0,:);
-        plot(asdrp(:,2),asdrp(:,1),'k');axis tight;
- xlabel(['(' num2str(0.1) 's)^-1']);xtick(0:3000:6000);
-    %ylabel()
+% subplot(1,3,3);
+% asdrp = SS.asdr(SS.asdr(:,2)>0,:);
+%         plot(asdrp(:,2),asdrp(:,1),'k');axis tight;
+%  xlabel(['(' num2str(0.1) 's)^-1']);xtick(0:3000:6000);
+%     %ylabel()
 set(h,'visible','on');
 
 
