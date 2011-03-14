@@ -62,7 +62,7 @@ function ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,env,sniplengt
 
 % check number and type of arguments
 
-if( nargin < 3)|| isempty(tbound)
+if( nargin < 2)|| isempty(tbound)
     tbound = [];
 end
 if( nargin < 3)|| isempty(pbspeed)
