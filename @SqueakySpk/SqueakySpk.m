@@ -471,7 +471,6 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             end
             %             if us>1,ttmp = interp(wftime,usfs);else ttmp = wftime;end
             tind = nearest(wftime,0):nearest(wftime,150);%peak will only come after crossing
-            tind
             cleanwfs = find(SS.clean);
             for k = 1:length(cleanwfs)
                 SS.waveform_us(:,k) = interp(SS.waveform(:,cleanwfs(k)),us);
