@@ -440,7 +440,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             SS.clean = SS.clean&(tmp');
             SS.methodlog = [SS.methodlog '<PkVelocity>'];
         end
-        function UpSamp(SS,us,pkalign,tpre,tpost)
+        function UpSamp(SS,us,pkalign,tpre,tpost,threshold)
             % UPSAMP(SS,us,pkalign,tpre,tpost)
             % upsample waveforms by integer factor and optionally
             % change snippet time after align to (new) peaks
@@ -450,15 +450,18 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             %                     used by the user's recording system
             % tpre: time preceding peak in usec
             % tpost: time after peak in usec
+            % threshold: threshold information
             % Written by: NK
             disp('upsampling waveforms')
+            if nargin < 6, threshold = -1;end%align to negative peak by default
             if nargin < 3, pkalign = 0;end
             if nargin == 3,
                 tpre = 200;tpost = 600;%usec, should provide integer multiple samples of 1/SS.fs
             end
             if nargin < 2,      us = 2;end
-            default_peak_index = 25*us+1;
-            % do only clean waveforms for to improve speed, need separate matrix though
+            %             default_peak_index = 25*us+1;
+            default_peak_index = 8*us+1;
+            % do only clean waveforms to improve speed, need separate matrix though
             SS.waveform_us = zeros(size(SS.waveform,1)*us,size(SS.waveform(:,SS.clean),2));
             if pkalign
                 wfpre   = SS.fs*tpre*1e-6;wfpost = SS.fs*tpost*1e-6;
@@ -466,17 +469,24 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 wftime  = linspace(-tpre,tpost,nwfpts);%final, upsampled time, usecs
                 wf      = zeros(nwfpts,size(SS.waveform_us,2));
             end
+            %             if us>1,ttmp = interp(wftime,usfs);else ttmp = wftime;end
+            tind = nearest(wftime,0):nearest(wftime,150);%peak will only come after crossing
+            tind
             cleanwfs = find(SS.clean);
             for k = 1:length(cleanwfs)
                 SS.waveform_us(:,k) = interp(SS.waveform(:,cleanwfs(k)),us);
                 if pkalign
-                    wftmp = SS.waveform_us(:,k);
-                    [dum pkind] = max(abs(wftmp));
-                    try
-                        wf(:,k) = wftmp(pkind-wfpre*us:pkind+wfpost*us);
-                    catch %todo: make this relevant
-                        wf(:,k) = wftmp(default_peak_index-wfpre*us:default_peak_index+wfpost*us);
+                    wftmp = SS.waveform_us(:,k);wftest = wftmp(tind);
+                    if threshold < 0, 
+                        [dum pkind] = min(wftest);else %todo: incorporate NR threshold info
+                        [dum pkind] = max(wftest);
                     end
+                    pkind = tind(1)+pkind-1;
+%                     try
+                        wf(:,k) = wftmp(pkind-wfpre*us:pkind+wfpost*us);
+%                     catch %todo: make this relevant
+%                         wf(:,k) = wftmp(default_peak_index-wfpre*us:default_peak_index+wfpost*us);
+%                     end
                 end
             end
             if pkalign
@@ -505,13 +515,21 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             if nargin < 2 || isempty(maxwfs)
                 maxwfs = 10000; %usec, peak-trough
             end
-            wfs = SS.waveform(:,SS.clean&SS.channel==chan);
-            n = min([size(wfs,2) maxwfs]);
-            wfi = randsample(size(wfs,2),n);
-            plot([1:size(wfs,1)]/SS.fs,wfs(:,wfi),'b');hold on;
-            plot([1:size(wfs,1)]/SS.fs,nanmean(wfs,2),'k','linewidth',2)
-            title(['ch' num2str(chan) ', n = ' num2str(length(find(SS.clean)))]);
-            SS.methodlog = [SS.methodlog '<PlotWfs>'];
+            if strfind(SS.methodlog,'UpSamp'),
+                wfs = SS.waveform_us(:,SS.clean&SS.channel==chan);
+                time = SS.waveform_us_t;
+            else
+                wfs = SS.waveform(:,SS.clean&SS.channel==chan);
+                time = [1:size(wfs,1)]/SS.fs;
+            end
+            if isempty(wfs), disp('no waveforms');else
+                n = min([size(wfs,2) maxwfs]);
+                wfi = randsample(size(wfs,2),n);
+                plot(time,wfs(:,wfi),'b');hold on;
+                plot(time,nanmean(wfs,2),'k','linewidth',2)
+                title(['ch' num2str(chan) ', n = ' num2str(length(find(SS.clean)))]);
+                SS.methodlog = [SS.methodlog '<PlotWfs>'];
+            end
         end
         function ResetClean(SS)
             % RESETCLEAN(SS) Resets the clean, badunit and badchannel arrays
