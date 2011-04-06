@@ -34,13 +34,13 @@ end
 subplot(m + rowsavg, m,[1 rowsavg*m])
 
     confplot(SS.psh.t.*1000,...
-            mean(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:)),...
-            std(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:)),...
-            std(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:)),...
+            mean(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:),1),...
+            std(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:),1),...
+            std(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:),1),...
             'LineWidth',2,'color', [0 0 0]);
     title([num2str(sum(SS.psh.stimcount)) ' stimuli over all channels'])
     axis tight
-    ylim([0 max(max(mean(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:))))])
+    ylim([0 max(max(mean(SS.psh.hist(~isnan(SS.psh.hist(:,1)),:),1)))])
 
 [ax1,h1] = suplabel('Time (msec)');
 [ax2,h2] = suplabel('ASDR (s^{-1})','y');
@@ -71,7 +71,7 @@ set(h2,'FontSize',16);
         %   See also ERRORBAR, SEMILOGX, SEMILOGY, LOGLOG, PLOTYY, GRID, CLF, CLC, TITLE,
         %   XLABEL, YLABEL, AXIS, AXES, HOLD, COLORDEF, LEGEND, SUBPLOT, STEM.
         %
-        %     © 2002 - Michele Giugliano, PhD (http://www.giugliano.info) (Bern, Monday Nov 4th, 2002 - 19:02)
+        %     ï¿½ 2002 - Michele Giugliano, PhD (http://www.giugliano.info) (Bern, Monday Nov 4th, 2002 - 19:02)
         %    (bug-reports to michele@giugliano.info)
         %   $Revision: 1.0 $  $Date: 2002/11/11 14:36:08 $
         %
