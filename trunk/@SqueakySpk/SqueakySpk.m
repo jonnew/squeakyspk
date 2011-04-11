@@ -543,7 +543,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         end
         
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
-        WaveClus(SS,maxclusters,minspk,decompmeth,plotbool)
+        WaveClus(SS,maxclusters,minspk,decompmeth,plotall,ploton)
         % This method is contained in a separate file.
         
         %% BLOCK 4: ADVANCED CLEANING METHODS (methods that alter the 'clean' array, but have dependences on overloaded input properties or sorting)
