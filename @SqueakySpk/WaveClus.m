@@ -1,4 +1,4 @@
-function WaveClus(SS,maxclus,minspk,decompmeth,plotall)
+function WaveClus(SS,maxclus,minspk,decompmeth,plotall,ploton)
 % WAVECLUS ported version of Rodrigo Quian Quiroga's wave-clus
 % combined wavelet/superparamagnetic clustering algorithm.
 %
@@ -21,6 +21,9 @@ function WaveClus(SS,maxclus,minspk,decompmeth,plotall)
 %
 %   Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
+if nargin < 6 || isempty(ploton)
+    ploton = 1;
+end
 if nargin < 5 || isempty(plotall)
     plotall = 1;
 end
@@ -315,144 +318,147 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
             end
             
             %PLOTS (if requested by user)
-            clf
-            set(gcf,'PaperOrientation','Landscape','PaperPosition',[0.25 0.25 10.5 8])
-            ylimit = [];
-            subplot(2,5,6)
-            temperature=handles.par.mintemp+temp*handles.par.tempstep;
-            switch handles.par.temp_plot
-                case 'lin'
-                    plot([handles.par.mintemp handles.par.maxtemp-handles.par.tempstep], ...
-                        [handles.par.min_clus handles.par.min_clus],'k:',...
-                        handles.par.mintemp+(1:handles.par.num_temp)*handles.par.tempstep, ...
-                        tree(1:handles.par.num_temp,5:size(tree,2)),[temperature temperature],[1 tree(1,5)],'k:')
-                case 'log'
-                    semilogy([handles.par.mintemp handles.par.maxtemp-handles.par.tempstep], ...
-                        [handles.par.min_clus handles.par.min_clus],'k:',...
-                        handles.par.mintemp+(1:handles.par.num_temp)*handles.par.tempstep, ...
-                        tree(1:handles.par.num_temp,5:size(tree,2)),[temperature temperature],[1 tree(1,5)],'k:')
-            end
-            axis tight;
-            xlabel('Temperature');
-            ylabel('Cluster Size')
-            subplot(2,5,1)
-            hold on
-            num_clusters = length(find([length(class1) length(class2) length(class3)...
-                length(class4) length(class5) length(class0)] >= handles.par.min_clus));
-            if length(class0) > handles.par.min_clus;
-                subplot(2,5,5);
-                max_spikes=min(length(class0),handles.par.max_spikes);
-                if plotall
-                    plot(spikes(class0(1:max_spikes),:)','k');
+            if (ploton)
+                clf
+                set(gcf,'PaperOrientation','Landscape','PaperPosition',[0.25 0.25 10.5 8])
+                ylimit = [];
+                subplot(2,5,6)
+                temperature=handles.par.mintemp+temp*handles.par.tempstep;
+                switch handles.par.temp_plot
+                    case 'lin'
+                        plot([handles.par.mintemp handles.par.maxtemp-handles.par.tempstep], ...
+                            [handles.par.min_clus handles.par.min_clus],'k:',...
+                            handles.par.mintemp+(1:handles.par.num_temp)*handles.par.tempstep, ...
+                            tree(1:handles.par.num_temp,5:size(tree,2)),[temperature temperature],[1 tree(1,5)],'k:')
+                    case 'log'
+                        semilogy([handles.par.mintemp handles.par.maxtemp-handles.par.tempstep], ...
+                            [handles.par.min_clus handles.par.min_clus],'k:',...
+                            handles.par.mintemp+(1:handles.par.num_temp)*handles.par.tempstep, ...
+                            tree(1:handles.par.num_temp,5:size(tree,2)),[temperature temperature],[1 tree(1,5)],'k:')
                 end
-                xlim([1 size(spikes,2)]);
-                title('Cluster 0','Fontweight','bold')
-                subplot(2,5,10)
-                xa=diff(index(class0));
-                [n,c]=hist(xa,0:1:500);
-                bar(c(1:end-1),n(1:end-1))
-                xlim([0 500])
-                set(get(gca,'children'),'facecolor','k','EdgeColor','k','linewidth',0.01)
-                xlabel([num2str(sum(n(1:3))) ' in < 3ms'])
-                title([num2str(length(class0)) ' spikes']);
-            end
-            if length(class1) > handles.par.min_clus;
-                subplot(2,5,1);
-                max_spikes=min(length(class1),handles.par.max_spikes);
-                plot(spikes(class1(1:max_spikes),:)','b');
-                xlim([1 size(spikes,2)]);
-                subplot(2,5,2);
-                hold
-                if plotall
+                axis tight;
+                xlabel('Temperature');
+                ylabel('Cluster Size')
+                subplot(2,5,1)
+                hold on
+                num_clusters = length(find([length(class1) length(class2) length(class3)...
+                    length(class4) length(class5) length(class0)] >= handles.par.min_clus));
+                if length(class0) > handles.par.min_clus;
+                    subplot(2,5,5);
+                    max_spikes=min(length(class0),handles.par.max_spikes);
+                    if plotall
+                        plot(spikes(class0(1:max_spikes),:)','k');
+                    end
+                    xlim([1 size(spikes,2)]);
+                    title('Cluster 0','Fontweight','bold')
+                    subplot(2,5,10)
+                    xa=diff(index(class0));
+                    [n,c]=hist(xa,0:1:500);
+                    bar(c(1:end-1),n(1:end-1))
+                    xlim([0 500])
+                    set(get(gca,'children'),'facecolor','k','EdgeColor','k','linewidth',0.01)
+                    xlabel([num2str(sum(n(1:3))) ' in < 3ms'])
+                    title([num2str(length(class0)) ' spikes']);
+                end
+                if length(class1) > handles.par.min_clus;
+                    subplot(2,5,1);
+                    max_spikes=min(length(class1),handles.par.max_spikes);
                     plot(spikes(class1(1:max_spikes),:)','b');
+                    xlim([1 size(spikes,2)]);
+                    subplot(2,5,2);
+                    hold
+                    if plotall
+                        plot(spikes(class1(1:max_spikes),:)','b');
+                    end
+                    plot(meanwave1,'k','linewidth',2)
+                    xlim([1 size(spikes,2)]);
+                    title('Cluster 1','Fontweight','bold')
+                    ylimit = [ylimit;ylim];
+                    subplot(2,5,7)
+                    xa=diff(index(class1));
+                    [n,c]=hist(xa,0:1:500);
+                    bar(c(1:end-1),n(1:end-1))
+                    xlim([0 500])
+                    set(get(gca,'children'),'facecolor','b','EdgeColor','b','linewidth',0.01)
+                    xlabel([num2str(sum(n(1:3))) ' in < 3ms'])
+                    title([num2str(length(class1)) ' spikes']);
+                    cluster(class1(:),1)=1;
                 end
-                plot(meanwave1,'k','linewidth',2)
-                xlim([1 size(spikes,2)]);
-                title('Cluster 1','Fontweight','bold')
-                ylimit = [ylimit;ylim];
-                subplot(2,5,7)
-                xa=diff(index(class1));
-                [n,c]=hist(xa,0:1:500);
-                bar(c(1:end-1),n(1:end-1))
-                xlim([0 500])
-                set(get(gca,'children'),'facecolor','b','EdgeColor','b','linewidth',0.01)
-                xlabel([num2str(sum(n(1:3))) ' in < 3ms'])
-                title([num2str(length(class1)) ' spikes']);
-                cluster(class1(:),1)=1;
-            end
-            if length(class2) > handles.par.min_clus;
-                subplot(2,5,1);
-                max_spikes=min(length(class2),handles.par.max_spikes);
-                plot(spikes(class2(1:max_spikes),:)','r');
-                xlim([1 size(spikes,2)]);
-                subplot(2,5,3);
-                hold
-                if plotall
+                if length(class2) > handles.par.min_clus;
+                    subplot(2,5,1);
+                    max_spikes=min(length(class2),handles.par.max_spikes);
                     plot(spikes(class2(1:max_spikes),:)','r');
+                    xlim([1 size(spikes,2)]);
+                    subplot(2,5,3);
+                    hold
+                    if plotall
+                        plot(spikes(class2(1:max_spikes),:)','r');
+                    end
+                    plot(meanwave2,'k','linewidth',2)
+                    xlim([1 size(spikes,2)]);
+                    title('Cluster 2','Fontweight','bold')
+                    ylimit = [ylimit;ylim];
+                    subplot(2,5,8)
+                    xa=diff(index(class2));
+                    [n,c]=hist(xa,0:1:500);
+                    bar(c(1:end-1),n(1:end-1))
+                    xlim([0 500])
+                    set(get(gca,'children'),'facecolor','r','EdgeColor','r','linewidth',0.01)
+                    xlabel([num2str(sum(n(1:3))) ' in < 3ms'])
+                    cluster(class2(:),1)=2;
+                    title([num2str(length(class2)) ' spikes']);
                 end
-                plot(meanwave2,'k','linewidth',2)
-                xlim([1 size(spikes,2)]);
-                title('Cluster 2','Fontweight','bold')
-                ylimit = [ylimit;ylim];
-                subplot(2,5,8)
-                xa=diff(index(class2));
-                [n,c]=hist(xa,0:1:500);
-                bar(c(1:end-1),n(1:end-1))
-                xlim([0 500])
-                set(get(gca,'children'),'facecolor','r','EdgeColor','r','linewidth',0.01)
-                xlabel([num2str(sum(n(1:3))) ' in < 3ms'])
-                cluster(class2(:),1)=2;
-                title([num2str(length(class2)) ' spikes']);
-            end
-            if length(class3) > handles.par.min_clus;
-                subplot(2,5,1);
-                max_spikes=min(length(class3),handles.par.max_spikes);
-                plot(spikes(class3(1:max_spikes),:)','g');
-                xlim([1 size(spikes,2)]);
-                subplot(2,5,4);
-                hold
-                if plotall
+                if length(class3) > handles.par.min_clus;
+                    subplot(2,5,1);
+                    max_spikes=min(length(class3),handles.par.max_spikes);
                     plot(spikes(class3(1:max_spikes),:)','g');
+                    xlim([1 size(spikes,2)]);
+                    subplot(2,5,4);
+                    hold
+                    if plotall
+                        plot(spikes(class3(1:max_spikes),:)','g');
+                    end
+                    plot(meanwave3,'k','linewidth',2)
+                    xlim([1 size(spikes,2)]);
+                    title('Cluster 3','Fontweight','bold')
+                    ylimit = [ylimit;ylim];
+                    subplot(2,5,9)
+                    xa=diff(index(class3));
+                    [n,c]=hist(xa,0:1:500);
+                    bar(c(1:end-1),n(1:end-1))
+                    xlim([0 500])
+                    set(get(gca,'children'),'FaceColor','g','EdgeColor','g','linewidth',0.01)
+                    xlabel([num2str(sum(n(1:3))) ' in < 3ms'])
+                    cluster(class3(:),1)=3;
+                    title([num2str(length(class3)) ' spikes']);
                 end
-                plot(meanwave3,'k','linewidth',2)
-                xlim([1 size(spikes,2)]);
-                title('Cluster 3','Fontweight','bold')
-                ylimit = [ylimit;ylim];
-                subplot(2,5,9)
-                xa=diff(index(class3));
-                [n,c]=hist(xa,0:1:500);
-                bar(c(1:end-1),n(1:end-1))
-                xlim([0 500])
-                set(get(gca,'children'),'FaceColor','g','EdgeColor','g','linewidth',0.01)
-                xlabel([num2str(sum(n(1:3))) ' in < 3ms'])
-                cluster(class3(:),1)=3;
-                title([num2str(length(class3)) ' spikes']);
+                
+                
+                % Rescale spike's axis
+                if ~isempty(ylimit)
+                    ymin = min(ylimit(:,1));
+                    ymax = max(ylimit(:,2));
+                end
+                if length(class1) > handles.par.min_clus; subplot(2,5,2); ylim([ymin ymax]); end
+                if length(class2) > handles.par.min_clus; subplot(2,5,3); ylim([ymin ymax]); end
+                if length(class3) > handles.par.min_clus; subplot(2,5,4); ylim([ymin ymax]); end
+                if length(class0) > handles.par.min_clus; subplot(2,5,5); ylim([ymin ymax]); end
+                
+                title([pwd '/' char(file_to_cluster)],'Interpreter','none','Fontsize',14)
+                features_name = handles.par.features;
+                toc
+                
+                if print2paper == 1;
+                    print
+                end
+                if print2file == 1;
+                    set(gcf,'papertype','usletter','paperorientation','portrait','paperunits','inches')
+                    set(gcf,'paperposition',[.25 .25 10.5 7.8])
+                    eval(['print -djpeg fig2print_' char(file_to_cluster)]);
+                end
+                
+                drawnow;
             end
-            
-            % Rescale spike's axis
-            if ~isempty(ylimit)
-                ymin = min(ylimit(:,1));
-                ymax = max(ylimit(:,2));
-            end
-            if length(class1) > handles.par.min_clus; subplot(2,5,2); ylim([ymin ymax]); end
-            if length(class2) > handles.par.min_clus; subplot(2,5,3); ylim([ymin ymax]); end
-            if length(class3) > handles.par.min_clus; subplot(2,5,4); ylim([ymin ymax]); end
-            if length(class0) > handles.par.min_clus; subplot(2,5,5); ylim([ymin ymax]); end
-            
-            title([pwd '/' char(file_to_cluster)],'Interpreter','none','Fontsize',14)
-            features_name = handles.par.features;
-            toc
-            
-            if print2paper == 1;
-                print
-            end
-            if print2file == 1;
-                set(gcf,'papertype','usletter','paperorientation','portrait','paperunits','inches')
-                set(gcf,'paperposition',[.25 .25 10.5 7.8])
-                eval(['print -djpeg fig2print_' char(file_to_cluster)]);
-            end
-            
-            drawnow;
             
             
             %Output

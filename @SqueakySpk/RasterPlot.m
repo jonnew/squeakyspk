@@ -5,14 +5,11 @@ function RasterPlot(SS, bound, what2show, yaxischannel)
 % stimuli. Spikes that will currently be cleaned in the Squeaky spike
 % object appear as red dots, those that will pass appear as white dots.
 %
-%   RASTERPLOT(SS) displays a clickable raster-plot of
+%   RASTERPLOT(SS) displays a raster-plot of
 %   SS properties time versus unit (or channel),
 %   e.g.    SS.time = [0.1 0.21 0.22 0.9 1.1,...,N] (NX1)
 %           SS.unit = [3 1 1 1 2,...,N] (NX1)
 %           SS.waveform = [[],[],...,N] (MXN).
-%   The lower plot waits for the user to click a point on the raster plot
-%   an then plots the corresponding raw voltage trace taken from the
-%   SS.waveform matrix.
 %
 %   RASTEPLOT(SS, bound, what2show, yaxischannel) creates a raster
 %   wave plot for a portion of the full recording specified in bound = [start
@@ -89,7 +86,7 @@ if usechan || yaxischannel
 else
     unitinterest = SS.unit(startind:endind);
     % Set up figure and plot raster array
-    fh = figure()
+    fh = figure();
     set(fh,'color','k'); % sets the background color to black
     hold on
     

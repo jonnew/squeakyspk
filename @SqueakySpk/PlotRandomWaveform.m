@@ -41,17 +41,22 @@ maxT = T(end,1);
 r = randperm(length(dat.time));
 r = r(1:N);
 W = dat.waveform(:,r);
-chs = (dat.channel(r))';
+chs = (dat.channel(r));
 
 % Constants to find plot position
 n = ceil(sqrt(max(dat.channel)));
 
-% Calculate position of the waveforms
-yoff = rangeV.*(n-ceil(chs'/n)+0.5)';
-W = W + yoff(ones(size(W,1),1),:);
+% Calculate position of the waveforms and time axes
+if size(chs,1) > 1
+    yoff = rangeV.*(n-ceil(chs'/n)+0.5);
+    xoff = T(end,1)*mod(chs'-1,8);
+else
+    yoff = rangeV.*(n-ceil(chs'/n)+0.5)';
+    xoff = T(end,1)*mod(chs'-1,8)';
+end
 
-% Calculate posisitions of time axes
-xoff = T(end,1)*mod(chs'-1,8)';
+% Apply offsets
+W = W + yoff(ones(size(W,1),1),:);
 T = T + xoff(ones(size(W,1),1),:);
 
 % Create grid

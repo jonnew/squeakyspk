@@ -26,6 +26,7 @@ SS.WeedUnitByWaveform();
 
 %% Calculate ASDR
 SS.ASDR
+SS.CSDR
 
 %% Examime some data to make sure results of sorting and cleaning look good
 SS.RasterWave;
