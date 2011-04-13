@@ -628,9 +628,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         end
         
         %% Block 8: Save SS object
-        function Save(SS)
-            save([SS.name '.SS'],'SS')
-        end
+        
+        Save(SS,auxfid)
+        % This method is contained in a separate file.
         
     end
     
