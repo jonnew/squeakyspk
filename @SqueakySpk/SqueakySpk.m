@@ -277,7 +277,8 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 unit2remove = 0;
             end
             if isempty(SS.unit)
-                error('You have not clustered your data yet and unit information is not available.')
+                warning('You have not clustered your data yet and unit information is not available. Cannot remove units')
+                return
             end
             
             % Append the badunit vector
@@ -563,13 +564,13 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotPeriStimHistogram(SS)
         % This method is contained in a separate file.
         
-        RandScat(SS,bound,forcechannel)
+        RandScat(SS,bound,forcechannel,makefig)
         % This method is contained in a separate file.
         
         PlotCSDR(SS,frmax)
         % This method is contained in a separate file.
         
-        PlotRandomWaveform(SS,N,rangeV)
+        PlotRandomWaveform(SS,N,rangeV,bound)
         % This method is contained in a separate file.
         
         DemarseActivityPlot(SS,t,tau,dilation,name)

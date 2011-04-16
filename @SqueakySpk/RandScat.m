@@ -1,7 +1,11 @@
-function q=RandScat(SS,bound,forcechannel)
-% RANDSCAT88(SS) plots scatter plots of the clean spikes that occured within bound 
-% = [t0 t1] in SS. It stacks thin horizontal raster plots for each channel/unit. Within
-% each plot, spikes are randomly positioned vertically for clarity.
+function q = RandScat(SS,bound,forcechannel,makefig)
+% RANDSCAT(SS, BOUND, FORCECHANNEL, MAKEFIG) plots scatter plots of the
+% clean spikes that occured within bound = [t0 t1] in SS. It stacks thin
+% horizontal raster plots for each channel/unit. Within each plot, spikes
+% are randomly positioned vertically for clarity. FORCECHANNEL = 1 forces
+% the ordinate axis to display channel number in the case that your data is
+% spike sorted. MAKEFIG = 1 the scatter plot in a new figure, 0 in whatever
+% axes are open. Default is 1.
 %
 % p = RandScat(SS) returns the plot handle.
 % 
@@ -19,7 +23,9 @@ end
 dat = SS.ReturnClean;
 idx = dat.time>=bound(1)&dat.time<bound(2);
 
-figure()
+if makefig
+    figure()
+end
 if ~isfield(dat,'unit') || forcechannel
     p=plot(dat.time(idx), dat.channel(idx) + 0.7*rand(size(dat.channel(idx))) - 0.35,'k.');
     ylabel 'Channel'
