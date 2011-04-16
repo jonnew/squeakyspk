@@ -70,7 +70,7 @@ if(returnplot)
         plot(SS.asdr(:,1),SS.asdr(:,2),'k');
     end
     xlabel('Time (sec)')
-    ylabel(['(' num2str(dt) 's)^-1'])
+    ylabel('s^-1')
 end
 
 end

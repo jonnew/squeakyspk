@@ -1,17 +1,21 @@
-function PlotRandomWaveform(SS,N,rangeV)
-% PLOTRANDOMWAVEFORM plots N waveforms randomly choosen from the data in SS.
-% This gives a general idea of spike-waveform characteristics and does not 
-% depend on sorting. This function does not employ subplot, so it is very fast
-% for plotting many waveforms across many different channels. N is the number
-% of waveforms to be plotted. RANGEV is the maximal voltage range to allocate
-% for each channel (each box will be +-RANGEV).
+function PlotRandomWaveform(SS,N,rangeV,bound)
+% PLOTRANDOMWAVEFORM plots N waveforms randomly choosen from the data in
+% SS. This gives a general idea of spike-waveform characteristics and does
+% not depend on sorting. This function does not employ subplot, so it is
+% very fast for plotting many waveforms across many different channels. N
+% is the number of waveforms to be plotted. RANGEV is the maximal voltage
+% range to allocate for each channel (each box will be +-RANGEV). BOUND
+% allows the user to specify a time block [t0 t1] from the recording to
+% create the plot from.
 %
-%       Created by: Jon Newman (jnewman6 at gatech dot edu)
-%       Location: The Georgia Institute of Technology
-%       Created on: Feb 2, 2011
-%       Last modified: Feb 2, 2011
+%       Created by: Jon Newman (jnewman6 at gatech dot edu) Location: The
+%       Georgia Institute of Technology Created on: Feb 2, 2011 Last
+%       modified: Feb 2, 2011
 % 	Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
+if nargin < 4 || isempty(bound)
+    bound = [0 max(SS.time)];
+end
 if nargin < 3 || isempty(rangeV)
     rangeV = 200; % uV
 end
@@ -20,6 +24,10 @@ if nargin < 2 || isempty(N)
 end
 
 dat = SS.ReturnClean;
+dat.waveform = dat.waveform(:,dat.time > bound(1) & dat.time < bound(2));
+dat.channel = dat.channel(dat.time > bound(1) & dat.time < bound(2),:);
+dat.time = dat.time(dat.time > bound(1) & dat.time < bound(2));
+
 
 if N > length(dat.time)
     N = length(dat.time);
@@ -42,6 +50,10 @@ r = randperm(length(dat.time));
 r = r(1:N);
 W = dat.waveform(:,r);
 chs = (dat.channel(r));
+
+% Create color matrix
+col = jet(max(SS.channel));
+col = col(chs,:);
 
 % Constants to find plot position
 n = ceil(sqrt(max(dat.channel)));
@@ -68,8 +80,9 @@ ygridy = [rangeV*n*ones(1,n);zeros(1,n)];
 
 % plot
 q = figure();
-hold on
-plot(T,W,'b');
+set(gca, 'ColorOrder', col);
+hold all
+plot(T,W);
 line(ygridx,ygridy,'color',[0 0 0]);
 line(xgridx,xgridy,'color',[0 0 0]);
 axis([0 n*maxT 0 n*rangeV]);
