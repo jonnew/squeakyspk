@@ -79,6 +79,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % properties of the stimulus given while collecting the main data [STIM DATA]
         st_time; % [N DOUBLE (sec, spike index)]
         st_channel; % [N INT (channel #, spike index)]
+        st_type; % [N INT (auxiliary information about this stimulus, spike index)]
         
         % properties of the spontaneous data used for spk verification [SPONT DATA]
         sp_time; % [N DOUBLE (sec, spike index)]
@@ -161,8 +162,15 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 SS.st_time = [];
                 SS.st_channel = [];
             else
-                SS.st_time = stimulus.time;
-                SS.st_channel = stimulus.channel;
+                if ~isempty(stimulus.type)
+                    SS.st_time = stimulus.time;
+                    SS.st_channel = stimulus.channel;
+                    SS.st_type = stimulus.type;
+                else
+                    SS.st_time = stimulus.time;
+                    SS.st_channel = stimulus.channel;
+                    SS.st_type = [];
+                end
             end
             
             % Load spontaneous data
@@ -185,27 +193,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         end
         
         %% BLOCK 2: CLEANING METHODS (methods that alter the 'clean' array)
-        function HardThreshold(SS,highThreshold,lowThreshold)
-            % HARDTHRESHOLD(SS,highThreshold,lowThreshold) removes all 'spikes'
-            % with P2P amplitude greater/less than high/low threshold
-            % (dependent on whatever units you are measuring AP's with).
-            % Written by: JN and RZT
-            
-            % Set default thresholds if non are provided
-            if nargin < 2 || isempty(highThreshold)
-                highThreshold = 175; %uV
-            end
-            if nargin < 3 || isempty(lowThreshold)
-                lowThreshold = 0; %uV
-            end
-            
-            dirty = ((max(SS.waveform) - min(SS.waveform)) > highThreshold | (max(SS.waveform) - min(SS.waveform)) < lowThreshold);
-            if ~isempty(dirty)
-                SS.clean = SS.clean&(~dirty');
-            end
-            
-            SS.methodlog = [SS.methodlog '<HardThreshold>'];
-        end
+        HardThreshold(SS,highThreshold,lowThreshold)
+        % This method is contained in a separate file.
+        
         function RemoveBySymmetry(SS,maxWaveSymmetry)
             % REMOVEBYSYMMETRY(SS,maxWaveSymmetry) takes the ratio of the
             % maximal postive and negative deflections of a waveform about
