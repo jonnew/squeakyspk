@@ -60,6 +60,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         fs;
         recunit; % Unit that the users data is provided in as a fraction of volts (1-> volts, 0.001 -> millivolts, etc).
         
+        % recording properities
+        tor; % time of recording
+        age; % age of culture, in seconds
+        
         % properties of data that you are cleaning [MAIN DATA]
         clean; % [N BOOL (clean?, spike index)]
         time; % [N DOUBLE (sec, spike index)]
@@ -560,7 +564,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotCSDR(SS,frmax)
         % This method is contained in a separate file.
         
-        PlotRandomWaveform(SS,N,rangeV,bound)
+        PlotRandomWaveform(SS,plotall,N,rangeV,bound)
         % This method is contained in a separate file.
         
         DemarseActivityPlot(SS,t,tau,dilation,name)
@@ -609,12 +613,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             
             % Rename the clean units starting from 1
             if ~isempty(SS.unit)
-                cleanunits = SS.unit(logical(SS.clean));
-                cleanunitvalues = unique(cleanunits);
-                for i = 1:length(cleanunitvalues )
-                    cleanunits(cleanunits == cleanunitvalues(i)) = i;
-                end
-                sqycln.unit = cleanunits;
+                sqycln.unit = SS.unit(logical(SS.clean));
             end
         end
         

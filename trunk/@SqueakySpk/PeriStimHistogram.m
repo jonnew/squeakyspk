@@ -20,13 +20,13 @@ if nargin < 5 || isempty(ploton)
     ploton = 1; % Whole recording
 end
 if nargin < 4 || isempty(bound)
-    bound = [0 max(SS.time)]; % Whole recording
+    bound = [0 max(SS.st_time)]; % All stimuli
 end
 if nargin < 3 || isempty(histrange)
     histrange = [-100 500]; % Default range of histogram (msec)
 end
 if nargin < 2 || isempty(dt)
-    dt = 5; % Default time resolution of 5 msec
+    dt = 1; % Default time resolution of 5 msec
 end
 if nargin < 1
     error('Need to act on SqueakSpk Object');
@@ -55,8 +55,9 @@ psh.stimcount = zeros(max(goodchan),1);
 psh.hist = zeros(max(goodchan),length(b(1):dtsec:b(2)));
 psh.std = zeros(max(goodchan),length(b(1):dtsec:b(2)));
 
-wait_h = waitbar(0,'Caclulating PSH');
-steps2update = floor(length(goodstim)/100);
+disp('Calculating Peri-stimulus histogram ...')
+% wait_h = waitbar(0,'Caclulating PSH');
+% steps2update = floor(length(goodstim)/100);
 
 % perform only on clean spks
 clean_spk = SS.time(SS.clean);
@@ -74,13 +75,14 @@ for i = 1:length(goodstim)
         psh.stimcount(goodchan(i)) = psh.stimcount(goodchan(i)) + 1;
     end
     
-    if ~logical(mod(i,steps2update))
-        waitbar(i/length(goodstim),wait_h)
-    end
+%     if ~logical(mod(i,steps2update))
+%         waitbar(i/length(goodstim),wait_h)
+%     end
     
 end
 
-close(wait_h)
+% close(wait_h)
+disp('Finished calculating Peri-stimulus histogram.')
 
 % Calculate RMS and normalize everything to firing rate
 for i = 1:max(goodchan)
