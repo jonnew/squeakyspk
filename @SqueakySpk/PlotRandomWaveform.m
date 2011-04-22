@@ -1,32 +1,43 @@
-function PlotRandomWaveform(SS,N,rangeV,bound)
+function PlotRandomWaveform(SS,plotall,N,rangeV,bound)
 % PLOTRANDOMWAVEFORM plots N waveforms randomly choosen from the data in
 % SS. This gives a general idea of spike-waveform characteristics and does
 % not depend on sorting. This function does not employ subplot, so it is
-% very fast for plotting many waveforms across many different channels. N
-% is the number of waveforms to be plotted. RANGEV is the maximal voltage
-% range to allocate for each channel (each box will be +-RANGEV). BOUND
-% allows the user to specify a time block [t0 t1] from the recording to
-% create the plot from.
+% very fast for plotting many waveforms across many different channels.
+% PLOTALL determines random waveforms are drawn from all spikes (1) or just
+% clean ones (0), the default being 0. N is the number of waveforms to be
+% plotted. RANGEV is the maximal voltage range to allocate for each channel
+% (each box will be +-RANGEV). BOUND allows the user to specify a time
+% block [t0 t1] from the recording to create the plot from.
 %
 %       Created by: Jon Newman (jnewman6 at gatech dot edu) Location: The
 %       Georgia Institute of Technology Created on: Feb 2, 2011 Last
 %       modified: Feb 2, 2011
 % 	Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
-if nargin < 4 || isempty(bound)
+if nargin < 5 || isempty(bound)
     bound = [0 max(SS.time)];
 end
-if nargin < 3 || isempty(rangeV)
+if nargin < 4 || isempty(rangeV)
     rangeV = 200; % uV
 end
-if nargin < 2 || isempty(N)
+if nargin < 3 || isempty(N)
     N = 1000; % Default to 1000 waveforms
 end
+if nargin < 2 || isempty(plotall)
+    plotall = 0;
+end
 
-dat = SS.ReturnClean;
-dat.waveform = dat.waveform(:,dat.time > bound(1) & dat.time < bound(2));
-dat.channel = dat.channel(dat.time > bound(1) & dat.time < bound(2),:);
-dat.time = dat.time(dat.time > bound(1) & dat.time < bound(2));
+if ~plotall
+    dat = SS.ReturnClean;
+    dat.waveform = dat.waveform(:,dat.time > bound(1) & dat.time < bound(2));
+    dat.channel = dat.channel(dat.time > bound(1) & dat.time < bound(2),:);
+    dat.time = dat.time(dat.time > bound(1) & dat.time < bound(2));
+else
+    
+    dat.waveform = SS.waveform(:,SS.time > bound(1) & SS.time < bound(2));
+    dat.channel = SS.channel(SS.time > bound(1) & SS.time < bound(2),:);
+    dat.time = SS.time(SS.time > bound(1) & SS.time < bound(2));
+end
 
 
 if N > length(dat.time)
