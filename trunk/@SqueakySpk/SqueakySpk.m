@@ -353,178 +353,6 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             %                 size(true_wave)
             SS.methodlog = [SS.methodlog '<Mitraclean>'];
         end
-        function AmpSel(SS,threshold)
-            % AMPSEL(SS,threshold) select waveforms based on amplitude
-            % Written by: NK
-            % Set default threshold if none is provided
-            if nargin < 2 || isempty(threshold)
-                threshold = 50; %uV, p2p amplitude
-            end
-            tmp = ((max(SS.waveform) - min(SS.waveform)) > threshold);
-            SS.clean = SS.clean&(tmp');
-            SS.methodlog = [SS.methodlog '<AmpSel>'];
-        end
-        function PkTrSel(SS,width)
-            % PKTRSEL(SS,width) select waveforms based on peak-trough time
-            % Written by: NK
-            % Set default min/max widths if none are provided
-            if nargin < 2 || isempty(width)
-                width = [0 500]; %usec, peak-trough
-            end
-            [dum pt] = max(SS.waveform);[dum trt] = min(SS.waveform);
-            tmpw = abs(pt-trt)/SS.fs*1e6;
-            tmp = tmpw>=width(1) & tmpw<=width(2);
-            SS.clean = SS.clean&(tmp');
-            SS.methodlog = [SS.methodlog '<PkTrSel>'];
-        end
-        function MinCheck(SS,mintime)
-            % MINCHECK(SS,mintime)
-            % check that the minimum value is past a certain sample
-            % you need to know when/where your threshold was
-            % this is currently only relevant for a negative threshold -only scheme
-            % Written by: NK
-            if nargin < 2 || isempty(mintime)
-                mintime = [500]; %usec, peak-trough
-            end
-            [dum trt] = min(SS.waveform);
-            tmp = (trt/SS.fs*1e6)<mintime;
-            SS.clean = SS.clean&(tmp');
-            SS.methodlog = [SS.methodlog '<MinCheck>'];
-        end
-        function Crossing(SS,th)
-            % CROSSING(SS,th)
-            % require a zero (or user-specified)-crossing of +/->=5 uV
-            % Written by: NK
-            if nargin < 2 || isempty(th)
-                th = 0; %uV, p2p amplitude
-            end
-            tmp = max(SS.waveform)>=(th+5) & min(SS.waveform)<=(th+5);
-            SS.clean = SS.clean&(tmp');
-            SS.methodlog = [SS.methodlog '<Crossing>'];
-        end
-        function MaxMinCheck(SS,th)
-            % MAXMINCHECK(SS,th)
-            % no max or min at first 2 or last 2 samples is allowed
-            % with +/- uV thresholding
-            % Written by: NK
-            if nargin < 2 || isempty(th)
-                th = 150; %uV, p2p amplitude
-            end
-            [maxs maxi] = max(SS.waveform);[mins mini] = min(SS.waveform);
-            tmp = (maxi>2 & maxi<(size(SS.waveform,1)-1)) & (mini>2 & mini<(size(SS.waveform,1)-1)) & ...
-                (maxs<th)&(mins>-th);
-            SS.clean = SS.clean&(tmp');
-            SS.methodlog = [SS.methodlog '<MaxMinCheck>'];
-        end
-        function PkVelocity(SS,th)
-            % PKVELOCITY(SS,th)
-            % threshold the velocity at the peaks
-            % th uV/sec -find empirically, 6-8e5 uV/sec seems to work well
-            % Written by: NK
-            if nargin < 2 || isempty(th)
-                th = 8e5; %uV/sec
-            end
-            [maxs maxi] = max(SS.waveform);[mins mini] = min(SS.waveform);
-            vel = diff(SS.waveform);
-            maxi(maxi<2)=2;maxi(maxi==size(SS.waveform,1))=size(SS.waveform,1)-1;
-            mini(mini<2)=2;mini(mini==size(SS.waveform,1))=size(SS.waveform,1)-1;
-            pv = abs(vel(maxi-1:maxi,:));tv = abs(vel(mini-1:mini,:));%1 before, 1 after
-            pv(pv<eps)=nan;tv(tv<eps)=nan;
-            pkvel = nanmean(pv,1)*SS.fs;trvel = nanmean(tv,1)*SS.fs;
-            tmp = (pkvel<th) & (trvel<th);
-            SS.clean = SS.clean&(tmp');
-            SS.methodlog = [SS.methodlog '<PkVelocity>'];
-        end
-        function UpSamp(SS,us,pkalign,tpre,tpost,threshold)
-            % UPSAMP(SS,us,pkalign,tpre,tpost)
-            % upsample waveforms by integer factor and optionally
-            % change snippet time after align to (new) peaks
-            % us: upsampling rate, integer factor, default of 2
-            % pkalign: realign to peaks after upsampling
-            %           todo: need to take into account threshold, pos/neg peaks and pre/post wf time
-            %                     used by the user's recording system
-            % tpre: time preceding peak in usec
-            % tpost: time after peak in usec
-            % threshold: threshold information
-            % Written by: NK
-            disp('upsampling waveforms')
-            if nargin < 6, threshold = -1;end%align to negative peak by default
-            if nargin < 3, pkalign = 0;end
-            if nargin == 3,
-                tpre = 200;tpost = 600;%usec, should provide integer multiple samples of 1/SS.fs
-            end
-            if nargin < 2,      us = 2;end
-            %             default_peak_index = 25*us+1;
-            default_peak_index = 8*us+1;
-            % do only clean waveforms to improve speed, need separate matrix though
-            SS.waveform_us = zeros(size(SS.waveform,1)*us,size(SS.waveform(:,SS.clean),2));
-            if pkalign
-                wfpre   = SS.fs*tpre*1e-6;wfpost = SS.fs*tpost*1e-6;
-                nwfpts  = (wfpre+wfpost)*us+1;
-                wftime  = linspace(-tpre,tpost,nwfpts);%final, upsampled time, usecs
-                wf      = zeros(nwfpts,size(SS.waveform_us,2));
-            end
-            %             if us>1,ttmp = interp(wftime,usfs);else ttmp = wftime;end
-            tind = nearest(wftime,0):nearest(wftime,150);%peak will only come after crossing
-            cleanwfs = find(SS.clean);
-            for k = 1:length(cleanwfs)
-                SS.waveform_us(:,k) = interp(SS.waveform(:,cleanwfs(k)),us);
-                if pkalign
-                    wftmp = SS.waveform_us(:,k);wftest = wftmp(tind);
-                    if threshold < 0, 
-                        [dum pkind] = min(wftest);else %todo: incorporate NR threshold info
-                        [dum pkind] = max(wftest);
-                    end
-                    pkind = tind(1)+pkind-1;
-%                     try
-                        wf(:,k) = wftmp(pkind-wfpre*us:pkind+wfpost*us);
-%                     catch %todo: make this relevant
-%                         wf(:,k) = wftmp(default_peak_index-wfpre*us:default_peak_index+wfpost*us);
-%                     end
-                end
-            end
-            if pkalign
-                SS.waveform_us = wf;
-                SS.waveform_us_t = wftime;
-            end
-            tmp = SS.waveform_us;
-            SS.waveform_us = zeros(nwfpts,size(SS.waveform,2));
-            SS.waveform_us(:,SS.clean) = tmp;
-            SS.methodlog = [SS.methodlog '<UpSamp>'];
-        end
-        function MUA(SS)
-            % MUA(SS) all units on the same channel are combined to create
-            % Multi-Unit Activity (MUA)
-            % Written by: NK
-            SS.unit = SS.clean.*SS.channel;
-            SS.methodlog = [SS.methodlog '<MUA>'];
-        end
-        function PlotWfs(SS,maxwfs,chan)
-            % PLOTWFS(SS,maxwfs,chan)
-            % plot maxwfs waveforms on specified channel (ie for debugging purposes)
-            % Written by: NK
-            if nargin < 3 || isempty(chan)
-                chan = 2;
-            end
-            if nargin < 2 || isempty(maxwfs)
-                maxwfs = 10000; %usec, peak-trough
-            end
-            if strfind(SS.methodlog,'UpSamp'),
-                wfs = SS.waveform_us(:,SS.clean&SS.channel==chan);
-                time = SS.waveform_us_t;
-            else
-                wfs = SS.waveform(:,SS.clean&SS.channel==chan);
-                time = [1:size(wfs,1)]/SS.fs;
-            end
-            if isempty(wfs), disp('no waveforms');else
-                n = min([size(wfs,2) maxwfs]);
-                wfi = randsample(size(wfs,2),n);
-                plot(time,wfs(:,wfi),'b');hold on;
-                plot(time,nanmean(wfs,2),'k','linewidth',2)
-                title(['ch' num2str(chan) ', n = ' num2str(length(find(SS.clean)))]);
-                SS.methodlog = [SS.methodlog '<PlotWfs>'];
-            end
-        end
         function ResetClean(SS)
             % RESETCLEAN(SS) Resets the clean, badunit and badchannel arrays
             % so nothing is cleaned.
@@ -534,8 +362,27 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             SS.badchannel = [];
             SS.badunit = [];
             SS.methodlog = [SS.methodlog '<ResetClean>'];
-            
         end
+        
+        AmpSel(SS,threshold)
+        % This method is contained in a separate file.
+        PkTrSel(SS,width)
+        % This method is contained in a separate file.
+        MinCheck(SS,mintime)
+        % This method is contained in a separate file.
+        Crossing(SS,th)
+        % This method is contained in a separate file.
+        MaxMinCheck(SS,th)
+        % This method is contained in a separate file.
+        PkVelocity(SS,th)
+        % This method is contained in a separate file.
+        UpSamp(SS,us,pkalign,tpre,tpost,threshold)
+        % This method is contained in a separate file.
+        MUA(SS)
+        % This method is contained in a separate file.
+        PlotWfs(SS,maxwfs,chan)
+        % This method is contained in a separate file.
+
         
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
         WaveClus(SS,maxclusters,minspk,decompmeth,plotall,ploton)
