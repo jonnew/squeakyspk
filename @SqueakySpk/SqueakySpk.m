@@ -416,6 +416,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotCSDR(SS,frmax)
         % This method is contained in a separate file.
         
+        PlotCSDRHist(SS,binsize,maxdr)
+        % This method is contained in a separate file.
+        
         PlotRandomWaveform(SS,plotall,N,rangeV,bound)
         % This method is contained in a separate file.
         
@@ -432,7 +435,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PeriStimHistogram(SS,dt,histrange,whichstim,ploton);
         % This method is contained in a separate file.
         
-        UnitWisePSH(SS,dt,histrange,whichstim,whichunit,ploton);
+        UnitWisePSH(SS,dt,histrange,whichstim,whichunit,effrange,ploton);
         % This method is contained in a separate file.
         
         PeriStimRaster(SS,bound,dur,ch);

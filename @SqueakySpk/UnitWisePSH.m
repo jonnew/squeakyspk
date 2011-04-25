@@ -173,7 +173,7 @@ disp('Finished calculating Peri-stimulus histogram.')
 
 % Plot if the user wants it
 if ploton
-   SS.PlotUnitWisePSH(200);
+   SS.PlotUnitWisePSH();
 end
 
 % Add psh to method log
