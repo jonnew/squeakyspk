@@ -26,10 +26,10 @@ img = SS.csdr(:,2:end)';
 cmp = gray(200);
 cmp = flipud(cmp.^3);
 
-% Smooth along each channel
-for i = 1:size(img,1)
-    img(i,:) = smooth(img(i,:),3);
-end
+% % Smooth along each channel
+% for i = 1:size(img,1)
+%     img(i,:) = smooth(img(i,:),3);
+% end
 
 if sum(sum(img > frmax)) > 0
     img(img > frmax ) = frmax;
@@ -37,7 +37,7 @@ elseif frmax ~= inf
     img(end) = frmax;
 end
 
-% Blur the image with a Gaussian Filter
+% Make the image
 q = imagesc(img);
 c = colorbar();
 ylabel(c,'Firing Rate (Hz)')

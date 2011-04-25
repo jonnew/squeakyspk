@@ -11,7 +11,8 @@ function PlotAvgWaveform(SS)
 
 
 if isempty(SS.avgwaveform) %|| isempty(SS.avgwaveform.avg)
-    error('You have not performed spike sorting yet, or there are no valid units.')
+    warning('You have not performed spike sorting yet, or there are no valid units. Exiting PLOTAVGWAVEFORM')
+    return;
 end
 
 figure();

@@ -79,6 +79,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         badunit; % Array of units deemed to be bad after spike sorting
         badchannel; % Array of channels deemed to be bad
         psh; % Peri-stimulus histogram
+        upsh; % unit-wise peri-stimulus histogram 
         
         % properties of the stimulus given while collecting the main data [STIM DATA]
         st_time; % [N DOUBLE (sec, spike index)]
@@ -353,37 +354,38 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             %                 size(true_wave)
             SS.methodlog = [SS.methodlog '<Mitraclean>'];
         end
-        function ResetClean(SS)
-            % RESETCLEAN(SS) Resets the clean, badunit and badchannel arrays
-            % so nothing is cleaned.
-            % Written by: JN
-            
-            SS.clean = true(length(SS.time),1);
-            SS.badchannel = [];
-            SS.badunit = [];
-            SS.methodlog = [SS.methodlog '<ResetClean>'];
-        end
-        
+
+        ResetClean(SS)
+        % This method is contained in a separate file.
+
         AmpSel(SS,threshold)
         % This method is contained in a separate file.
+        
         PkTrSel(SS,width)
         % This method is contained in a separate file.
+        
         MinCheck(SS,mintime)
         % This method is contained in a separate file.
+        
         Crossing(SS,th)
         % This method is contained in a separate file.
+        
         MaxMinCheck(SS,th)
         % This method is contained in a separate file.
+        
         PkVelocity(SS,th)
         % This method is contained in a separate file.
+        
         UpSamp(SS,us,pkalign,tpre,tpost,threshold)
         % This method is contained in a separate file.
+        
         MUA(SS)
         % This method is contained in a separate file.
+        
         PlotWfs(SS,maxwfs,chan)
         % This method is contained in a separate file.
 
-        
+       
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
         WaveClus(SS,maxclusters,minspk,decompmeth,plotall,ploton)
         % This method is contained in a separate file.
@@ -405,6 +407,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotPeriStimHistogram(SS)
         % This method is contained in a separate file.
         
+        PlotUnitWisePSH(SS,frmax,include0)
+        % This method is contained in a separate file.
+        
         RandScat(SS,bound,forcechannel,makefig)
         % This method is contained in a separate file.
         
@@ -415,21 +420,22 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         DemarseActivityPlot(SS,t,tau,dilation,name)
-        %contained in a separate file- t is a 2d vector containing the
-        %start and stop times, tau is the time constant of the image,
-        %dilation is the time dilation
+        % This method is contained in a separate file.
         
         %% Block 7: BASIC DATA PROCESSING TOOLS
         ASDR(SS,dt,shouldplot,loglin,ymax);
         % This method is contained in a separate file.
         
-        BI(SS);
+        BI(SS,bound);
         % This method is contained in a separate file.
         
-        PeriStimHistogram(SS,dt,histrange,bound,ploton);
+        PeriStimHistogram(SS,dt,histrange,whichstim,ploton);
         % This method is contained in a separate file.
         
-        PeriStimRaster(SS,bounds,dur,ch);
+        UnitWisePSH(SS,dt,histrange,whichstim,whichunit,ploton);
+        % This method is contained in a separate file.
+        
+        PeriStimRaster(SS,bound,dur,ch);
         % This method is contained in a separate file.
         
         PeriSpikeRaster(SS,unit,bounds,dur);
@@ -444,28 +450,15 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,env,sniplength, fid)
         % This method is contained in a separate file.
+        
         dh = DishHRTF(SS,fs,pbloc,times,chind)
         % This method is contained in a separate file.
         
         %% Block 7: RETURN CLEAN DATA
-        function sqycln = ReturnClean(SS)
-            % SQYCLN = RETURNCLEAN(SS) return the clean data. Returns an array
-            % of the format of the orginal main data input containing those
-            % data indicies that have survived the cleaning process.
-            
-            sqycln = {};
-            sqycln.time = SS.time(logical(SS.clean));
-            sqycln.channel = SS.channel(logical(SS.clean));
-            sqycln.waveform = SS.waveform(:,logical(SS.clean));
-            
-            % Rename the clean units starting from 1
-            if ~isempty(SS.unit)
-                sqycln.unit = SS.unit(logical(SS.clean));
-            end
-        end
+        sqycln = ReturnClean(SS)
+        % This method is contained in a separate file.
         
         %% Block 8: Save SS object
-        
         Save(SS,auxfid)
         % This method is contained in a separate file.
         
