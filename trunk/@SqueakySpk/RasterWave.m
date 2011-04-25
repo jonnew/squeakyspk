@@ -70,8 +70,8 @@ if usechan || yaxischannel
     subplot(211)
     hold on
     
-
-        % Plot the raster for spikes in the time bound of interest
+    
+    % Plot the raster for spikes in the time bound of interest
     switch what2show
         case 'both'
             plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
@@ -132,6 +132,7 @@ if usechan
 else
     ylabel('\textbf{unit}','fontsize',13,'Interpreter','Latex')
 end
+zoom on
 hold off
 
 

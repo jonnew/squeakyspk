@@ -1,8 +1,8 @@
 function PlotCSDR(SS,frmax)
-% CSDR(SS,FRMAX) Channel Spike Detection Rate. Takes information from the csdr
-% property to display data as image wherein the firing rate on each channel
-% is shown in grey scale from 0 to FRMAX Hz. FRMAX is set to the maximal detected
-% firing rate by default.
+% PlotCSDR(SS,FRMAX) Channel Plots the Channel Spike Detection Rate. Takes
+% information from the csdr property to display data as image wherein the
+% firing rate on each channel is shown in grey scale from 0 to FRMAX Hz.
+% FRMAX is set to the maximal detected firing rate by default.
 %
 %       Created by: Jon Newman (jnewman6 at gatech dot edu)
 %       Location: The Georgia Institute of Technology
