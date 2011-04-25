@@ -1,11 +1,10 @@
 function UnitWisePSH(SS,dt,histrange,whichstim,whichunit,effrange,ploton)
 %UNITWISEPSH create the UPSH for an SS object.
 %
-%   	PERISTIMTIMEHISTOGRAM(SS,DT,HISTRANGE,WHICHSTIM,
-%   	WHICHUNIT,EFFRANGE,PLOTON) calculates the peristimulus histogram
-%   	with time resolution DT (msec) for a time window around the
-%   	conditioning stimulus event defined by HISTRANGE = [t1 t2] in
-%   	milliseconds.
+%   	  UNITWISEPSH(SS,DT,HISTRANGE,WHICHSTIM,WHICHUNIT,EFFRANGE,PLOTON) 
+%       calculates the peristimulus histogram with time resolution DT (msec)
+%       for a time window around the conditioning stimulus event defined by 
+%       HISTRANGE = [t1 t2] inmilliseconds.
 % 
 %       WHICHSTIM is a logical array withdimesions equal to SS.st_time,
 %       defining which stimuli the PSH should be calculated for. The
