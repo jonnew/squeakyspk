@@ -1,13 +1,13 @@
-function BI(SS)
+function BI(SS,bound)
 % BI(SS,BOUND) Burstiness index as described in Wagenaar et al
-% (2006) J. Neurosci 25(3): 680�68. BOUND = [t0 tend] is an option arguement that
+% (2006) J. Neurosci 25(3): 680;68. BOUND = [t0 tend] is an option arguement that
 % allows one to calculate the BI over a particular time chunk. Since this
 % operation involves a division by an esimated firing rate, it is possible
 % to get an infinite value, in which case 'NA' is returned.
 
 
 if isempty(SS.asdr)
-    warning('You need to calculate the ASDR before calculating the BI');
+    warning('You need to calculate the ASDR before calculating the BI. Now exiting BI.');
     return;
 end
 if nargin < 2

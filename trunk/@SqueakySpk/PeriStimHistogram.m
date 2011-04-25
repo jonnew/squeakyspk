@@ -1,26 +1,29 @@
-function PeriStimHistogram(SS,dt,histrange,bound,ploton)
+function PeriStimHistogram(SS,dt,histrange,whichstim,ploton)
 %PERISTIMTIMEHISTOGRAM create the PSH for an SS object.
 %
-%   	PERISTIMTIMEHISTOGRAM(SS, dt,histrange,bound,ploton) calculates the
-%   	peristimulus histogram with time resolution dt (msec) for a time
-%   	window around the conditioning stimulus event defined by histrange
-%   	= [t1 t2] in milliseconds, the range of data in seconds supplied by
-%   	bound = [T1 T2] in seconds. The PSH is caculated for each channel
-%   	and stored in the [N x M] matrix psh.hist which represend the M
-%   	sample long psh for each of N channels. Ploton controls whether or
-%   	not the PSH is plotted after the comptuation has finished.
+%   	PERISTIMTIMEHISTOGRAM(SS,DT,HISTRANGE,TYPE,PLOTON) calculates the
+%   	peristimulus histogram with time resolution DT (msec) for a time
+%   	window around the conditioning stimulus event defined by HISTRANGE
+%   	= [t1 t2] in milliseconds. WHICHSTIM is a logical array with dimesions
+%   	equal to SS.st_time, defining which stimuli the PSH should be
+%   	calculated for. The default value is WHICHSTIM = true(size(SS.st_time)).
+%       The PSH is caculated for each channel and stored in the [N x M]
+%       matrix psh.hist which reprsents the M sample long psh for each of N
+%       channels. PLOTON is a logical that controls whether or not the PSH
+%       is plotted after the comptuation has finished.
 %
 %       Created by: Jon Newman (jnewman6 at gatech dot edu) Location: The
 %       Georgia Institute of Technology Created on: Feb 2, 2011 Last
 %       modified: Feb 2, 2011
-% 	Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
+% 
+%       Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
-% check number and type of arguments
+% check number and whichstim of arguments
 if nargin < 5 || isempty(ploton)
     ploton = 1; % Whole recording
 end
-if nargin < 4 || isempty(bound)
-    bound = [0 max(SS.st_time)]; % All stimuli
+if nargin < 4 || isempty(whichstim)
+   whichstim = true(size(SS.st_time)); % All stimuli
 end
 if nargin < 3 || isempty(histrange)
     histrange = [-100 500]; % Default range of histogram (msec)
@@ -38,7 +41,7 @@ if isempty(SS.st_time)
     return
 end
 
-% Make sure the data actual has stimulation entries
+% Make sure the histogram bounds are corre
 if histrange(1) > histrange(2)
     error('histrange(1) must be less than histrange(2)')
 end
@@ -46,9 +49,8 @@ end
 % convert to seconds
 b = histrange/1000; dtsec = dt/1000;
 
-goodstim = find(SS.st_time >= bound(1) & SS.st_time <= bound(2));
-goodtime = SS.st_time(goodstim);
-goodchan = SS.st_channel(goodstim);
+goodtime = SS.st_time(whichstim);
+goodchan = SS.st_channel(whichstim);
 
 psh.t = b(1):dtsec:b(2);
 psh.stimcount = zeros(max(goodchan),1);
@@ -57,16 +59,16 @@ psh.std = zeros(max(goodchan),length(b(1):dtsec:b(2)));
 
 disp('Calculating Peri-stimulus histogram ...')
 % wait_h = waitbar(0,'Caclulating PSH');
-% steps2update = floor(length(goodstim)/100);
+% steps2update = floor(length(whichstim)/100);
 
 % perform only on clean spks
 clean_spk = SS.time(SS.clean);
 
-for i = 1:length(goodstim)
+for i = 1:sum(whichstim)
     t1 = b(1) + goodtime(i);
     t2 = b(2) + goodtime(i);
     
-    spks = clean_spk(clean_spk > t1 & clean_spk <= t2);
+    spks = clean_spk(clean_spk >= (t1-dtsec) & clean_spk <= (t2+dtsec));
     count = hist(spks-goodtime(i),psh.t);
     
     if size(count,2) ~= 1
@@ -76,7 +78,7 @@ for i = 1:length(goodstim)
     end
     
 %     if ~logical(mod(i,steps2update))
-%         waitbar(i/length(goodstim),wait_h)
+%         waitbar(i/length(whichstim),wait_h)
 %     end
     
 end
