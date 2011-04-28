@@ -112,6 +112,8 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         xrez;%[DOUBLE (resolution of offsets, in ms)]
         %the resolution of the cross correlation
         xauto;
+        
+        afpars; %analysis function parameters. see extractafpars
     end
     
     methods
@@ -401,6 +403,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         RasterPlot(SS, bound, what2show, yaxischannel)
         % This method is contained in a separate file.
         
+        QPSRaster(SS, varargin)
+        % This method is contained in a separate file.
+        
         RasterWave(SS, bound, what2show, yaxischannel)
         % This method is contained in a separate file.
         
@@ -414,9 +419,6 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         PlotCSDR(SS,frmax)
-        % This method is contained in a separate file.
-        
-        PlotCSDRHist(SS,binsize,maxdr)
         % This method is contained in a separate file.
         
         PlotRandomWaveform(SS,plotall,N,rangeV,bound)
@@ -435,7 +437,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PeriStimHistogram(SS,dt,histrange,whichstim,ploton);
         % This method is contained in a separate file.
         
-        UnitWisePSH(SS,dt,histrange,whichstim,whichunit,effrange,forcechan,ploton);
+        UnitWisePSH(SS,dt,histrange,whichstim,whichunit,ploton);
         % This method is contained in a separate file.
         
         PeriStimRaster(SS,bound,dur,ch);
@@ -448,6 +450,18 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         XCorrFilm(SS,name,tasks, fps);
+        % This method is contained in a separate file.
+        
+        rel = CalcSejRel(SS, filters, varargin)
+        % This method is contained in a separate file.
+        
+        xcorrmat = CalcXCorr(SS, varargin)
+        % This method is contained in a separate file.
+        
+        catmat = cat_chao(SS, movtimebin, timewindow, bmode, varargin)
+        % This method is contained in a separate file.
+        
+        dapmat = finddap(SS, varargin)
         % This method is contained in a separate file.
         
         %% Block 6: SONIFICATION TOOLS
@@ -465,6 +479,23 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         Save(SS,auxfid)
         % This method is contained in a separate file.
         
+        %% Block 9: Internal Methods
+        [spike stim] = ReturnRanged(SS, varargin)
+        
+        %QPSRaster(SS, varargin)
+        reconstruct(SS)
+        % This method is contained in a separate file.
+        
+        spktrains = ReturnRespSpks(SS, spike, stim, ...
+                channelpair, rez, varargin)
+        % This method is contained in a separate file.
+
+        spks = RSIR(SS, spikes, stim, resprange)
+        % This method is contained in a separate file.
+
+        [trange rez spktype resprange channelrels] = ...
+            extractafpars(SS, afpars, verify)
+        % This method is contained in a separate file.
     end
     
 end
