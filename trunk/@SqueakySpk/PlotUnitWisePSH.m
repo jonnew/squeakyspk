@@ -1,9 +1,9 @@
-function PlotUnitWisePSH(SS,frmax,include0)
+function q = PlotUnitWisePSH(SS,frmax,include0)
 % PLOTUNITWISEPSH plots the results of UnitWisePSH.
 % 
 %     PLOTUNITWISEPSH(SS,FRMAX) takes information from the upsh property to
-%     display data as image wherein the firing rate of each unit is shown
-%     in grey scale from 0 to FRMAX Hz. FRMAX is set to the maximal
+%     display data as image wherein the firing rate of each unit/channel is
+%     shown in grey scale from 0 to FRMAX Hz. FRMAX is set to the maximal
 %     detected firing rate by default. INCLUDE0 is a boolean that
 %     determines whether the 0 unit should be included in the plot. Its
 %     default value is false.
@@ -31,9 +31,9 @@ end
 figure()
 
 % Decide if unit 0 should be included
-if include0
+if include0 || strcmp(SS.upsh.type,'channel-wise')
     img = SS.upsh.hist';
-else
+elseif strcmp(SS.upsh.type,'unit-wise')
     img = SS.upsh.hist(:,SS.upsh.unit ~= 0)';
 end
     
@@ -60,6 +60,10 @@ set(gca,'XTickLabel',SS.upsh.t(idx));
 
 % labels
 xlabel('Time (sec)')
-ylabel('Unit (sorted by response efficacy)')
+if strcmp(SS.upsh.type,'unit-wise')
+    ylabel('Unit (sorted by response efficacy)')
+else
+    ylabel('Channel (sorted by response efficacy)')
+end
 set(gca,'YDir','normal')
 end
