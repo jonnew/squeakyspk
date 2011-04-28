@@ -13,6 +13,9 @@ function q = RandScat(SS,bound,forcechannel,makefig)
 % matlab/randscat88.m: part of meabench, an MEA recording and analysis tool
 % Copyright (C) 2000-2002  Daniel Wagenaar (wagenaar@caltech.edu)
 
+if nargin < 4 || isempty(makefig)
+    makefig = 1;
+end
 if nargin < 3 || isempty(forcechannel)
     forcechannel = 0;
 end
@@ -21,7 +24,7 @@ if nargin < 2 || isempty(bound)
 end
 
 dat = SS.ReturnClean;
-idx = dat.time>=bound(1)&dat.time<bound(2);
+idx = dat.time>bound(1)&dat.time<bound(2);
 
 if makefig
     figure()
@@ -36,6 +39,7 @@ end
 
 set(p,'markersize',2);
 xlabel 'Time (s)'
+xlim([bound(1) bound(2)]);
 axis tight
 
 if nargout>0
