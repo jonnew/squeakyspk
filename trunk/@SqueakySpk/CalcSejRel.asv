@@ -1,0 +1,57 @@
+function rel = CalcSejRel(SS, filters, varargin)
+%CALCSEJREL calculates the reliability of response spike trains 
+%   REL = CALCSEJREL(filters) calculates the response spike train
+%   reliability by taking the normalization of the summation of the inner
+%   products of each pair of spike trains divided by the norm of each pair
+%   of spike trains. filters is the 
+    
+    if nargin > 2
+        [trange, rez, spktype, resprange, channels] = ...
+            SS.extractafpars(varargin{1}, 1);
+    end
+    
+    %filter and channel sizes
+    fsize=size(filters, 1);
+    csize=size(channels, 1);
+
+    %get spike and stim structs
+    [spike stim] = SS.ReturnRanged(trange, spktype);
+    
+    %get spike trains
+    spktrains = cell(1, csize);
+    parfor x=1:length(spktrains)
+        chls = channels(x, :);
+        if chls(3) == 0
+            spktrains{x, 1} = SS.ReturnRespSpks(spike, spike, [chls(1) chls(2)], rez, resprange);
+        elseif chls(3) == 1
+            spktrains{x, 1} = SS.ReturnRespSpks(spike, stim, [chls(2) chls(1)], rez, resprange);
+        else
+            spktrains{x, 1} = SS.ReturnRespSpks(spike, stim, [chls(1) chls(2)], rez, resprange);
+        end
+    end
+    
+    rcorr_values = zeros(csize, fsize);
+    %wb=waitbar(0, 'calculating reliability');
+    parfor x=1:csize
+        disp(['Channel: ' num2str(x)])
+        %set temp variables. spktrnset is one set of spike trains. subrcv
+        %is a subset of rcorr values
+        spktrnset = spktrains{x, 1};
+        subrcv = zeros(1, fsize);
+        for y=1:fsize
+            %waitbar(((x-1)*csize+y)/(csize*fsize), wb);
+            disp(['Filter: ' num2str(y)])
+            %convolve
+            for z=1:length(spktrnset)
+                spktrnset(z, :) = conv(spktrnset(z, :), filters(y, :), 'same');
+            end
+            %store calc_rcorr result
+            subrcv(y) = calc_rcorr(spktrnset);
+        end
+        %copy into rcorr_values
+        rcorr_values(x, :) = subrcv;
+    end
+    
+    rel = rcorr_values;
+    
+end

@@ -1,0 +1,801 @@
+classdef (ConstructOnLoad = false) SqueakySpk < handle
+    %SQUEAKYSPK data class and methods for basic preprosessing of data
+    %collected using extracellular, multielectrode arrays.
+    %
+    %   Properties:
+    %   1. Data name
+    %       a. name; % String that names the data object
+    %
+    %   2. Properties of data that you are cleaning [MAIN DATA]
+    %         a. clean; % [N BOOL (clean?, spike index)]
+    %         b. time; % [N DOUBLE (sec, spike index)]
+    %         c. channel; % [N INT (channel #, spike index)]
+    %         d. waveform; % [M DOUBLE x N INT ([uV], spike index)]
+    %         e. unit; % [N INT (unit #, spike index)]
+    %         f. avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
+    %         g. asdr; % Array-wide spike detection rate matrix [[bins] [count]]
+    %         h. badunit; % Array of units deemed to be bad after spike sorting
+    %         i  badchannel; % Array of channels deemed to be bad
+    %
+    %   3. properties of the stimulus given while collecting the main data [STIM DATA]
+    %       a. st_time; % [N DOUBLE (sec, spike index)]
+    %     	b. st_channel; % [N INT (channel #, spike index)]
+    %
+    % 	4. properties of the spontaneous data used for spk verification [SPONT DATA]
+    %   	a. sp_time; % [N DOUBLE (sec, spike index)]
+    %    	b. sp_channel; % [N INT (channel #, spike index)]
+    %    	c. sp_waveform; % [M DOUBLE x N INT ([uV], spike index)]
+    %    	d. sp_unit; % [N INT (unit #, spike index)]
+    %    	e. sp_avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
+    %
+    %   4. Methods log
+    %       a. methodlog; % string array that keeps track of the methods run on the SS object
+    %
+    %   Methods:
+    %     1. Constructor
+    %         a. SqueakySpk
+    %     2. Basic Cleaning
+    %         a. HardThreshold
+    %         b. RemoveSpkWithBlank
+    %         c. RemoveChan
+    %         d. RemoveUnit
+    %         e. MitrClean
+    %     3. Spike Sorting
+    %         a. WaveClus
+    %     4. Advanced Cleaning
+    %         a. WeedUnitByWaveform
+    %     5. Analysis
+    %     6. Sonification
+    %     7. Returning clean data
+    %     8. Saving
+    %
+    %   To use SqueakySpk, look at ReadMe.txt that came with this package,
+    %   look at the testscript and examine the help for each method by
+    %   typing help methodname in the command promp.
+    
+    properties (SetAccess = public)
+        
+        % Data name and parameters of recording
+        name; % String that names the data object
+        fs;
+        recunit; % Unit that the users data is provided in as a fraction of volts (1-> volts, 0.001 -> millivolts, etc).
+        
+        % properties of data that you are cleaning [MAIN DATA]
+        clean; % [N BOOL (clean?, spike index)]
+        time; % [N DOUBLE (sec, spike index)]
+        channel; % [N INT (channel #, spike index)]
+        waveform; % [M DOUBLE x N INT ([uV], spike index)]
+        waveform_us;% [M DOUBLE x N INT ([uV], spike index)], upsampled waveforms, dirty indices are 0's
+        waveform_us_t;% [N DOUBLE (microseconds from peak for upsampled waveforms)]
+        unit; % [N INT (unit #, spike index)]
+        avgwaveform; % {avg:[M DOUBLE x K INT ([uV], unit #)],sd[M DOUBLE x K INT ([uV], unit #)]}
+        asdr; % Array-wide spike detection rate matrix [[bins] [count]]
+        csdr; % Channel spike detection rate matrix [[bins] [count_1] [count_2] ...]
+        bi; % burstiness index as defined by Wagenaar
+        badunit; % Array of units deemed to be bad after spike sorting
+        badchannel; % Array of channels deemed to be bad
+        psh; % Peri-stimulus histogram
+        
+        % properties of the stimulus given while collecting the main data [STIM DATA]
+        st_time; % [N DOUBLE (sec, spike index)]
+        st_channel; % [N INT (channel #, spike index)]
+        
+        % properties of the spontaneous data used for spk verification [SPONT DATA]
+        sp_time; % [N DOUBLE (sec, spike index)]
+        sp_channel; % [N INT (channel #, spike index)]
+        sp_waveform; % {avg:[M DOUBLE x K INT ([uV], unit #)],sd[M DOUBLE x K INT ([uV], unit #)]}
+        sp_unit; % [N INT (unit #, spike index)]
+        sp_avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
+        
+        % Methods log
+        methodlog; % string array that keeps track of the methods run on the SS object
+        
+%         % Stuff filled by running xcorrs
+%         xcorrmat;%[N x M x P xQ double (timeslice, 'causal' channel, 'effect' channel, offset (ms)]
+%         %cross correlation between spikes on different channels and
+%         %stimuli on different channels.  Each cross correlation is
+%         %calculated using XBIN seconds of data (a 'timeslice').
+%         
+%         xcount;%[N x M int (timeslice, 'causal' channel count)]
+%         %the number of times this channel was active.  Stimulating
+%         %electrodes are index +64
+%         
+%         xbin;%[INT (length of each timeslice in s)]
+%         %the duration of a timeslice, in seconds
+%         
+%         xrez;%[DOUBLE (resolution of offsets, in ms)]
+%         %the resolution of the cross correlation
+%         xauto;
+        
+        afpars; %analysis function parameters. see extractafpars
+    end
+    
+    methods
+        
+        %% BLOCK 1: CONSTRUCTOR
+        function SS = SqueakySpk(name,fs,recunit,spike,stimulus,spontaneous)
+            % SQUEAKYSPK SS object constructor. The first four arguments are
+            % required. They are a name for the object that you are about
+            % to create, the sampling frequency in Hz, fs, fraction of volts
+            % that the waveform data is provided in,and the data structure, spike, of the form:
+            %   spike.time = [NX1] vector of spike times in seconds
+            %   spike.channel = [NX1] vector of corresponding channels
+            %   spike.waveform = [NXM] matrix of corresponding spike snip waveforms
+            % Addtional arguments for a stimulus data structure of the
+            % form:
+            %   stimulus.time = [RX1] vector of spike times in seconds
+            % stimulus.channel = [RX1] vector of corresponding channels
+            % And spontanous data taken before and evoked recording,
+            % with the same fields as the spike structure.
+            
+            if nargin < 4
+                error('You must provide (1) a name string, (2) the sampling frequency, (3) units used for recording as a fraction of Volts, and (3) a spike data structure.')
+            end
+            
+            % String with name of data
+            SS.name = name;
+            
+            % Sampling frequency
+            SS.fs = fs;
+            
+            % Recording unit
+            SS.recunit = recunit;
+            
+            %constructor using only the spike construct (ie, the data to be
+            %cleaned)
+            SS.clean = true(length(spike.time),1);
+            [SS.time ind] = sort(spike.time); % Make sure incoming data
+            if min(spike.channel) == 0 % channel index is 1 based
+                SS.channel = spike.channel(ind)+1;
+            else
+                SS.channel = spike.channel(ind);
+            end
+            if size(spike.waveform,2)>0 %allow for spike files with no waveforms to be uploaded
+                SS.waveform = (spike.waveform(:,ind)).*1e6*SS.recunit; % Convert to uV
+            end
+            SS.unit = [];
+            SS.methodlog = [];
+            SS.badunit = [];
+            SS.badchannel = [];
+            
+            % Load stimulus information
+            if nargin < 5 || isempty (stimulus)
+                SS.st_time = [];
+                SS.st_channel = [];
+            else
+                SS.st_time = stimulus.time;
+                SS.st_channel = stimulus.channel;
+            end
+            
+            % Load spontaneous data
+            if nargin < 6 || isempty (spontaneous)
+                SS.sp_time = [];
+                SS.sp_channel = [];
+                SS.sp_waveform = [];
+                SS.sp_unit = [];
+            else
+                [SS.sp_time ind] = sort(spontaneous.time);
+                if min(spontaneous.channel) == 0 % channel index is 1 based
+                    SS.sp_channel = spontaneous.channel(ind)+1;
+                else
+                    SS.sp_channel = spontaneous.channel(ind);
+                end
+                SS.sp_waveform = (spontaneous.waveform(:,ind)).*1e6*SS.recunit;
+                SS.sp_unit = [];
+            end
+            
+            SS.trange = [SS.time(1) SS.time(end)];
+            SS.rez = 1;
+            
+            % END CONSTRUCTOR
+        end
+        
+        %% BLOCK 2: CLEANING METHODS (methods that alter the 'clean' array)
+        function HardThreshold(SS,highThreshold,lowThreshold)
+            % HARDTHRESHOLD(SS,highThreshold,lowThreshold) removes all 'spikes'
+            % with P2P amplitude greater/less than high/low threshold
+            % (dependent on whatever units you are measuring AP's with).
+            % Written by: JN and RZT
+            
+            % Set default thresholds if non are provided
+            if nargin < 2 || isempty(highThreshold)
+                highThreshold = 175; %uV
+            end
+            if nargin < 3 || isempty(lowThreshold)
+                lowThreshold = 0; %uV
+            end
+            
+            dirty = ((max(SS.waveform) - min(SS.waveform)) > highThreshold | (max(SS.waveform) - min(SS.waveform)) < lowThreshold);
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty');
+            end
+            
+            SS.methodlog = [SS.methodlog '<HardThreshold>'];
+        end
+        function RemoveBySymmetry(SS,maxWaveSymmetry)
+            % REMOVEBYSYMMETRY(SS,maxWaveSymmetry) takes the ratio of the
+            % maximal postive and negative deflections of a waveform about
+            % its mean (DC) offset and compares this to maxWaveSymmetry
+            % (which is between 0 and 1). If the ratio is larger than
+            % maxWaveSymmetry, the spike is rejected.
+            % Written by: JN
+            
+            if maxWaveSymmetry > 1 || maxWaveSymmetry <0
+                error(' The arguement maxWaveSymmetry must be a ratio between 0 and 1')
+            end
+            
+            meanAmplitude = mean(SS.waveform,1);
+            maxAmplitude = abs(max(SS.waveform,[],1) - meanAmplitude);
+            minAmplitude = abs(min(SS.waveform,[],1)  - meanAmplitude);
+            numeratorOverDenominator = sort([maxAmplitude; minAmplitude],1);
+            symRatio = numeratorOverDenominator(1,:)./numeratorOverDenominator(2,:);
+            dirty = symRatio > maxWaveSymmetry;
+            
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty');
+            end
+            SS.methodlog = [SS.methodlog '<RemoveBySymmetry>'];
+        end
+        function RemoveSpkWithBlank(SS)
+            % REMOVESPKWITHBLANK(SS) Removes all 'spikes' that have more that have 5 or more
+            % voltage values in their waveform below 0.1 uV inidcating that a
+            % portion of the waveform is blanked. This is extremely
+            % unlikely otherwise.
+            % Written by: JN
+            
+            dirty = (sum(abs(SS.waveform) <= 0.1,1) >= 5);
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty');
+            end
+            SS.methodlog = [SS.methodlog '<RemoveSpkWithBlank>'];
+        end
+        function RemoveChannel(SS,channel2remove)
+            % REMOVECHANNELS(SS,channel2remove) removes data collected on
+            % channels that the experimenter knows
+            % apriori are bad for some reason. channelstoremove is a
+            % 1-based, linearly indexed set of channel numbers to be
+            % removed from the data. The default channels to remove are [1
+            % 8 33 57 64] corresponding to the four unconnected channels
+            % and the ground on a standard MCS MEA.
+            % Written by: JN
+            
+            if nargin < 2 || isempty(channel2remove)
+                channel2remove = [1 8 33 57 64];
+            end
+            
+            % Append the badchannel vector
+            SS.badchannel = unique([SS.badchannel channel2remove]);
+            
+            dirty = ismember(SS.channel,channel2remove)';
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty');
+            end
+            
+            SS.methodlog = [SS.methodlog '<RemoveChannel>'];
+        end
+        function RemoveUnit(SS,unit2remove)
+            % REMOVEUNIT(unit2remove) removes all a spikes with ID in the
+            % unit2remove vector from the clean array. Default is to remove
+            % all unsorted 'spikes'.
+            % Written by: JN
+            
+            if nargin < 2 || isempty(unit2remove)
+                unit2remove = 0;
+            end
+            if isempty(SS.unit)
+                error('You have not clustered your data yet and unit information is not available.')
+            end
+            
+            % Append the badunit vector
+            SS.badunit = [SS.badunit unit2remove];
+            
+            dirty = ismember(SS.unit,unit2remove);
+            if ~isempty(dirty)
+                SS.clean = SS.clean&(~dirty);
+            end
+            SS.methodlog = [SS.methodlog '<RemoveUnit>'];
+        end
+        function MitraClean(SS)
+            % MITRA CLEAN(SS) removes all spikes that have multiple peaks
+            % effective at removing noise, many stimulus artifacts
+            % still get through
+            %
+            % probably not optimal code, but this will work
+            %
+            % needs edit so that it doesn't care about minor ripples in the
+            % main peak
+            %
+            %will remove compound APs if they are less than 1ms apart
+            % Written by: RZT
+            
+            true_wave = ones(length(SS.waveform),1);
+            
+            for ind = 1:length(SS.waveform)
+                wave = SS.waveform(:,ind);%examine this particular waveform
+                [d i] = max(abs(wave));
+                d = wave(i); %get the peak amplitude, including the sign
+                pos = (d>0);
+                pos = pos*2-1;% -1 means negative, 1 means positive
+                low =i-25;%need to specify the region of interest- 25 samples on either side of the peak
+                if low<1;
+                    low = 1;
+                end
+                high = i+25;
+                if high>75
+                    high = 75;
+                end
+                %look for peaks on either side of the main peak
+                dt =diff(wave);
+                
+                %find the valleys on either side of the main peak
+                up = dt(i+1:high-1);
+                down = dt(low:i-1);
+                bup = find(up*pos>0);
+                bdown = find(-down*pos>0);
+                
+                %if a valley is found, check to see if other peaks after
+                %this valley are equal to half the amplitude of the main
+                %peak
+                if ~isempty(bup)
+                    bu = bup(1);
+                    %plot(i+bu,wave(i+bu),'.b');
+                    if max(wave(i+bu:high)*pos)>d*pos/2
+                        true_wave(ind) = 0;
+                    end
+                end
+                
+                %look to see if the first peak before the main peak exceeds
+                %threhold:
+                if ~isempty(bdown)
+                    bd = bdown(length(bdown));
+                    %plot(bd+low,wave(bd+low),'.m');
+                    if max(wave(low:bd+low)*pos)>d*pos/2
+                        true_wave(ind) = 0;
+                    end
+                end
+                %                 if true_wave(ind)
+                %                     figure(1);hold on;plot(wave);
+                %                 else
+                %                     figure(2);hold on; plot(wave);
+                %                 end
+            end
+            SS.clean = SS.clean&true_wave;
+            %                 size(SS.clean)
+            %                 size(true_wave)
+            SS.methodlog = [SS.methodlog '<Mitraclean>'];
+        end
+        function AmpSel(SS,threshold)
+            % AMPSEL(SS,threshold) select waveforms based on amplitude
+            % Written by: NK
+            % Set default threshold if none is provided
+            if nargin < 2 || isempty(threshold)
+                threshold = 50; %uV, p2p amplitude
+            end
+            tmp = ((max(SS.waveform) - min(SS.waveform)) > threshold);
+            SS.clean = SS.clean&(tmp');
+            SS.methodlog = [SS.methodlog '<AmpSel>'];
+        end
+        function PkTrSel(SS,width)
+            % PKTRSEL(SS,width) select waveforms based on peak-trough time
+            % Written by: NK
+            % Set default min/max widths if none are provided
+            if nargin < 2 || isempty(width)
+                width = [0 500]; %usec, peak-trough
+            end
+            [dum pt] = max(SS.waveform);[dum trt] = min(SS.waveform);
+            tmpw = abs(pt-trt)/SS.fs*1e6;
+            tmp = tmpw>=width(1) & tmpw<=width(2);
+            SS.clean = SS.clean&(tmp');
+            SS.methodlog = [SS.methodlog '<PkTrSel>'];
+        end
+        function MinCheck(SS,mintime)
+            % MINCHECK(SS,mintime)
+            % check that the minimum value is past a certain sample
+            % you need to know when/where your threshold was
+            % this is currently only relevant for a negative threshold -only scheme
+            % Written by: NK
+            if nargin < 2 || isempty(mintime)
+                mintime = [500]; %usec, peak-trough
+            end
+            [dum trt] = min(SS.waveform);
+            tmp = (trt/SS.fs*1e6)<mintime;
+            SS.clean = SS.clean&(tmp');
+            SS.methodlog = [SS.methodlog '<MinCheck>'];
+        end
+        function Crossing(SS,th)
+            % CROSSING(SS,th)
+            % require a zero (or user-specified)-crossing of +/->=5 uV
+            % Written by: NK
+            if nargin < 2 || isempty(th)
+                th = 0; %uV, p2p amplitude
+            end
+            tmp = max(SS.waveform)>=(th+5) & min(SS.waveform)<=(th+5);
+            SS.clean = SS.clean&(tmp');
+            SS.methodlog = [SS.methodlog '<Crossing>'];
+        end
+        function MaxMinCheck(SS,th)
+            % MAXMINCHECK(SS,th)
+            % no max or min at first 2 or last 2 samples is allowed
+            % with +/- uV thresholding
+            % Written by: NK
+            if nargin < 2 || isempty(th)
+                th = 150; %uV, p2p amplitude
+            end
+            [maxs maxi] = max(SS.waveform);[mins mini] = min(SS.waveform);
+            tmp = (maxi>2 & maxi<(size(SS.waveform,1)-1)) & (mini>2 & mini<(size(SS.waveform,1)-1)) & ...
+                (maxs<th)&(mins>-th);
+            SS.clean = SS.clean&(tmp');
+            SS.methodlog = [SS.methodlog '<MaxMinCheck>'];
+        end
+        function PkVelocity(SS,th)
+            % PKVELOCITY(SS,th)
+            % threshold the velocity at the peaks
+            % th uV/sec -find empirically, 6-8e5 uV/sec seems to work well
+            % Written by: NK
+            if nargin < 2 || isempty(th)
+                th = 8e5; %uV/sec
+            end
+            [maxs maxi] = max(SS.waveform);[mins mini] = min(SS.waveform);
+            vel = diff(SS.waveform);
+            maxi(maxi<2)=2;maxi(maxi==size(SS.waveform,1))=size(SS.waveform,1)-1;
+            mini(mini<2)=2;mini(mini==size(SS.waveform,1))=size(SS.waveform,1)-1;
+            pv = abs(vel(maxi-1:maxi,:));tv = abs(vel(mini-1:mini,:));%1 before, 1 after
+            pv(pv<eps)=nan;tv(tv<eps)=nan;
+            pkvel = nanmean(pv,1)*SS.fs;trvel = nanmean(tv,1)*SS.fs;
+            tmp = (pkvel<th) & (trvel<th);
+            SS.clean = SS.clean&(tmp');
+            SS.methodlog = [SS.methodlog '<PkVelocity>'];
+        end
+        function UpSamp(SS,us,pkalign,tpre,tpost)
+            % UPSAMP(SS,us,pkalign,tpre,tpost)
+            % upsample waveforms by integer factor and optionally
+            % change snippet time after align to (new) peaks
+            % us: upsampling rate, integer factor, default of 2
+            % pkalign: realign to peaks after upsampling
+            %           todo: need to take into account threshold, pos/neg peaks and pre/post wf time
+            %                     used by the user's recording system
+            % tpre: time preceding peak in usec
+            % tpost: time after peak in usec
+            % Written by: NK
+            disp('upsampling waveforms')
+            if nargin < 3, pkalign = 0;end
+            if nargin == 3,
+                tpre = 200;tpost = 600;%usec, should provide integer multiple samples of 1/SS.fs
+            end
+            if nargin < 2,      us = 2;end
+            default_peak_index = 25*us+1;
+            % do only clean waveforms for to improve speed, need separate matrix though
+            SS.waveform_us = zeros(size(SS.waveform,1)*us,size(SS.waveform(:,SS.clean),2));
+            if pkalign
+                wfpre   = SS.fs*tpre*1e-6;wfpost = SS.fs*tpost*1e-6;
+                nwfpts  = (wfpre+wfpost)*us+1;
+                wftime  = linspace(-tpre,tpost,nwfpts);%final, upsampled time, usecs
+                wf      = zeros(nwfpts,size(SS.waveform_us,2));
+            end
+            cleanwfs = find(SS.clean);
+            for k = 1:length(cleanwfs)
+                SS.waveform_us(:,k) = interp(SS.waveform(:,cleanwfs(k)),us);
+                if pkalign
+                    wftmp = SS.waveform_us(:,k);
+                    [dum pkind] = max(abs(wftmp));
+                    try
+                        wf(:,k) = wftmp(pkind-wfpre*us:pkind+wfpost*us);
+                    catch %todo: make this relevant
+                        wf(:,k) = wftmp(default_peak_index-wfpre*us:default_peak_index+wfpost*us);
+                    end
+                end
+            end
+            if pkalign
+                SS.waveform_us = wf;
+                SS.waveform_us_t = wftime;
+            end
+            tmp = SS.waveform_us;
+            SS.waveform_us = zeros(nwfpts,size(SS.waveform,2));
+            SS.waveform_us(:,SS.clean) = tmp;
+            SS.methodlog = [SS.methodlog '<UpSamp>'];
+        end
+        function MUA(SS)
+            % MUA(SS) all units on the same channel are combined to create
+            % Multi-Unit Activity (MUA)
+            % Written by: NK
+            SS.unit = SS.clean.*SS.channel;
+            SS.methodlog = [SS.methodlog '<MUA>'];
+        end
+        function PlotWfs(SS,maxwfs,chan)
+            % PLOTWFS(SS,maxwfs,chan)
+            % plot maxwfs waveforms on specified channel (ie for debugging purposes)
+            % Written by: NK
+            if nargin < 3 || isempty(chan)
+                chan = 2;
+            end
+            if nargin < 2 || isempty(maxwfs)
+                maxwfs = 10000; %usec, peak-trough
+            end
+            wfs = SS.waveform(:,SS.clean&SS.channel==chan);
+            n = min([size(wfs,2) maxwfs]);
+            wfi = randsample(size(wfs,2),n);
+            plot([1:size(wfs,1)]/SS.fs,wfs(:,wfi),'b');hold on;
+            plot([1:size(wfs,1)]/SS.fs,nanmean(wfs,2),'k','linewidth',2)
+            title(['ch' num2str(chan) ', n = ' num2str(length(find(SS.clean)))]);
+            SS.methodlog = [SS.methodlog '<PlotWfs>'];
+        end
+        function ResetClean(SS)
+            % RESETCLEAN(SS) Resets the clean, badunit and badchannel arrays
+            % so nothing is cleaned.
+            % Written by: JN
+            
+            SS.clean = true(length(SS.time),1);
+            SS.badchannel = [];
+            SS.badunit = [];
+            SS.methodlog = [SS.methodlog '<ResetClean>'];
+            
+        end
+        
+        %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
+        WaveClus(SS,maxclusters,minspk,decompmeth,plotbool)
+        % This method is contained in a separate file.
+        
+        %% BLOCK 4: ADVANCED CLEANING METHODS (methods that alter the 'clean' array, but have dependences on overloaded input properties or sorting)
+        WeedUnitByWaveform(SS)
+        % This method is contained in a separate file.
+        
+        %% BLOCK 5: VISUALIZATION TOOLS
+        PlotAvgWaveform(SS)
+        % This method is contained in a separate file.
+        
+        RasterPlot(SS, bound, what2show, yaxischannel)
+        % This method is contained in a separate file.
+        
+        RasterWave(SS, bound, what2show, yaxischannel)
+        % This method is contained in a separate file.
+        
+        PlotPeriStimHistogram(SS)
+        % This method is contained in a separate file.
+        
+        RandScat(SS,bound,forcechannel)
+        % This method is contained in a separate file.
+        
+        PlotCSDR(SS,frmax)
+        % This method is contained in a separate file.
+        
+        PlotRandomWaveform(SS,N,rangeV)
+        % This method is contained in a separate file.
+        
+        DemarseActivityPlot(SS,t,tau,dilation,name)
+        %contained in a separate file- t is a 2d vector containing the
+        %start and stop times, tau is the time constant of the image,
+        %dilation is the time dilation
+        
+        %% Block 7: BASIC DATA PROCESSING TOOLS
+        ASDR(SS,dt,shouldplot,loglin,ymax);
+        % This method is contained in a separate file.
+        
+        BI(SS);
+        % This method is contained in a separate file.
+        
+        PeriStimHistogram(SS,dt,histrange,bound,ploton);
+        % This method is contained in a separate file.
+        
+        PeriStimRaster(SS,bounds,dur,ch);
+        % This method is contained in a separate file.
+        
+        PeriSpikeRaster(SS,unit,bounds,dur);
+        % This method is contained in a separate file.
+        
+        [result counts]=XCorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez);
+        % This method is contained in a separate file.
+        
+        XCorrFilm(SS,name,tasks, fps);
+        % This method is contained in a separate file.
+        
+        %% Block 6: SONIFICATION TOOLS
+        ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,env,sniplength, fid)
+        % This method is contained in a separate file.
+        dh = DishHRTF(SS,fs,pbloc,times,chind)
+        % This method is contained in a separate file.
+        
+        %% Block 7: RETURN CLEAN DATA
+        function sqycln = ReturnClean(SS)
+            % SQYCLN = RETURNCLEAN(SS) return the clean data. Returns an array
+            % of the format of the orginal main data input containing those
+            % data indicies that have survived the cleaning process.
+            
+            sqycln = {};
+            sqycln.time = SS.time(logical(SS.clean));
+            sqycln.channel = SS.channel(logical(SS.clean));
+            sqycln.waveform = SS.waveform(:,logical(SS.clean));
+            
+            % Rename the clean units starting from 1
+            if ~isempty(SS.unit)
+                cleanunits = SS.unit(logical(SS.clean));
+                cleanunitvalues = unique(cleanunits);
+                for i = 1:length(cleanunitvalues )
+                    cleanunits(cleanunits == cleanunitvalues(i)) = i;
+                end
+                sqycln.unit = cleanunits;
+            end
+        end
+        
+        %% Block 8: Save SS object
+        function Save(SS)
+            save([SS.name '.SS'],'SS')
+        end
+        
+        %% Block 9: Internal Methods - PDM
+        function [spike stim] = ReturnRanged(SS, varargin)
+        %RETURNRANGED returns ranged spike and stim data
+        %   [spike stim] = RETURNRANGED(SS) returns spike and stim data as
+        %   structs within range [SS.afpars.trange(1) SS.afpars.trange(2)).
+        %
+        %   RETURNRANGED(..., trange, spktype) specifies the time range and
+        %   spike type, and does not overwrite the field in SS.afpars
+            
+            error(nargchk(1, 3, nargin, 'struct'));
+            
+            %defaults to SS properties
+            trange = SS.afpars.trange;
+            spktype = SS.afpars.spktype;
+
+            %check input parameters
+            for x=1:length(varargin)
+                if isempty(varargin{x}) 
+                    continue;
+                elseif ischar(varargin{x})
+                    spktype = varargin{x};
+                elseif isa(varargin{x}, 'double')
+                    trange = varargin{x};
+                else
+                    error('input data not valid');
+                end
+            end
+           
+            %get indices for all spikes within range
+            a = find(SS.time >= trange(1), 1);
+            b = find(SS.time < trange(2), 1, 'last');
+            ind = a:b;
+            
+            %return clean or dirty spikes
+            if strcmp(spktype, 'clean') 
+                ind = ind(logical(SS.clean(a:b)));
+            elseif strcmp(spktype, 'dirty')
+                ind = ind(logical(~SS.clean(a:b)));
+            end
+            
+            spike.time = SS.time(ind);
+            spike.channel = SS.channel(ind);
+            spike.waveform = SS.waveform(:, ind);
+            
+            %get and return indices for all stims within range
+            a = find(SS.st_time >= trange(1), 1);
+            b = find(SS.st_time < trange(2), 1, 'last');
+            
+            stim.time = SS.st_time(a:b);
+            stim.channel = SS.st_channel(a:b);
+        end
+        
+        function QPSRaster(SS, varargin)
+        %QPSRASTER quickly plots a peristim/spike raster plot
+        %   QPSRASTER(SS) plots a peristim/spike raster for each channel
+        %   relationship in SS.afpars.channelrels
+        %   
+        %   QPSRASTER(..., afpars) allows specification of afpars struct.
+        %   See SS.extractafpars for more info.
+        
+            %get all necessary input parameters
+            if nargin > 1
+                [trange, ~, spktype, resprange, channelrels] = ...
+                SS.extractafpars(varargin{1}, 1);
+            else 
+                [trange, ~, spktype, resprange, channelrels] = ...
+                SS.extractafpars(SS.afpars, 1);
+            end
+            
+            %return ranged data
+            [spike stim] = SS.ReturnRanged(trange, spktype);
+            
+            stchs = unique(channelrels(:, 1));
+            for x=stchs'
+                %for each unique stimulating channel, get all spikes and
+                %stims on this channel
+                substima = stim.time(stim.channel == x);
+                subspikea = spike.time(spike.channel == x);
+                rechs = channelrels(channelrels(:, 1) == x, 2);
+                
+                for y=rechs'
+                    %for each responding channel, get spikes and stims
+                    substimb = stim.time(stim.channel == y);
+                    subspikeb = spike.time(spike.channel == y);
+                    figure;
+                    hold on;
+                    title(['Stimulating channel: ' num2str(x) ...
+                        ' Responding channel ' num2str(y)])
+                    xlabel('Time (sec)')
+                    ylabel('Stimulus No.')
+                    rels = channelrels(channelrels(:, 1) == x & ...
+                        channelrels(:, 2) == y, 3);
+                    
+                    for z=1:length(rels)
+                        %for each channel pair relationship, plot according
+                        %to which relationship is indicated. 0 is
+                        %spike-spike, 1 is spike-stim, and 2 is stim-spike
+                        if rels(z)==0
+                            for ii=1:length(subspikea)
+                                resps = SS.RSIR(subspikeb, ...
+                                    subspikea(ii), resprange);
+                                plot(resps, zeros(1, length(resps))+ii,'.')
+                            end
+                        elseif rels(z)==1
+                            for ii=1:length(substimb)
+                                resps = SS.RSIR(subspikea, ...
+                                    substimb(ii), resprange);
+                                plot(resps, zeros(1, length(resps))+ii,'.')
+                            end
+                        else
+                            for ii=1:length(substima)
+                                resps = SS.RSIR(subspikeb, ...
+                                    substima(ii), resprange);
+                                plot(resps, zeros(1, length(resps))+ii,'.')
+                            end
+                        end         
+                    end
+                end
+            end
+        end
+        
+        function spktrains = ReturnRespSpks(SS, spike, stim, ...
+                channelpair, rez, varargin)
+        %RETURNRESPSPKS returns response spike trains
+        %   SPKTRAINS = RETURNRESPSPKS(SS, spike, stim, channelpair, rez, 
+        %   varargin) 
+        %   returns a matrix of spike trains of channel channelpair(2) in 
+        %   response to stimulation of channel channelpair(1).
+            
+            %default to SS.afpars resprange field, or set to user-defined
+            %value if given
+            resprange = SS.afpars.resprange;
+            if nargin > 5 && ~isempty(varargin{1})
+                resprange = varargin{1};
+            end
+            
+            %get stims, spikes, number of bins, and initialize spktrains
+            stims = stim.time(stim.channel == channelpair(1));
+            spks = spike.time(spike.channel == channelpair(2));
+            bins = resprange*1000*rez;
+            spktrains = zeros(length(stims), bins);
+            
+            %get spikes within resprange, create histogram for each
+            %spike train
+            for x=1:length(stims)
+                spikes = SS.RSIR(spks, stims(x), resprange)*1000*rez;
+                spktrains(x, :) = hist(spikes, ...
+                    .5:1:bins-.5);
+            end
+        end
+        
+        function spks = RSIR(SS, spikes, stim, resprange)
+            %SPKS = RSIR(SS, SPIKES, STIM, RESPRANGE) returns all spikes in
+            %the vector SPIKES whose times are greater than STIM and less 
+            %than or equal to STIM + RESPRANGE. RESPRANGE is in sec. All 
+            %times in SPKS will be less than or equal to RESPRANGE.
+            %RSIR = return spikes in range
+            
+            %utilizes faster logical indexing
+            a = find(spikes > stim, 1);
+            b = find(spikes <= stim + resprange, 1, 'last');
+            spks = spikes(a:b) - stim;
+        end
+        
+        reconstruct(SS)
+
+        [trange rez spktype resprange channelrels] = ...
+            extractafpars(SS, afpars, verify)
+        
+        %% Pranav Methods
+        rel = CalcSejRel(SS, filters, varargin)
+        xcorrmat = CalcXCorr(SS, varargin)
+        catmat = cat_chao(SS, movtimebin, timewindow, bmode, varargin)
+        dapmat = finddap(SS, varargin)
+    end
+    
+end
+

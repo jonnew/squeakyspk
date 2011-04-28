@@ -1,0 +1,103 @@
+function xcorrmat = CalcXCorr(SS, trange, channels, rez)
+    %CALCXCORR calculates the cross correlation of spikes and stims
+    %   CHANNELS is Nx3 matrix of channels, where N is number of
+    %   relationships
+    %   ALEN is length of time series array (see documentation on
+    %   convert2tseries). 2*ALEN+1 is cross correlation array
+    %   length. ALEN should be chosen based on the maximum time (in
+    %   milliseconds) that a spike or stim could occur - doing
+    %   ceil(max(spike.time))*1000 is an easy way to calculate
+    %   this
+    tic
+    if nargin < 4
+        rez = 1;
+    end
+    if nargin < 3
+        %default channels matrix. compares only spikes
+        channels = zeros(64*63/2+64 + 4096, 3);
+        ind = 1;
+        %compare all spikes
+        for x=1:64
+            for y=x:64
+                channels(ind, 1) = x;
+                channels(ind, 2) = y;
+                ind = ind + 1;
+            end
+        end
+        %compares stims and spikes
+        for x=0:63
+            for y=1:64
+                channels(ind, 1) = x+1;
+                channels(ind, 2) = y;
+                channels(ind, 3) = 2;
+                ind = ind + 1;
+            end
+        end
+    end
+    if nargin < 2
+        trange = [SS.time(1) SS.time(end)];
+    end
+    
+    %get ranged data
+    [spike stim] = SS.ReturnRanged(trange, []);
+    
+    csize = size(channels, 1);
+
+    %main calc loops
+    %figure out which stim and spike tseries need to be loaded
+    stimlist = [];
+    spikelist = [];
+    
+    stimhist = zeros(csize, trange(2)*1000*rez);
+    spikehist = zeros(csize, trange(2)*1000*rez);
+    
+    %make cross correlation matrix
+    xcorrmat = zeros(csize, size(stimhist, 2)*2-1);
+    
+    binsize = 1/rez;
+    histbins = binsize/2:binsize:(trange(2)*1000-binsize/2);
+    
+    disp('sorting spikes and stims');
+    for x=1:csize
+        if channels(x, 3) == 0
+            spikelist = [spikelist channels(x, 1) channels(x, 2)];
+        elseif channels(x, 3) == 1
+            spikelist = [spikelist channels(x, 1)];
+            stimlist = [stimlist channels(x, 2)];
+        elseif channels(x, 3) == 2
+            spikelist = [spikelist channels(x, 2)];
+            stimlist = [stimlist channels(x, 1)];
+        else
+            error('Invalid channel combination');
+        end
+    end
+    
+    spikelist = unique(spikelist);
+    stimlist = unique(stimlist);
+    
+    parfor x=1:length(spikelist)
+        spikehist(x, :) = hist(spike.time(spike.channel == spikelist(x))*1000, histbins);
+    end
+    
+    spikehist(1000:1000:105000)
+    
+    
+    parfor x=1:length(stimlist)
+        stimhist(x, :) = hist(stim.time(stim.channel == stimlist(x))*1000, histbins);
+    end
+    
+    %calculate xcorrs
+    disp('calculating xcorrs')
+    parfor x=1:csize
+        if channels(x, 3) == 0
+            xcorrmat(x, :) = xcorr(spikehist(spikelist == channels(x, 1), :), spikehist(spikelist == channels(x, 2), :));
+        elseif channels(x, 3) == 1
+            xcorrmat(x, :) = xcorr(spikehist(spikelist == channels(x, 1), :), stimhist(stimlist == channels(x, 2), :));
+        elseif channels(x, 3) == 2
+            xcorrmat(x, :) = xcorr(stimhist(stimlist == channels(x, 1), :), spikehist(spikelist == channels(x, 2), :));
+        else 
+            error('Invalid channel combination');
+        end
+    end
+    toc
+end
