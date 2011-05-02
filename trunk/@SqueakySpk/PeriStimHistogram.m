@@ -1,20 +1,21 @@
 function PeriStimHistogram(SS,dt,histrange,whichstim,ploton)
-%PERISTIMTIMEHISTOGRAM create the PSH for an SS object.
+% PERISTIMHISTOGRAM create the PSH for an SS object.
 %
-%   	PERISTIMTIMEHISTOGRAM(SS,DT,HISTRANGE,TYPE,PLOTON) calculates the
+%   	PERISTIMHISTOGRAM(SS,DT,HISTRANGE,WHICHSTIM,PLOTON) calculates the
 %   	peristimulus histogram with time resolution DT (msec) for a time
 %   	window around the conditioning stimulus event defined by HISTRANGE
 %   	= [t1 t2] in milliseconds. WHICHSTIM is a logical array with dimesions
 %   	equal to SS.st_time, defining which stimuli the PSH should be
 %   	calculated for. The default value is WHICHSTIM = true(size(SS.st_time)).
 %       The PSH is caculated for each channel and stored in the [N x M]
-%       matrix psh.hist which reprsents the M sample long psh for each of N
+%       matrix psh.hist which represents the M sample long psh for each of N
 %       channels. PLOTON is a logical that controls whether or not the PSH
 %       is plotted after the comptuation has finished.
 %
 %       Created by: Jon Newman (jnewman6 at gatech dot edu) Location: The
-%       Georgia Institute of Technology Created on: Feb 2, 2011 Last
-%       modified: Feb 2, 2011
+%       Georgia Institute of Technology 
+%       Created on: Feb 2, 2011 
+%       Last modified: Apr 26, 2011
 % 
 %       Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
@@ -58,8 +59,6 @@ psh.hist = zeros(max(goodchan),length(b(1):dtsec:b(2)));
 psh.std = zeros(max(goodchan),length(b(1):dtsec:b(2)));
 
 disp('Calculating Peri-stimulus histogram ...')
-% wait_h = waitbar(0,'Caclulating PSH');
-% steps2update = floor(length(whichstim)/100);
 
 % perform only on clean spks
 clean_spk = SS.time(SS.clean);
@@ -76,15 +75,8 @@ for i = 1:sum(whichstim)
         psh.std(goodchan(i),:) = psh.std(goodchan(i),:) + count.^2;
         psh.stimcount(goodchan(i)) = psh.stimcount(goodchan(i)) + 1;
     end
-    
-%     if ~logical(mod(i,steps2update))
-%         waitbar(i/length(whichstim),wait_h)
-%     end
-    
+       
 end
-
-% close(wait_h)
-disp('Finished calculating Peri-stimulus histogram.')
 
 % Calculate RMS and normalize everything to firing rate
 for i = 1:max(goodchan)
@@ -99,6 +91,9 @@ SS.psh = psh;
 if ploton
     SS.PlotPeriStimHistogram;
 end
+
+% Finish
+disp('Finished calculating Peri-stimulus histogram.')
 
 % Add psh to method log
 SS.methodlog = [SS.methodlog '<PeriStimHistogram>'];

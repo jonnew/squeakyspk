@@ -172,7 +172,7 @@ SS.methodlog = [SS.methodlog '<WaveClus>'];
         parsefieldnames = fieldnames(channelparse);
         clusterresults = {};
         
-        figure()
+        
         for k=1:size(chan2anal,2)
             
             tic
