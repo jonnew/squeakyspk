@@ -58,6 +58,11 @@ xt = get(gca,'XTick');
 idx = round(length(SS.upsh.t)*(xt/max(xt)));
 set(gca,'XTickLabel',SS.upsh.t(idx));
 
+% Draw a line indicating time 0
+hold on
+idx = find(SS.upsh.t ==0);
+plot([idx idx],[0 size(img,1)],'b-','LineWidth',2)
+
 % labels
 xlabel('Time (sec)')
 if strcmp(SS.upsh.type,'unit-wise')

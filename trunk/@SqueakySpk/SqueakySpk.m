@@ -435,7 +435,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PeriStimHistogram(SS,dt,histrange,whichstim,ploton);
         % This method is contained in a separate file.
         
-        UnitWisePSH(SS,dt,histrange,whichstim,whichunit,effrange,forcechan,ploton);
+        UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton);
         % This method is contained in a separate file.
         
         PeriStimRaster(SS,bound,dur,ch);
@@ -458,7 +458,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% Block 7: RETURN CLEAN DATA
-        sqycln = ReturnClean(SS)
+        sqycln = ReturnClean(SS,bound)
         % This method is contained in a separate file.
         
         %% Block 8: Save SS object
