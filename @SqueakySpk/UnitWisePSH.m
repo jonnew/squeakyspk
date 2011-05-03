@@ -1,7 +1,7 @@
 function UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton)
 %UNITWISEPSH create the UPSH for an SS object.
 %
-%   	UNITWISEPSH(SS,DT,HISTRANGE,WHICHSTIM,which,EFFRANGE,PLOTON)
+%   	UNITWISEPSH(SS,DT,HISTRANGE,WHICHSTIM,WHICH,EFFRANGE,FORCECHAN,PLOTON)
 %       calculates the peristimulus histogram with time resolution DT (msec)
 %       for a time window around the conditioning stimulus event defined by
 %       HISTRANGE = [t1 t2] in milliseconds for each unit or channel in the
@@ -11,7 +11,7 @@ function UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton)
 %       defining which stimuli the PSH should be calculated for. The
 %       default value is WHICHSTIM = true(size(SS.st_time)).
 %
-%       WHICH is an integer array , defining which units or channels the
+%       WHICH is an integer array, defining which units or channels the
 %       PSH should be calculated for. The default value is WHICH =
 %       unique(SS.unit) if spike sorting has been performed and WHICH =
 %       unique(SS.channel), otherwise.
@@ -40,7 +40,7 @@ function UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton)
 %       instead of units, even if sorting has been performed.
 %
 %       This fucntion popopulates the UPSH property of the current SS
-%       object, SS.upsh. This has the following fiels:
+%       object, SS.upsh. This has the following fielDs:
 %
 %       upsh.type = 'unit-wise' or 'channel-wise'
 %       upsh.stimcount = number of stimuli used to calculate the upsh
@@ -89,7 +89,7 @@ if nargin < 1
 end
 
 % check number and whichstim of arguments
-if isempty(SS.unit) || length(SS.unit) ~= length(SS.time)
+if ~forcechan && (isempty(SS.unit) || length(SS.unit) ~= length(SS.time))
     warning(['You have not performed spike sorting yet or the unit property is not correctly populated.', ...
         ' performing the unitwisepsh across channels']);
     forcechan = true;
@@ -129,7 +129,9 @@ upsh.std = zeros(size(upsh.hist));
 disp('Calculating Peri-stimulus histogram ...')
 
 % perform only on clean spks
-dat = SS.ReturnClean();
+b0 = min(SS.st_time(whichstim) - histrange(1)/1000 - dt);
+b1 = max(SS.st_time(whichstim) + histrange(2)/1000 + dt);
+dat = SS.ReturnClean([b0 b1]);
 
 % modify clean data to use only selected units
 if ~forcechan
@@ -211,7 +213,7 @@ disp('Finished calculating Peri-stimulus histogram.')
 
 % Plot if the user wants it
 if ploton
-    SS.PlotUnitWisePSH();
+    SS.PlotUnitWisePSH(100);
 end
 
 % Add psh to method log

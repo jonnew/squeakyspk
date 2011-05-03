@@ -2,15 +2,19 @@ function PeriStimHistogram(SS,dt,histrange,whichstim,ploton)
 % PERISTIMHISTOGRAM create the PSH for an SS object.
 %
 %   	PERISTIMHISTOGRAM(SS,DT,HISTRANGE,WHICHSTIM,PLOTON) calculates the
-%   	peristimulus histogram with time resolution DT (msec) for a time
-%   	window around the conditioning stimulus event defined by HISTRANGE
-%   	= [t1 t2] in milliseconds. WHICHSTIM is a logical array with dimesions
+%   	array-wide peri-stimulus histogram with time resolution DT (msec)
+%   	for a time window around the conditioning stimulus event defined by
+%   	HISTRANGE = [t1 t2] in milliseconds. 
+% 
+%       WHICHSTIM is a logical array with dimesions
 %   	equal to SS.st_time, defining which stimuli the PSH should be
-%   	calculated for. The default value is WHICHSTIM = true(size(SS.st_time)).
-%       The PSH is caculated for each channel and stored in the [N x M]
-%       matrix psh.hist which represents the M sample long psh for each of N
-%       channels. PLOTON is a logical that controls whether or not the PSH
-%       is plotted after the comptuation has finished.
+%   	calculated for. The default value is WHICHSTIM =
+%   	true(size(SS.st_time)).
+% 
+%       The PSH is caculated for each stimulating  channel and stored in
+%       the [N x M] matrix psh.hist which represents the M sample long psh
+%       for each of N channels. PLOTON is a logical that controls whether
+%       or not the PSH is plotted after the comptuation has finished.
 %
 %       Created by: Jon Newman (jnewman6 at gatech dot edu) Location: The
 %       Georgia Institute of Technology 
