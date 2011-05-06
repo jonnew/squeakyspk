@@ -11,11 +11,11 @@ if isempty(SS.asdr)
     return;
 end
 if nargin < 2
-    bound = [0 SS.asdr(end,1)];
+    bound = [0 SS.asdr.bin(end)];
 end
 
-asdr_ToUse = SS.asdr(:,2);
-asdr_ToUse = asdr_ToUse(SS.asdr(:,1) > bound(1) & SS.asdr(:,1) < bound(2));
+asdr_ToUse = SS.asdr.asdr;
+asdr_ToUse = asdr_ToUse(SS.asdr.bin > bound(1) & SS.asdr.bin < bound(2));
 
 sASDR = sort(asdr_ToUse,'descend');
 l15 = ceil(0.15*length(asdr_ToUse));

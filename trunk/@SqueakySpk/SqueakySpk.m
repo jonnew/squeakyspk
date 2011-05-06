@@ -79,7 +79,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         badunit; % Array of units deemed to be bad after spike sorting
         badchannel; % Array of channels deemed to be bad
         psh; % Peri-stimulus histogram
-        upsh; % unit-wise peri-stimulus histogram 
+        upsh; % unit-wise peri-stimulus histogram
         
         % properties of the stimulus given while collecting the main data [STIM DATA]
         st_time; % [N DOUBLE (sec, spike index)]
@@ -132,10 +132,24 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             % And spontanous data taken before and evoked recording,
             % with the same fields as the spike structure.
             
+            % Check input arguments
             if nargin < 4
-                error('You must provide (1) a name string, (2) the sampling frequency, (3) units used for recording as a fraction of Volts, and (3) a spike data structure.')
+                error('Minimal arguements to create an SS object are (1) a name string, (2) the sampling frequency, (3) units used for recording as a fraction of Volts, and (4) a spike data structure.')
             end
-            
+            if nargin == 5
+                if min(spike.channel) < 0 || min(stimulus.channel) < 0
+                    error('A channel entry on one of your input structures has a negative value. Channels should be 1-based integers.')
+                end
+            end
+            if nargin == 6
+                if min(spike.channel) < 0 || min(stimulus.channel) < 0 || min(spontaneous.channel) < 0
+                    error('A channel entry on one of your input structures has a negative value. Channels should be 1-based integers.')
+                end
+            end
+            if min(spike.time) < 0
+                error('Your spike.time arguement has a negative entry')
+            end
+
             % String with name of data
             SS.name = name;
             
@@ -148,8 +162,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             %constructor using only the spike construct (ie, the data to be
             %cleaned)
             SS.clean = true(length(spike.time),1);
-            [SS.time ind] = sort(spike.time); % Make sure incoming data
+            [SS.time ind] = sort(spike.time); % Make sure incoming data is sorted in time
             if min(spike.channel) == 0 % channel index is 1 based
+                warning('Channel index must be 1 based in an SS object, shifting your SS.channel, SS.sp_channel and SS.st_channel properties by 1');
+                SS.channel = spike.channel(ind)+1;
+                
                 SS.channel = spike.channel(ind)+1;
             else
                 SS.channel = spike.channel(ind);
@@ -170,10 +187,16 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 if ~isempty(stimulus.type)
                     SS.st_time = stimulus.time;
                     SS.st_channel = stimulus.channel;
+                    if min(stimulus.channel) == 0
+                        SS.st_channel = SS.st_channel+1;
+                    end
                     SS.st_type = stimulus.type;
                 else
                     SS.st_time = stimulus.time;
                     SS.st_channel = stimulus.channel;
+                    if min(stimulus.channel) == 0
+                        SS.st_channel = SS.st_channel+1;
+                    end
                     SS.st_type = [];
                 end
             end
@@ -354,10 +377,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             %                 size(true_wave)
             SS.methodlog = [SS.methodlog '<Mitraclean>'];
         end
-
+        
         ResetClean(SS)
         % This method is contained in a separate file.
-
+        
         AmpSel(SS,threshold)
         % This method is contained in a separate file.
         
@@ -384,8 +407,8 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         PlotWfs(SS,maxwfs,chan)
         % This method is contained in a separate file.
-
-       
+        
+        
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
         WaveClus(SS,maxclusters,minspk,decompmeth,plotall,ploton)
         % This method is contained in a separate file.
@@ -426,7 +449,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% Block 7: BASIC DATA PROCESSING TOOLS
-        ASDR(SS,dt,shouldplot,loglin,ymax);
+        ASDR(SS,dt,bound,shouldplot,loglin,ymax);
         % This method is contained in a separate file.
         
         BI(SS,bound);

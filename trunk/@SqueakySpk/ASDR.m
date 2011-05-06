@@ -1,16 +1,25 @@
-function h = ASDR(SS,dt,loglin,ymax,returnplot)
+function h = ASDR(SS,dt,bound,loglin,ymax,returnplot)
 % ASDR(SS) Array-wide spike detection rate using bins of width 1 second. 
 % The function populates the asdr and csdr properties of the SS object.
 % This analysis is only performed on clean spikes.
 % 
-%   SS.asdr is a matrix of the form [b ASDR] where b are time bins
-%   and ASDR is vector of corresponding firing rates over all electrodes.
+%   SS.asdr.bin is an (NX1) vector of time bins used to calculate the asdr.
+%   SS.asdr.asdr is an (NX1) vector of histogram counts where each of the N
+%   indices correspond to a bin value. asdr is vector of corresponding
+%   firing rates over all electrodes.
+%   SS.asdr.mean is a scalar value representing the mean of asdr.asdr
+%   SS.asdr.median is a scalar value representing the median of asdr.asdr
+%   SS.asdr.var is a scalar value representing the variance of asdr.asdr
+%   SS.asdr.skew is a scalar value representing the skewness of asdr.asdr
+%   SS.asdr.kurt is a scalar value representing the kurtosis of asdr.asdr
 % 
-%   SS.csdr is a matrix of the form [b CSDR] where b are time bins 
-%   and CSDR is matrix of corresponding firing rates where each column
-%   represents the firing rate at a given electrode.
+%   SS.csdr.bin is an (NX1) vector of time bins used to calculate the asdr.
+%   SS.csdr.bin is an (NXM) matrix with the counts for individual
+%   electrodes down the columns.
 % 
-% ASDR(SS,dt) Allows the user to define a specific bin size (in seconds)
+% ASDR(SS,dt,bound) Allows the user to define a specific bin size DT,in
+% seconds and a range BOUND = [t0 t1] over which the asdr is calculated.
+% This is reflected in the bin fields of the asdr and csdr matracies.
 % 
 % ASDR(SS,...,loglin,ymax,returnplot) Allows the user to define aspects of the 
 % ASDR figure. If loglin is set to false, then the plot returned by ASDR will have
@@ -26,48 +35,58 @@ function h = ASDR(SS,dt,loglin,ymax,returnplot)
 %       Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 
-if nargin < 5 || isempty(returnplot)
+if nargin < 6 || isempty(returnplot)
     returnplot = 1;
 end
-if nargin < 4 || isempty(ymax)
+if nargin < 5 || isempty(ymax)
     ymax = 'auto';
 end
-if nargin < 3 || isempty(loglin)
-    loglin = 1;
+if nargin < 4 || isempty(loglin)
+    loglin = 0;
 end
 if nargin < 2 || isempty(dt)
     dt = 1; %seconds
 end
+if nargin < 3 || isempty(bound)
+    bound = [0 SS.time(end) + dt];
+end
 
 dat = SS.ReturnClean;
 
-% Calculate
-bins = 0:dt:SS.time(end);
-SS.csdr = zeros(length(bins),max(SS.channel)+1);
-SS.csdr(:,1) = bins';
+% Calculate the csdr matrix
+bins = bound(1):dt:bound(2);
+SS.csdr.csdr = zeros(length(bins),max(SS.channel));
+SS.csdr.bin = bins';
 for i = 1:max(dat.channel)
     asdr_tmp = hist(dat.time(dat.channel==i),bins);
     if size(asdr_tmp,2) == 1;
-        SS.csdr(:,i+1) = asdr_tmp./dt;
+        SS.csdr.csdr(:,i) = asdr_tmp./dt;
     else
-        SS.csdr(:,i+1) = asdr_tmp'./dt;
+        SS.csdr.csdr(:,i) = asdr_tmp'./dt;
     end
 end
 
 % Calculate ASDR
-SS.asdr = [bins' sum(SS.csdr(:,2:end),2)];
+SS.asdr.bin = bins';
+SS.asdr.asdr = sum(SS.csdr.csdr(:,2:end),2);
+SS.asdr.mean = mean(SS.asdr.asdr);
+SS.asdr.median = median(SS.asdr.asdr);
+SS.asdr.var = var(SS.asdr.asdr);
+SS.asdr.skew = skewness(SS.asdr.asdr,0);
+SS.asdr.kurt = kurtosis(SS.asdr.asdr,0);
 
 % Plot results
 if(returnplot)
     h = figure();
     if loglin
-        asdrp = SS.asdr(SS.asdr(:,2)>0,:);
-        semilogy(asdrp(:,1),asdrp(:,2),'k');
+        asdrp_b = SS.asdr.bin(SS.asdr.asdr > 0,:);
+        asdrp_a = SS.asdr.asdr(SS.asdr.asdr > 0,:);
+        semilogy(asdrp_b, asdrp_a, 'k');
         if ~strcmp(ymax,'auto')            
             ylim([1 ymax])
         end
     else
-        plot(SS.asdr(:,1),SS.asdr(:,2),'k');
+        plot(SS.asdr.bin,SS.asdr.asdr,'k');
     end
     xlabel('Time (sec)')
     ylabel('s^-1')
