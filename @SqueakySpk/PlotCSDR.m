@@ -20,17 +20,13 @@ if nargin < 2 || isempty(frmax)
 end
 
 figure()
-img = SS.csdr(:,2:end)';
+img = SS.csdr.csdr';
 
 % Create a color map that is good at displaying a wide range of data
 cmp = gray(200);
 cmp = flipud(cmp.^3);
 
-% % Smooth along each channel
-% for i = 1:size(img,1)
-%     img(i,:) = smooth(img(i,:),3);
-% end
-
+% set FR max by setting a single pixel to this value and then using imagesc
 if sum(sum(img > frmax)) > 0
     img(img > frmax ) = frmax;
 elseif frmax ~= inf
@@ -38,7 +34,7 @@ elseif frmax ~= inf
 end
 
 % Make the image
-q = imagesc(img);
+imagesc(img);
 c = colorbar();
 ylabel(c,'Firing Rate (Hz)')
 colormap(cmp);

@@ -188,7 +188,7 @@ end
 
 % Calculate RMS and normalize everything to firing rate
 upsh.std = sqrt(upsh.std/upsh.stmcount)/dtsec;
-SS.upsh.hist = upsh.hist/upsh.stmcount/dtsec;
+upsh.hist = upsh.hist/upsh.stmcount/dtsec;
 
 % calculate efficacy
 eff = sum(upsh.hist(upsh.t>0 & upsh.t<=effrange/1000,:),1);
