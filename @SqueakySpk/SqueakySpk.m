@@ -449,7 +449,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% Block 7: BASIC DATA PROCESSING TOOLS
-        ASDR(SS,dt,bound,shouldplot,loglin,ymax);
+        ASDR(SS,dt,bound,whichchan,shouldplot,loglin,ymax);
         % This method is contained in a separate file.
         
         BI(SS,bound);

@@ -1,7 +1,14 @@
-function h = ASDR(SS,dt,bound,loglin,ymax,returnplot)
+function h = ASDR(SS,dt,bound,whichchan,loglin,ymax,returnplot)
 % ASDR(SS) Array-wide spike detection rate using bins of width 1 second. 
 % The function populates the asdr and csdr properties of the SS object.
 % This analysis is only performed on clean spikes.
+% 
+%   SS.csdr.chan is an (MX1) vector describing the channels used to make
+%   the csdr and the asdr. This defines the word 'array' in array-wide
+%   spike detection rate
+%   SS.csdr.bin is an (NX1) vector of time bins used to calculate the asdr.
+%   SS.csdr.bin is an (NXM) matrix with the counts for individual
+%   electrodes down the columns.
 % 
 %   SS.asdr.bin is an (NX1) vector of time bins used to calculate the asdr.
 %   SS.asdr.asdr is an (NX1) vector of histogram counts where each of the N
@@ -13,13 +20,12 @@ function h = ASDR(SS,dt,bound,loglin,ymax,returnplot)
 %   SS.asdr.skew is a scalar value representing the skewness of asdr.asdr
 %   SS.asdr.kurt is a scalar value representing the kurtosis of asdr.asdr
 % 
-%   SS.csdr.bin is an (NX1) vector of time bins used to calculate the asdr.
-%   SS.csdr.bin is an (NXM) matrix with the counts for individual
-%   electrodes down the columns.
-% 
-% ASDR(SS,dt,bound) Allows the user to define a specific bin size DT,in
+% ASDR(SS,dt,bound,whichchan) Allows the user to define a specific bin size DT,in
 % seconds and a range BOUND = [t0 t1] over which the asdr is calculated.
 % This is reflected in the bin fields of the asdr and csdr matracies.
+% WHICHCHAN is a vector of channel numbers that are used to calcuate the
+% csdr and asdr. This defines the 'array'. The default value for WHICHCHAN
+% = unique(SS.channel).
 % 
 % ASDR(SS,...,loglin,ymax,returnplot) Allows the user to define aspects of the 
 % ASDR figure. If loglin is set to false, then the plot returned by ASDR will have
@@ -35,14 +41,17 @@ function h = ASDR(SS,dt,bound,loglin,ymax,returnplot)
 %       Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 
-if nargin < 6 || isempty(returnplot)
+if nargin < 7 || isempty(returnplot)
     returnplot = 1;
 end
-if nargin < 5 || isempty(ymax)
+if nargin < 6 || isempty(ymax)
     ymax = 'auto';
 end
-if nargin < 4 || isempty(loglin)
+if nargin < 5 || isempty(loglin)
     loglin = 0;
+end
+if nargin < 4 || isempty(whichchan)
+    whichchan = unique(SS.channel);
 end
 if nargin < 2 || isempty(dt)
     dt = 1; %seconds
@@ -53,12 +62,17 @@ end
 
 dat = SS.ReturnClean;
 
+% Define the array
+SS.csdr.chan = whichchan;
+
 % Calculate the csdr matrix
 bins = bound(1):dt:bound(2);
-SS.csdr.csdr = zeros(length(bins),max(SS.channel));
+SS.csdr.csdr = zeros(length(bins),length(whichchan));
 SS.csdr.bin = bins';
-for i = 1:max(dat.channel)
-    asdr_tmp = hist(dat.time(dat.channel==i),bins);
+for i = 1:length(whichchan)
+    times  = dat.time(dat.time >= bound(1) & dat.time <= bound(2));
+    ch = dat.channel(dat.time >= bound(1) & dat.time <= bound(2));
+    asdr_tmp = hist(times(ch == whichchan(i)),bins);
     if size(asdr_tmp,2) == 1;
         SS.csdr.csdr(:,i) = asdr_tmp./dt;
     else
