@@ -63,6 +63,8 @@ end
 dat = SS.ReturnClean;
 
 % Define the array
+SS.csdr =[]; SS.asdr = [];
+
 SS.csdr.chan = whichchan;
 
 % Calculate the csdr matrix
