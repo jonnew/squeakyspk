@@ -31,15 +31,19 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
     %   4. Methods log
     %       a. methodlog; % string array that keeps track of the methods run on the SS object
     %
+    %   5. Analysis properties used by analysis functions like CAT, dAP,
+    %   etc. Refer to specific function documentation for more info
+    %       a. analysispars; % refer to ReturnAnalysisPars doc
+    %   
     %   Methods:
     %     1. Constructor
     %         a. SqueakySpk
     %     2. Basic Cleaning
     %         a. HardThreshold
     %         b. RemoveSpkWithBlank
-    %         c. RemoveChan
+    %         c. RemoveChannel
     %         d. RemoveUnit
-    %         e. MitrClean
+    %         e. MitraClean
     %     3. Spike Sorting
     %         a. WaveClus
     %     4. Advanced Cleaning
@@ -57,7 +61,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         % Data name and parameters of recording
         name; % String that names the data object
-        fs;
+        fs; % frequency
         recunit; % Unit that the users data is provided in as a fraction of volts (1-> volts, 0.001 -> millivolts, etc).
         
         % recording properities
@@ -95,6 +99,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         % Methods log
         methodlog; % string array that keeps track of the methods run on the SS object
+        
+        % Analysis parameters
+        analysispars; % refer to ReturnAnalysisPars for doc
         
         % Stuff filled by running xcorrs
         xcorrmat;%[N x M x P xQ double (timeslice, 'causal' channel, 'effect' channel, offset (ms)]
@@ -178,6 +185,15 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             SS.methodlog = [];
             SS.badunit = [];
             SS.badchannel = [];
+            
+            %Analysis parameters defaults. Refer to ReturnAnalysisPars for
+            %more info
+            SS.analysispars = ...
+                struct('trange', [0 SS.time(end)], ...
+                       'rez', 1, ...
+                       'spktype', 'clean', ...
+                       'resprange', .025, ...
+                       'channelrels', zeros(0, 3));
             
             % Load stimulus information
             if nargin < 5 || isempty (stimulus)
@@ -455,6 +471,12 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         BI(SS,bound);
         % This method is contained in a separate file.
         
+        catmat = CAT(SS, movtimebin, timewindow, bmode, varargin)
+        % This method is contained in a separate file.
+        
+        dapmat = DAP(SS, varargin)
+        % This method is contained in a separate file.
+        
         PeriStimHistogram(SS,dt,histrange,whichstim,ploton);
         % This method is contained in a separate file.
         
@@ -465,6 +487,12 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         PeriSpikeRaster(SS,unit,bounds,dur);
+        % This method is contained in a separate file.
+        
+        rel = SejReliability(SS, filters, varargin);
+        % This method is contained in a separate file.
+        
+        xcorrmat = XCorr(SS, varargin)
         % This method is contained in a separate file.
         
         [result counts]=XCorrs(SS, mintime, maxtime, binlength, xcorlength, xcorrez);
@@ -486,6 +514,21 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         %% Block 8: Save SS object
         Save(SS,auxfid)
+        % This method is contained in a separate file.
+        
+        %% Block 9: Internal Methods
+        [spike stim] = ReturnRangedData(SS, varargin)
+        % This method is contained in a separate file.
+        
+        spktrains = ReturnPeriStimSpkTrains(SS, spike, stim, ...
+                channelpair, rez, varargin)
+        % This method is contained in a separate file.
+        
+        spks = return_spksinrange(SS, spikes, stim, resprange)
+        % This method is contained in a separate file.
+        
+        [trange rez spktype resprange channelrels] = ...
+            ReturnAnalysisPars(SS, verify, varargin)
         % This method is contained in a separate file.
         
     end
