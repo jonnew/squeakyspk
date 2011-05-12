@@ -53,7 +53,7 @@ c = colorbar();
 ylabel(c,'P[Det. Rate]')
 colormap(cmp);
 set(gca,'YDir','normal')
-title('Joint-Channel Detection Dist.')
+title('Per-channel Detection Dists.')
 
 subplot(121)
 stairs(b,htot,'-k','LineWidth',2);
