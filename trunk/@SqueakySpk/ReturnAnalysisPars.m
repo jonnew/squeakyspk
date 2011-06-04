@@ -27,7 +27,7 @@ function [trange rez spktype resprange channelrels] = ...
         spktype = [];
         resprange = [];
         channelrels = [];
-        
+
         if nargin > 3
             trange = varargin{1};
             rez = varargin{2};
@@ -48,7 +48,7 @@ function [trange rez spktype resprange channelrels] = ...
                 analysispars = varargin{1};
             end
         end
-        
+ 
         if isempty(trange)
             trange = analysispars.trange;
         end

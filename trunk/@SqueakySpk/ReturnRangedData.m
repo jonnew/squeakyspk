@@ -39,7 +39,9 @@ function [spike stim] = ReturnRangedData(SS, varargin)
 
     spike.time = SS.time(ind);
     spike.channel = SS.channel(ind);
-    spike.waveform = SS.waveform(:, ind);
+    if ~isempty(SS.waveform)
+        spike.waveform = SS.waveform(:, ind);
+    end
 
     %get and return indices for all stims within range
     a = find(SS.st_time >= trange(1), 1);
