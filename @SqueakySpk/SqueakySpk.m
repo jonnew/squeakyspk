@@ -144,7 +144,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 error('Minimal arguements to create an SS object are (1) a name string, (2) the sampling frequency, (3) units used for recording as a fraction of Volts, and (4) a spike data structure.')
             end
             if nargin == 5
-                if min(spike.channel) < 0 || min(stimulus.channel) < 0
+                if (min(spike.channel) < 0) || (min([ stimulus.channel 0]) < 0)
                     error('A channel entry on one of your input structures has a negative value. Channels should be 1-based integers.')
                 end
             end
@@ -200,13 +200,20 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 SS.st_time = [];
                 SS.st_channel = [];
             else
-                if ~isempty(stimulus.type)
+                usetype = 0;
+                if isfield(stimulus, 'type')
+                    if ~isempty(stimulus.type)
+                        usetype = 1;
+                    end
+                end
+                if usetype
                     SS.st_time = stimulus.time;
                     SS.st_channel = stimulus.channel;
                     if min(stimulus.channel) == 0
                         SS.st_channel = SS.st_channel+1;
                     end
                     SS.st_type = stimulus.type;
+                
                 else
                     SS.st_time = stimulus.time;
                     SS.st_channel = stimulus.channel;
@@ -471,7 +478,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         BI(SS,bound);
         % This method is contained in a separate file.
         
-        catmat = CAT(SS, movtimebin, timewindow, bmode, varargin)
+        catmat = CATr(SS, movtimebin, timewindow, bmode, varargin)
         % This method is contained in a separate file.
         
         dapmat = DAP(SS, varargin)

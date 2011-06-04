@@ -19,7 +19,9 @@ else
 end
 sqycln.time = SS.time(logical(SS.clean) & withinbound);
 sqycln.channel = SS.channel(logical(SS.clean) & withinbound);
-sqycln.waveform = SS.waveform(:,logical(SS.clean) & withinbound);
+if ~isempty(SS.waveform)
+    sqycln.waveform = SS.waveform(:,logical(SS.clean) & withinbound);
+end
 if ~isempty(SS.unit)
     sqycln.unit = SS.unit(logical(SS.clean) & withinbound);
 end
