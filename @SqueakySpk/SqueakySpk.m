@@ -144,7 +144,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 error('Minimal arguements to create an SS object are (1) a name string, (2) the sampling frequency, (3) units used for recording as a fraction of Volts, and (4) a spike data structure.')
             end
             if nargin == 5
-                if (min(spike.channel) < 0) || (min([ stimulus.channel 0]) < 0)
+                if (min(spike.channel) < 0) || (min(stimulus.channel) < 0)
                     error('A channel entry on one of your input structures has a negative value. Channels should be 1-based integers.')
                 end
             end

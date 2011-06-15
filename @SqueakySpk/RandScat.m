@@ -30,16 +30,16 @@ if makefig
     figure()
 end
 if ~isfield(dat,'unit') || forcechannel
-    p=plot(dat.time(idx), dat.channel(idx) + 0.7*rand(size(dat.channel(idx))) - 0.35,'k.');
+    p=plot(dat.time(idx)-bound(1), dat.channel(idx) + 0.7*rand(size(dat.channel(idx))) - 0.35,'k.');
     ylabel 'Channel'
 else
-    p=plot(dat.time(idx), dat.unit(idx) + 0.7*rand(size(dat.unit(idx))) -.35,'k.');
+    p=plot(dat.time(idx)-bound(1), dat.unit(idx) + 0.7*rand(size(dat.unit(idx))) -.35,'k.');
     ylabel 'Unit'
 end
 
 set(p,'markersize',2);
 xlabel 'Time (s)'
-xlim([bound(1) bound(2)]);
+xlim([0 bound(2)-bound(1)]);
 axis tight
 
 if nargout>0
