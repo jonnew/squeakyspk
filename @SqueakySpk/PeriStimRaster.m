@@ -87,21 +87,32 @@ cl = NaN(length(sp_time),1);
 ind = 1;
 for i = 1:length(st_time)
     
+   if i<length(st_time)
+       durt = (st_time(i+1)-st_time(i))*1000;
    
+   else
+       durt = dur;
+   end
+   
+   if durt<dur
+       durtt = durt;
+   else
+       durtt = dur;
+   end
     
-    tmpx = sp_time((sp_time-st_time(i)<dur/1000) & (sp_time-st_time(i)>0));
+    tmpx = sp_time((sp_time-st_time(i)<durtt/1000) & (sp_time-st_time(i)>0));
 
     if ~isempty(tmpx)
         if all
             tmpy = st_time(i)+yoffset*(r(st_chan(i))-1)-bound(1);
             tmpx = tmpx-st_time(i);
             tmpx = tmpx*1000+xoffset*(c(st_chan(i))-1);
-            tmpc = sp_chan((sp_time-st_time(i)<dur/1000) & (sp_time-st_time(i)>0));
+            tmpc = sp_chan((sp_time-st_time(i)<durtt/1000) & (sp_time-st_time(i)>0));
         else
             tmpy = st_time(i)-bound(1);
             tmpx = tmpx-st_time(i);
             tmpx = tmpx*1000;
-            tmpc = sp_chan((sp_time-st_time(i)<dur/1000) & (sp_time-st_time(i)>0));
+            tmpc = sp_chan((sp_time-st_time(i)<durtt/1000) & (sp_time-st_time(i)>0));
         end
         %set(h,);
         %colors(tmpc,:)
@@ -134,16 +145,16 @@ set(h,'visible','off');%hold on;
 if all
     b = axes('XLim',[0 8*xoffset],'YLim',[0 8*yoffset]);
 else
-    b= axes('XLim',[0 xoffset],'YLim',[0 yoffset]);
+    b= subplot(3,1,[1 2]);set(b, 'XLim',[0 yoffset],'YLim',[0 xoffset]);
 end
 
 set(b,'ColorOrder',colors(cl(1:ind-1),:));
 %,'.','markersize',1
-lout =line([x(1:ind-1)';x(1:ind-1)'],[y(1:ind-1)';y(1:ind-1)']);
+lout =line([y(1:ind-1)';y(1:ind-1)'],[x(1:ind-1)';x(1:ind-1)']);
 if all
     set(lout,'MarkerSize',1,'LineStyle','.');
 else
-    set(lout,'MarkerSize',6,'LineStyle','.');
+    set(lout,'MarkerSize',1,'LineStyle','.');
 end
 
 if all
@@ -160,10 +171,10 @@ end
 if all
     set(gca,'XTick',[0 xoffset],'YTick',[0 yoffset],'YTickLabel',bound);
 else
-    set(gca,'YTick',[0  yoffset/2 yoffset],'YTickLabel',[bound(1) bound(2)/2+bound(1)/2 bound(2)]);
+    %set(gca,'XTick',[0  yoffset/2 yoffset],'XTickLabel',[bound(1) bound(2)/2+bound(1)/2 bound(2)]);
 end
-xlabel('msec post stimulus')
-ylabel('seconds into experiment')
+ylabel('msec post stimulus')
+xlabel('seconds into experiment')
 if ~all
     title(['PeriStimulus Rasterplot, stimulus on channel ' num2str(ch)]);
 else
@@ -175,7 +186,13 @@ end
 %  xlabel(['(' num2str(0.1) 's)^-1']);xtick(0:3000:6000);
 %     %ylabel()
 set(h,'visible','on');
+% subplot(5,1,4);hist(st_time,10:20:1020);xlim(bound);xlabel('seconds into experiment');ylim([0 2000]);
+% set(gca,'YTick',[0 1000 2000],'YTickLabel',[0 50 100]);ylabel('stimulation frequency (hz)');
 
+subplot(3,1,3);hist(SS.time,0.05:.1:(bound(2)+1));xlim(bound);xlabel('seconds into experiment');
+set(gca,'XTick',bound,'XTickLabel',[0 bound(2)-bound(1)]);
+ylim([0 750]);
+set(gca,'YTick',[0 250 500 750],'YTickLabel',[0 25 50 75]);ylabel('firing rate (hz)');
 
 
 
