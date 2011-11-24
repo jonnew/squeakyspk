@@ -1,4 +1,4 @@
-function WaveClus(SS,maxclus,minspk,decompmeth,plotall,ploton)
+function success = WaveClus(SS,maxclus,minspk,decompmeth,plotall,ploton)
 % WAVECLUS ported version of Rodrigo Quian Quiroga's wave-clus
 % combined wavelet/superparamagnetic clustering algorithm.
 %
@@ -51,7 +51,8 @@ waveform = SS.waveform(:,SS.clean);
 uniquechan = unique(channel);
 
 if isempty(time)
-    warning('It looks like there are no clean spikes in these data, so there is nothing to sort. Exiting WaveClus')
+    warning('It looks like there are no clean spikes in these data, so there is nothing to sort. Exiting WaveClus');
+    success = 0;
     return
 end
 
@@ -63,6 +64,8 @@ mkdir(hand)
 if isempty(chanparse)
     warning('It looks like there are very few clean spikes in the evoked data set, so sorting cannot be performed');
     pause(5);
+    success = 0;
+    return;
 else
     clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
     finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
@@ -91,6 +94,8 @@ if ~isempty(SS.sp_time)
     [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
     if isempty(chanparse)
         warning('It looks like there are very few clean spikes in the spontaneous data set, so sorting cannot be performed');
+        success = 0;
+        return;
     else
         clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
         finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
@@ -108,6 +113,8 @@ rmdir(hand,'s');
 
 % Add waveclus to method log
 SS.methodlog = [SS.methodlog '<WaveClus>'];
+success = 1;
+return;
 
 % Functions called for clustering
     function clusterresults = Do_Clustering(channelparse,chan2anal,maxclus,minspk,plotall)
