@@ -27,17 +27,23 @@ if nargin < 2 || isempty(plotall)
     plotall = 0;
 end
 
-if ~plotall
-    dat = SS.ReturnClean;
+dat = SS.ReturnClean;
+if(~plotall)
     dat.waveform = dat.waveform(:,dat.time > bound(1) & dat.time < bound(2));
     dat.channel = dat.channel(dat.time > bound(1) & dat.time < bound(2),:);
+    if (~isempty(dat.unit))
+        dat.unit = dat.unit(dat.time > bound(1) & dat.time < bound(2),:);
+    end
     dat.time = dat.time(dat.time > bound(1) & dat.time < bound(2));
 else
-    
-    dat.waveform = SS.waveform(:,SS.time > bound(1) & SS.time < bound(2));
-    dat.channel = SS.channel(SS.time > bound(1) & SS.time < bound(2),:);
-    dat.time = SS.time(SS.time > bound(1) & SS.time < bound(2));
+    dat.waveform = SS.waveform(:,dat.time > bound(1) & dat.time < bound(2));
+    dat.channel = SS.channel(dat.time > bound(1) & dat.time < bound(2),:);
+    if (~isempty(SS.unit))
+        dat.unit = SS.unit(dat.time > bound(1) & dat.time < bound(2),:);
+    end
+    dat.time = SS.time(dat.time > bound(1) & dat.time < bound(2));
 end
+
 
 
 if N > length(dat.time)
@@ -60,11 +66,21 @@ maxT = T(end,1);
 r = randperm(length(dat.time));
 r = r(1:N);
 W = dat.waveform(:,r);
-chs = (dat.channel(r));
 
-% Create color matrix
-col = jet(max(SS.channel));
-col = col(chs,:);
+chs = (dat.channel(r));
+if (isempty(SS.unit) || max(SS.unit) == 0)
+    
+    % Create color matrix
+    col = jet(max(SS.channel));
+    col = col(chs,:);
+else
+    uni = (dat.unit(r));
+    % Create color matrix
+    jcol = jet(max(uni));
+    jcol = jcol(randperm(size(jcol,1)),:);
+    col = [[0 0 0]; jcol];
+    col = col(uni+1,:);
+end
 
 % Constants to find plot position
 n = ceil(sqrt(max(dat.channel)));
