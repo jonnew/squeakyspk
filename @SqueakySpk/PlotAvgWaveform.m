@@ -11,8 +11,7 @@ function PlotAvgWaveform(SS)
 
 
 if isempty(SS.avgwaveform) %|| isempty(SS.avgwaveform.avg)
-    warning('You have not performed spike sorting yet, or there are no valid units. Exiting PLOTAVGWAVEFORM')
-    return;
+    SS.CalculateAvgWaveform;
 end
 
 figure();

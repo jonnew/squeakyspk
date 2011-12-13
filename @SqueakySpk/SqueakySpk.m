@@ -34,7 +34,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
     %   5. Analysis properties used by analysis functions like CAT, dAP,
     %   etc. Refer to specific function documentation for more info
     %       a. analysispars; % refer to ReturnAnalysisPars doc
-    %   
+    %
     %   Methods:
     %     1. Constructor
     %         a. SqueakySpk
@@ -156,7 +156,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             if min(spike.time) < 0
                 error('Your spike.time arguement has a negative entry')
             end
-
+            
             % String with name of data
             SS.name = name;
             
@@ -181,7 +181,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             if size(spike.waveform,2)>0 %allow for spike files with no waveforms to be uploaded
                 SS.waveform = (spike.waveform(:,ind)).*1e6*SS.recunit; % Convert to uV
             end
-            SS.unit = [];
+            if isfield(spike,'unit')
+                SS.unit = spike.unit(ind);
+            else
+                SS.unit = [];
+            end
             SS.methodlog = [];
             SS.badunit = [];
             SS.badchannel = [];
@@ -190,10 +194,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             %more info
             SS.analysispars = ...
                 struct('trange', [0 SS.time(end)], ...
-                       'rez', 1, ...
-                       'spktype', 'clean', ...
-                       'resprange', .025, ...
-                       'channelrels', zeros(0, 3));
+                'rez', 1, ...
+                'spktype', 'clean', ...
+                'resprange', .025, ...
+                'channelrels', zeros(0, 3));
             
             % Load stimulus information
             if nargin < 5 || isempty (stimulus)
@@ -213,7 +217,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                         SS.st_channel = SS.st_channel+1;
                     end
                     SS.st_type = stimulus.type;
-                
+                    
                 else
                     SS.st_time = stimulus.time;
                     SS.st_channel = stimulus.channel;
@@ -528,7 +532,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         spktrains = ReturnPeriStimSpkTrains(SS, spike, stim, ...
-                channelpair, rez, varargin)
+            channelpair, rez, varargin)
         % This method is contained in a separate file.
         
         spks = return_spksinrange(SS, spikes, stim, resprange)
