@@ -64,16 +64,16 @@ dat = SS.ReturnClean;
 
 % Define the array
 SS.csdr =[]; SS.asdr = [];
-
 SS.csdr.chan = whichchan;
 
 % Calculate the csdr matrix
 bins = bound(1):dt:bound(2);
 SS.csdr.csdr = zeros(length(bins),length(whichchan));
 SS.csdr.bin = bins';
+
+times  = dat.time(dat.time >= bound(1) & dat.time <= bound(2));
+ch = dat.channel(dat.time >= bound(1) & dat.time <= bound(2));
 for i = 1:length(whichchan)
-    times  = dat.time(dat.time >= bound(1) & dat.time <= bound(2));
-    ch = dat.channel(dat.time >= bound(1) & dat.time <= bound(2));
     asdr_tmp = histc(times(ch == whichchan(i)),bins);
     if size(asdr_tmp,2) == 1;
         SS.csdr.csdr(:,i) = asdr_tmp./dt;
@@ -82,7 +82,27 @@ for i = 1:length(whichchan)
     end
 end
 
+% calculate usdr if appropriate
+if isfield(dat,'unit')
+    % Define the array
+    SS.usdr.usdr = [];
+    SS.usdr.units = unique(dat.unit);
+    SS.usdr.bin = bins';
+    
+    times  = dat.time(dat.time >= bound(1) & dat.time <= bound(2));
+    un = dat.unit(dat.time >= bound(1) & dat.time <= bound(2));
+    for i = 1:length(SS.usdr.units)
+        asdr_tmp = histc(times(un == SS.usdr.units(i)),bins);
+        if size(asdr_tmp,2) == 1;
+            SS.usdr.usdr(:,i) = asdr_tmp./dt;
+        else
+            SS.usdr.usdr(:,i) = asdr_tmp'./dt;
+        end
+    end
+end
+
 % Calculate ASDR
+SS.asdr.dt = dt;
 SS.asdr.bin = bins';
 SS.asdr.asdr = sum(SS.csdr.csdr(:,2:end),2);
 SS.asdr.mean = mean(SS.asdr.asdr);
