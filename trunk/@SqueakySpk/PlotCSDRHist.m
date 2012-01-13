@@ -1,5 +1,5 @@
 function PlotCSDRHist(SS,binsize,maxdr)
-% PLOTCSDRHIST(SS,BINSIZE, MAXDR) plots the cChannel Spike Detection Rate histogram.
+% PLOTCSDRHIST(SS,BINSIZE, MAXDR) plots the Channel Spike Detection Rate histogram.
 % Takes information from the csdr property to display the detection rate
 % counts for each channel and across all channels. For the first plot, the
 % count for a paticular detection rate is a color from a grey scale. For
@@ -28,8 +28,8 @@ if nargin < 2 || isempty(binsize)
 end
 
 figure()
-X = SS.csdr(:,2:end)';
-totaltime = SS.csdr(end,1); % in seconds
+X = SS.csdr.csdr(:,2:end)';
+totaltime = SS.csdr.bin(end,1); % in seconds
 
 % Create a color map that is good at displaying a wide range of data
 cmp = gray(200);

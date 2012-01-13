@@ -31,14 +31,14 @@ dat = SS.ReturnClean;
 if(~plotall)
     dat.waveform = dat.waveform(:,dat.time > bound(1) & dat.time < bound(2));
     dat.channel = dat.channel(dat.time > bound(1) & dat.time < bound(2),:);
-    if (~isempty(dat.unit))
+    if (isfield(dat,'unit'))
         dat.unit = dat.unit(dat.time > bound(1) & dat.time < bound(2),:);
     end
     dat.time = dat.time(dat.time > bound(1) & dat.time < bound(2));
 else
     dat.waveform = SS.waveform(:,dat.time > bound(1) & dat.time < bound(2));
     dat.channel = SS.channel(dat.time > bound(1) & dat.time < bound(2),:);
-    if (~isempty(SS.unit))
+    if (isfield(dat,'unit'))
         dat.unit = SS.unit(dat.time > bound(1) & dat.time < bound(2),:);
     end
     dat.time = SS.time(dat.time > bound(1) & dat.time < bound(2));
@@ -116,6 +116,6 @@ axis([0 n*maxT 0 n*rangeV]);
 set(gca,'XTick',[maxT],'YTick',[rangeV]);
 xlabel('msec')
 ylabel('uV')
-title([num2str(N) ' random waveforms from ' SS.name]);
+title([num2str(N) ' random waveforms from ' SS.name],'Interpreter','None');
 end
 
