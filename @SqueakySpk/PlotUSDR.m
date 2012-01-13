@@ -1,7 +1,7 @@
-function PlotCSDR(SS,frmax)
-% PlotCSDR(SS,FRMAX) Channel Plots the Channel Spike Detection Rate. Takes
-% information from the csdr property to display data as image wherein the
-% firing rate on each channel is shown in grey scale from 0 to FRMAX Hz.
+function PlotUSDR(SS,frmax,sortu)
+% PlotUSDR(SS,FRMAX)Plots the Unit Spike Detection Rate. Takes
+% information from the usdr property to display data as image wherein the
+% firing rate for each unit is shown in grey scale from 0 to FRMAX Hz.
 % FRMAX is set to the maximal detected firing rate by default.
 %
 %       Created by: Jon Newman (jnewman6 at gatech dot edu)
@@ -11,16 +11,26 @@ function PlotCSDR(SS,frmax)
 % 	Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 if isempty(SS.asdr)
-    warning('You need to calculate the ASDR before plotting the CSDR');
+    warning('You need to calculate the ASDR before plotting the USDR');
     return;
 end
 
+if nargin < 3 || isempty(sortu)
+    sortu = 1;
+end
 if nargin < 2 || isempty(frmax)
     frmax = inf;
 end
 
 figure()
-img = SS.csdr.csdr';
+img = SS.usdr.usdr';
+
+% sort the image by integrated unit firing rate?
+if sortu
+    int = sum(img,2);
+    [x ind] = sort(int);
+    img = img(ind,:);
+end
 
 % Create a color map that is good at displaying a wide range of data
 cmp = gray(200);
@@ -39,11 +49,11 @@ c = colorbar();
 ylabel(c,'Firing Rate (Hz)')
 colormap(cmp);
 
-% labels
+% label
 xtickval = get(gca,'XTick');
 xticktime = xtickval * SS.asdr.dt;
 set(gca,'XTickLabel', num2str(xticktime'));
 xlabel('Time (sec)')
-ylabel('Channel')
+ylabel('Unit #')
 set(gca,'YDir','normal')
 end

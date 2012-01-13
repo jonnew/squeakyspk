@@ -79,6 +79,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         avgwaveform; % {avg:[M DOUBLE x K INT ([uV], unit #)],sd[M DOUBLE x K INT ([uV], unit #)]}
         asdr; % Array-wide spike detection rate matrix [[bins] [count]]
         csdr; % Channel spike detection rate matrix [[bins] [count_1] [count_2] ...]
+        usdr; % Unit spike detection rate structure
         bi; % burstiness index as defined by Wagenaar
         badunit; % Array of units deemed to be bad after spike sorting
         badchannel; % Array of channels deemed to be bad
@@ -464,6 +465,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         PlotCSDR(SS,frmax)
+        % This method is contained in a separate file.
+        
+        PlotUSDR(SS,frmax,sortu)
         % This method is contained in a separate file.
         
         PlotCSDRHist(SS,binsize,maxdr)
