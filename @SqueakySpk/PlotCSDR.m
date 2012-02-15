@@ -19,7 +19,6 @@ if nargin < 2 || isempty(frmax)
     frmax = inf;
 end
 
-figure()
 img = SS.csdr.csdr';
 
 % Create a color map that is good at displaying a wide range of data

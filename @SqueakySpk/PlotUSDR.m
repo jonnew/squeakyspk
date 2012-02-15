@@ -1,4 +1,4 @@
-function PlotUSDR(SS,frmax,sortu)
+function PlotUSDR(SS,frmax,sortu,sortbound)
 % PlotUSDR(SS,FRMAX)Plots the Unit Spike Detection Rate. Takes
 % information from the usdr property to display data as image wherein the
 % firing rate for each unit is shown in grey scale from 0 to FRMAX Hz.
@@ -15,6 +15,9 @@ if isempty(SS.asdr)
     return;
 end
 
+if nargin < 4 || isempty(sortbound)
+    sortbound = [0 SS.time(end)];
+end
 if nargin < 3 || isempty(sortu)
     sortu = 1;
 end
@@ -22,12 +25,12 @@ if nargin < 2 || isempty(frmax)
     frmax = inf;
 end
 
-figure()
 img = SS.usdr.usdr';
 
 % sort the image by integrated unit firing rate?
 if sortu
-    int = sum(img,2);
+    imgt = SS.usdr.usdr(SS.usdr.bin >= sortbound(1) & SS.usdr.bin < sortbound(2),:)';
+    int = sum(imgt,2);
     [x ind] = sort(int);
     img = img(ind,:);
 end
@@ -45,7 +48,7 @@ end
 
 % Make the image
 imagesc(img);
-c = colorbar();
+c = colorbar('Location','East');
 ylabel(c,'Firing Rate (Hz)')
 colormap(cmp);
 
@@ -53,6 +56,7 @@ colormap(cmp);
 xtickval = get(gca,'XTick');
 xticktime = xtickval * SS.asdr.dt;
 set(gca,'XTickLabel', num2str(xticktime'));
+set(gca,'YTick',[1 size(img,1)]);
 xlabel('Time (sec)')
 ylabel('Unit #')
 set(gca,'YDir','normal')
