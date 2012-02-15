@@ -1,4 +1,4 @@
-function h = ASDR(SS,dt,bound,whichchan,loglin,ymax, newfigure)
+function ASDR(SS,dt,bound,whichchan,loglin,ymax, showfigure)
 % ASDR(SS) Array-wide spike detection rate using bins of width 1 second.
 % The function populates the asdr and csdr properties of the SS object.
 % This analysis is only performed on clean spikes.
@@ -27,10 +27,10 @@ function h = ASDR(SS,dt,bound,whichchan,loglin,ymax, newfigure)
 % csdr and asdr. This defines the 'array'. The default value for WHICHCHAN
 % = unique(SS.channel).
 %
-% ASDR(SS,...,loglin,ymax,newfigure) Allows the user to define aspects of the
+% ASDR(SS,...,loglin,ymax,showfigure) Allows the user to define aspects of the
 % ASDR figure. If loglin is set to false, then the plot returned by ASDR will have
 % linear axes. ymax forces the maximal value of the ordinate axis.
-% newfigure is a boolean value determining if a new figure should be created
+% showfigure is a boolean value determining if a figure should be created
 % and its handle returned by the function. Default values for these
 % parameters are true, auto, and true, respectively.
 %
@@ -41,8 +41,8 @@ function h = ASDR(SS,dt,bound,whichchan,loglin,ymax, newfigure)
 %       Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 
-if nargin < 7 || isempty(newfigure)
-    newfigure = 1;
+if nargin < 7 || isempty(showfigure)
+    showfigure = 1;
 end
 if nargin < 6 || isempty(ymax)
     ymax = 'auto';
@@ -112,20 +112,18 @@ SS.asdr.skew = skewness(SS.asdr.asdr,0);
 SS.asdr.kurt = kurtosis(SS.asdr.asdr,0);
 
 % Plot results
-if(newfigure)
-    h = figure();
-end
-
-if loglin
-    asdrp_b = SS.asdr.bin(SS.asdr.asdr > 0,:);
-    asdrp_a = SS.asdr.asdr(SS.asdr.asdr > 0,:);
-    semilogy(asdrp_b, asdrp_a, 'k');
-    if ~strcmp(ymax,'auto')
-        ylim([1 ymax])
+if(showfigure)
+    if loglin
+        asdrp_b = SS.asdr.bin(SS.asdr.asdr > 0,:);
+        asdrp_a = SS.asdr.asdr(SS.asdr.asdr > 0,:);
+        semilogy(asdrp_b, asdrp_a, 'k');
+        if ~strcmp(ymax,'auto')
+            ylim([1 ymax])
+        end
+    else
+        stairs(SS.asdr.bin,SS.asdr.asdr,'k');
     end
-else
-    stairs(SS.asdr.bin,SS.asdr.asdr,'k');
+    xlabel('Time (sec)')
+    ylabel('s^-1')
 end
-xlabel('Time (sec)')
-ylabel('s^-1')
 end

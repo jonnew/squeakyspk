@@ -179,7 +179,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             else
                 SS.channel = spike.channel(ind);
             end
-            if size(spike.waveform,2)>0 %allow for spike files with no waveforms to be uploaded
+            if  isfield(spike, 'waveform') && size(spike.waveform,2) > 0 %allow for spike files with no waveforms to be uploaded
                 SS.waveform = (spike.waveform(:,ind)).*1e6*SS.recunit; % Convert to uV
             end
             if isfield(spike,'unit')
@@ -461,13 +461,13 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotUnitWisePSH(SS,frmax,include0)
         % This method is contained in a separate file.
         
-        RandScat(SS,bound,forcechannel,makefig)
+        RandScat(SS,bound,forcechannel,sortu,sortbound)
         % This method is contained in a separate file.
         
         PlotCSDR(SS,frmax)
         % This method is contained in a separate file.
         
-        PlotUSDR(SS,frmax,sortu)
+        PlotUSDR(SS,frmax,sortu,sortbound)
         % This method is contained in a separate file.
         
         PlotCSDRHist(SS,binsize,maxdr)
