@@ -77,13 +77,13 @@ sp_chan = SS.channel(goodspike);
 
 %looking at responses to just one channel
 h2 = waitbar(0,'generating peristimulus raster');
-xoffset = dur;
-yoffset = bound(2)-bound(1);
+yoffset = dur;
+xoffset = bound(2)-bound(1);
 
 
-x = NaN(length(sp_time),1);
-y = NaN(length(sp_time),1);
-cl = NaN(length(sp_time),1);
+x = NaN(length(sp_time),1);%time
+y = NaN(length(sp_time),1);%latency
+cl = NaN(length(sp_time),1);%color/channel
 ind = 1;
 for i = 1:length(st_time)
     
@@ -100,18 +100,18 @@ for i = 1:length(st_time)
        durtt = dur;
    end
     
-    tmpx = sp_time((sp_time-st_time(i)<durtt/1000) & (sp_time-st_time(i)>0));
+    tmpy = sp_time((sp_time-st_time(i)<durtt/1000) & (sp_time-st_time(i)>0));
 
-    if ~isempty(tmpx)
+    if ~isempty(tmpy)
         if all
-            tmpy = st_time(i)+yoffset*(r(st_chan(i))-1)-bound(1);
-            tmpx = tmpx-st_time(i);
-            tmpx = tmpx*1000+xoffset*(c(st_chan(i))-1);
+            tmpx = st_time(i)+xoffset*(r(st_chan(i))-1)-bound(1);
+            tmpy = tmpy-st_time(i);
+            tmpy = tmpy*1000+yoffset*(c(st_chan(i))-1);
             tmpc = sp_chan((sp_time-st_time(i)<durtt/1000) & (sp_time-st_time(i)>0));
         else
-            tmpy = st_time(i)-bound(1);
-            tmpx = tmpx-st_time(i);
-            tmpx = tmpx*1000;
+            tmpx = st_time(i)-bound(1);
+            tmpy = tmpy-st_time(i);
+            tmpy = tmpy*1000;
             tmpc = sp_chan((sp_time-st_time(i)<durtt/1000) & (sp_time-st_time(i)>0));
         end
         %set(h,);
@@ -121,12 +121,12 @@ for i = 1:length(st_time)
        % tmpx*ones(2,length(tmpc))
       % x
       % tmpx
-      x(ind:ind-1+length(tmpx)) =tmpx';
+      y(ind:ind-1+length(tmpy)) =tmpy';
      % y
      % tmpy*ones(1,length(tmpc))
-      y(ind:ind-1+length(tmpx)) = tmpy*ones(1,length(tmpc));
-      cl(ind:ind-1+length(tmpx)) = tmpc';
-      ind = ind+length(tmpx);
+      x(ind:ind-1+length(tmpy)) = tmpx*ones(1,length(tmpc));
+      cl(ind:ind-1+length(tmpy)) = tmpc';
+      ind = ind+length(tmpy);
         %set(b,'ColorOrder',colors(tmpc,:));
         
         %line([tmpx';tmpx'],tmpy*ones(2,length(tmpc)));
@@ -139,18 +139,18 @@ for i = 1:length(st_time)
 %pause
 end
 toc
-h = figure;
-set(h,'visible','off');%hold on;
-
+%h = gca;
+%set(h,'visible','off');%hold on;
+b = gca;
 if all
-    b = axes('XLim',[0 8*xoffset],'YLim',[0 8*yoffset]);
+    set(b,'XLim',[0 8*xoffset],'YLim',[0 8*yoffset]);
 else
-    b= subplot(3,1,[1 2]);set(b, 'XLim',[0 yoffset],'YLim',[0 xoffset]);
+    set(b,'XLim',[0 xoffset],'YLim',[0 yoffset]);
 end
 
 set(b,'ColorOrder',colors(cl(1:ind-1),:));
 %,'.','markersize',1
-lout =line([y(1:ind-1)';y(1:ind-1)'],[x(1:ind-1)';x(1:ind-1)']);
+lout =line([x(1:ind-1)';x(1:ind-1)'],[y(1:ind-1)';y(1:ind-1)']);
 if all
     set(lout,'MarkerSize',1,'LineStyle','.');
 else
@@ -169,10 +169,10 @@ if all
     line(xgridx,xgridy,'color',[0 0 0]);
 end
 if all
-    set(gca,'XTick',[0 xoffset],'YTick',[0 yoffset],'YTickLabel',bound);
-else
-    %set(gca,'XTick',[0  yoffset/2 yoffset],'XTickLabel',[bound(1) bound(2)/2+bound(1)/2 bound(2)]);
-end
+     set(gca,'XTick',[0 xoffset],'YTick',[0 yoffset]);
+% else
+%     %set(gca,'XTick',[0  yoffset/2 yoffset],'XTickLabel',[bound(1) bound(2)/2+bound(1)/2 bound(2)]);
+ end
 ylabel('msec post stimulus')
 xlabel('seconds into experiment')
 if ~all
@@ -185,14 +185,14 @@ end
 %         plot(asdrp(:,2),asdrp(:,1),'k');axis tight;
 %  xlabel(['(' num2str(0.1) 's)^-1']);xtick(0:3000:6000);
 %     %ylabel()
-set(h,'visible','on');
+%set(h,'visible','on');
 % subplot(5,1,4);hist(st_time,10:20:1020);xlim(bound);xlabel('seconds into experiment');ylim([0 2000]);
 % set(gca,'YTick',[0 1000 2000],'YTickLabel',[0 50 100]);ylabel('stimulation frequency (hz)');
 
-subplot(3,1,3);hist(SS.time,0.05:.1:(bound(2)+1));xlim(bound);xlabel('seconds into experiment');
-set(gca,'XTick',bound,'XTickLabel',[0 bound(2)-bound(1)]);
-ylim([0 750]);
-set(gca,'YTick',[0 250 500 750],'YTickLabel',[0 25 50 75]);ylabel('firing rate (hz)');
+%subplot(3,1,3);hist(SS.time,0.05:.1:(bound(2)+1));xlim(bound);xlabel('seconds into experiment');
+%set(gca,'XTick',bound,'XTickLabel',[0 bound(2)-bound(1)]);
+%ylim([0 750]);
+%set(gca,'YTick',[0 250 500 750],'YTickLabel',[0 25 50 75]);ylabel('firing rate (hz)');
 
 
 
