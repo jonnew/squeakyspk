@@ -516,6 +516,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         XCorrFilm(SS,name,tasks, fps);
         % This method is contained in a separate file.
         
+        latmat = LatencyMatrix(SS,bound,dur);
+        % This method is contained in a separate file.
+        
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,env,sniplength, fid)
         % This method is contained in a separate file.
