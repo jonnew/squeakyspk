@@ -498,7 +498,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton);
         % This method is contained in a separate file.
         
-        PeriStimRaster(SS,bound,dur,ch);
+        PeriStimRaster(SS,bound,dur,ch,ti);
         % This method is contained in a separate file.
         
         PeriSpikeRaster(SS,unit,bounds,dur);
