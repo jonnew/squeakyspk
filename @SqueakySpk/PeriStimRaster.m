@@ -1,4 +1,4 @@
-function[] = PeriStimRaster(SS,bound,dur,ch)
+function[] = PeriStimRaster(SS,bound,dur,ch,ti)
 %PERISTIMTIMERASTER creates a colorful peristimulus raster plot, similar to
 %figure 1b of Bakkum, Chao, and Potter's Long-Term Activity-Dependent
 %Plasticity of Action Potential Propagation Delay and Amplitude in Cortical
@@ -42,24 +42,45 @@ else
     all = 0;
 end
 
+if (nargin<5)
+    ti = 1;
+end
+
 
 % Make sure the data actual has stimulation entries
 if isempty(SS.st_time)
     warning('You must provide stimulus timing information to form a peristimulus raster. Now exiting...')
     return
 end
-if all
-    goodstim = find(SS.st_time >= bound(1) & SS.st_time <= bound(2));
+
+if ti
+    if all
+        goodstim = find(SS.st_time >= bound(1) & SS.st_time <= bound(2));
+    else
+        goodstim = find(SS.st_time >= bound(1) & SS.st_time <= bound(2) & SS.st_channel ==ch);
+    end
+
+    st_time = SS.st_time(goodstim);
+    st_chan = SS.st_channel(goodstim);
+
+    goodspike = find((SS.time >= bound(1) & SS.time <= bound(2))&SS.clean);
+    sp_time = SS.time(goodspike);
+    sp_chan = SS.channel(goodspike);
 else
-    goodstim = find(SS.st_time >= bound(1) & SS.st_time <= bound(2) & SS.st_channel ==ch);
+    if all
+        goodstim = bound(1):bound(2);
+    else
+        goodstim = find(SS.st_channel ==ch);
+        goodstim = goodstim(bound(1):bound(2));
+    end
+
+    st_time = SS.st_time(goodstim);
+    st_chan = SS.st_channel(goodstim);
+
+    goodspike = find((SS.time >= st_time(1) & SS.time <= (st_time(end)+dur/1000))&SS.clean);
+    sp_time = SS.time(goodspike);
+    sp_chan = SS.channel(goodspike);
 end
-st_time = SS.st_time(goodstim);
-st_chan = SS.st_channel(goodstim);
-
-goodspike = find((SS.time >= bound(1) & SS.time <= bound(2))&SS.clean);
-sp_time = SS.time(goodspike);
-sp_chan = SS.channel(goodspike);
-
 
  i = 1:64;
 %     if all
@@ -114,6 +135,10 @@ for i = 1:length(st_time)
             tmpy = tmpy*1000;
             tmpc = sp_chan((sp_time-st_time(i)<durtt/1000) & (sp_time-st_time(i)>0));
         end
+        
+        if ~ti
+            tmpx =i;
+        end
         %set(h,);
         %colors(tmpc,:)
         
@@ -150,7 +175,9 @@ end
 
 set(b,'ColorOrder',colors(cl(1:ind-1),:));
 %,'.','markersize',1
-lout =line([x(1:ind-1)';x(1:ind-1)'],[y(1:ind-1)';y(1:ind-1)']);
+
+    lout =line([x(1:ind-1)';x(1:ind-1)'],[y(1:ind-1)';y(1:ind-1)']);
+
 if all
     set(lout,'MarkerSize',1,'LineStyle','.');
 else
@@ -174,7 +201,11 @@ if all
 %     %set(gca,'XTick',[0  yoffset/2 yoffset],'XTickLabel',[bound(1) bound(2)/2+bound(1)/2 bound(2)]);
  end
 ylabel('msec post stimulus')
-xlabel('seconds into experiment')
+if ti
+    xlabel('seconds into experiment')
+else
+    xlabel('trial')
+end
 if ~all
     title(['PeriStimulus Rasterplot, stimulus on channel ' num2str(ch)]);
 else
