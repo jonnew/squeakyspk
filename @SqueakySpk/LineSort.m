@@ -1,13 +1,12 @@
 function LineSort(SS)
-% WEEDUNITBYWAVEFORM Supervised unit deletion by examination of average
-% voltage waveform. Input is an ss object. Requires that the ss object
-% hase non-empty units and average waveform fields. This can be acheived
-% by running WAVECLUS.
+% LINESORT Supervised spike sorting using time-domain feature selection.
+%
+%   
 %
 %   Created by: Jon Newman (jnewman6 at gatech dot edu)
 %   Location: The Georgia Institute of Technology
-%   Created on: July 30, 2009
-%   Last modified: Aug 05, 2010
+%   Created on: May 28, 2012
+%   Last modified: May 28, 2012
 %
 %   Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
@@ -336,8 +335,11 @@ set(f,'Visible','on');
         
         bIdx = find(B == 1);
         intersect = zeros(size(B));
-        w = ss.waveform(:,B);
-        t = 1:size(w,1);
+        x = 1:size(ss.waveform,1);
+        mn = floor(min(lineDef(1,:)));
+        mx = ceil(max(lineDef(1,:)));
+        w = ss.waveform(x >= mn & x <= mx,B);
+        t = mn:mx;
         for i = 1:sum(B)
             intersect(bIdx(i)) = ~isempty(InterX([t;w(:,i)'],lineDef));
         end
