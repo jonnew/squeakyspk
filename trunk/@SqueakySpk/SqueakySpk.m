@@ -1,61 +1,69 @@
 classdef (ConstructOnLoad = false) SqueakySpk < handle
-    %SQUEAKYSPK data class and methods for basic preprosessing of data
-    %collected using extracellular, multielectrode arrays.
-    %
-    %   Properties:
-    %   1. Data name
-    %       a. name; % String that names the data object
-    %
-    %   2. Properties of data that you are cleaning [MAIN DATA]
-    %         a. clean; % [N BOOL (clean?, spike index)]
-    %         b. time; % [N DOUBLE (sec, spike index)]
-    %         c. channel; % [N INT (channel #, spike index)]
-    %         d. waveform; % [M DOUBLE x N INT ([uV], spike index)]
-    %         e. unit; % [N INT (unit #, spike index)]
-    %         f. avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
-    %         g. asdr; % Array-wide spike detection rate matrix [[bins] [count]]
-    %         h. badunit; % Array of units deemed to be bad after spike sorting
-    %         i  badchannel; % Array of channels deemed to be bad
-    %
-    %   3. properties of the stimulus given while collecting the main data [STIM DATA]
-    %       a. st_time; % [N DOUBLE (sec, spike index)]
-    %     	b. st_channel; % [N INT (channel #, spike index)]
-    %
-    % 	4. properties of the spontaneous data used for spk verification [SPONT DATA]
-    %   	a. sp_time; % [N DOUBLE (sec, spike index)]
-    %    	b. sp_channel; % [N INT (channel #, spike index)]
-    %    	c. sp_waveform; % [M DOUBLE x N INT ([uV], spike index)]
-    %    	d. sp_unit; % [N INT (unit #, spike index)]
-    %    	e. sp_avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
-    %
-    %   4. Methods log
-    %       a. methodlog; % string array that keeps track of the methods run on the SS object
-    %
-    %   5. Analysis properties used by analysis functions like CAT, dAP,
-    %   etc. Refer to specific function documentation for more info
-    %       a. analysispars; % refer to ReturnAnalysisPars doc
-    %
-    %   Methods:
-    %     1. Constructor
-    %         a. SqueakySpk
-    %     2. Basic Cleaning
-    %         a. HardThreshold
-    %         b. RemoveSpkWithBlank
-    %         c. RemoveChannel
-    %         d. RemoveUnit
-    %         e. MitraClean
-    %     3. Spike Sorting
-    %         a. WaveClus
-    %     4. Advanced Cleaning
-    %         a. WeedUnitByWaveform
-    %     5. Analysis
-    %     6. Sonification
-    %     7. Returning clean data
-    %     8. Saving
-    %
-    %   To use SqueakySpk, look at ReadMe.txt that came with this package,
-    %   look at the testscript and examine the help for each method by
-    %   typing help methodname in the command promp.
+% SQUEAKYSPK is a data class and methods for basic preprocessing of data
+% collected using extracellular, multielectrode arrays.To use SqueakySpk,
+% look at ReadMe.txt and testscript.m that were provided with this package.
+% Additionally,
+% 
+%     1. For a full list of PROPERTIES type properties('SqueakySpk') into
+%     the command line. 
+%     2.  For a full list of METHODS type methods('SqueakySpk') into the
+%     command line. To access help on a particular method, type help 
+%     <methodname> into the command line.
+% 
+%   --
+% 
+% The following lists may not be up to date. Use the above methods for up
+% to date lists of methods and properties
+%
+%   PROPERTIES: 
+%
+%   - For a full list of properties type properties('SqueakySpk') into the
+%   command line.
+%
+%   1. Metadata
+%       a. name; % String that names the data object
+%       b. fs; % sampling rate for data collection in Hz
+%       c. recunit; % This is a scaling factor for spike waveform data. It
+%       is the fraction of volts that the waveform data is provided in. For
+%       instance, if data are in volts, then recunit = 1. If in millivolts,
+%       then recunit = 1/1000 = 0.001
+%       d. tor; % time of recording. Specified by user after object
+%       construction.
+%       e. age; % age of preperation. Useful for in-vitro studies. Specified by user after object
+%       construction.
+%
+%   2. Properties of data that you are cleaning
+%       a. clean; % [N BOOL (clean?, spike index)]  (sec, spike index)] 
+%       c. channel; % [N INT (channel #, spike index)] 
+%       d. waveform; % [M DOUBLE x N INT ([uV], spike index)] 
+%       e. unit; % [N INT (unit #, spike index)] 
+%       f. avgwaveform; % [M DOUBLE x K INT ([uV], unit #)] 
+%       g. asdr; % Array-wide spike detection rate matrix [[bins] [count]] 
+%       h. badunit; % Array of units deemed to be bad after spike sorting 
+%       i. badchannel; % Array of channels deemed to be bad 
+%       j. etc - further properties are filled in by
+%         running specific analysis methods. Type help <methodname> to
+%         investigate what property a method modifies.
+%
+%   3. properties of stimuli
+%       a. st_time; % [K DOUBLE (sec, spike index)]
+%     	b. st_channel; % [K INT (channel #, spike index)]
+%       c. st_type; % [K TYPE (aux. info about each stimulus. TYPE can be
+%       anything.)]
+%
+%   4. Methods log
+%       a. methodlog; % string array that keeps track of the methods run on
+%       the SS object
+%
+%   5. Analysis properties used by analysis functions like CAT, dAP, etc.
+%   Refer to specific function documentation for more info
+%       a. analysispars;
+%
+%   METHODS: 
+%   - For a full list of methods type methods('SqueakySpk') into the
+%   command line. 
+%   - To access help on a particular method, type help <methodname> into
+%   the command line.
     
     properties (SetAccess = public)
         
@@ -86,17 +94,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         psh; % Peri-stimulus histogram
         upsh; % unit-wise peri-stimulus histogram
         
-        % properties of the stimulus given while collecting the main data [STIM DATA]
-        st_time; % [N DOUBLE (sec, spike index)]
-        st_channel; % [N INT (channel #, spike index)]
-        st_type; % [N INT (auxiliary information about this stimulus, spike index)]
-        
-        % properties of the spontaneous data used for spk verification [SPONT DATA]
-        sp_time; % [N DOUBLE (sec, spike index)]
-        sp_channel; % [N INT (channel #, spike index)]
-        sp_waveform; % {avg:[M DOUBLE x K INT ([uV], unit #)],sd[M DOUBLE x K INT ([uV], unit #)]}
-        sp_unit; % [N INT (unit #, spike index)]
-        sp_avgwaveform; % [M DOUBLE x K INT ([uV], unit #)]
+        % properties of the stimulus given while collecting the main data
+        % [STIM DATA]
+        st_time; % [K DOUBLE (sec, spike index)]
+        st_channel; % [K INT (channel #, spike index)]
+        st_type; % [K TYPE (aux. info about each stimulus. TYPE can be anything.)]
         
         % Methods log
         methodlog; % string array that keeps track of the methods run on the SS object
@@ -106,9 +108,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         % Stuff filled by running xcorrs
         xcorrmat;%[N x M x P xQ double (timeslice, 'causal' channel, 'effect' channel, offset (ms)]
-        %cross correlation between spikes on different channels and
-        %stimuli on different channels.  Each cross correlation is
-        %calculated using XBIN seconds of data (a 'timeslice').
+        %cross correlation between spikes on different channels and stimuli
+        %on different channels.  Each cross correlation is calculated using
+        %XBIN seconds of data (a 'timeslice').
         
         xcount;%[N x M int (timeslice, 'causal' channel count)]
         %the number of times this channel was active.  Stimulating
@@ -125,21 +127,30 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
     methods
         
         %% BLOCK 1: CONSTRUCTOR
-        function SS = SqueakySpk(name,fs,recunit,spike,stimulus,spontaneous)
-            % SQUEAKYSPK SS object constructor. The first four arguments are
-            % required. They are a name for the object that you are about
-            % to create, the sampling frequency in Hz, fs, fraction of volts
-            % that the waveform data is provided in,and the data structure, spike, of the form:
-            %   spike.time = [NX1] vector of spike times in seconds
-            %   spike.channel = [NX1] vector of corresponding channels
-            %   spike.waveform = [NXM] matrix of corresponding spike snip waveforms
-            % Addtional arguments for a stimulus data structure of the
-            % form:
-            %   stimulus.time = [RX1] vector of spike times in seconds
-            % stimulus.channel = [RX1] vector of corresponding channels
-            % And spontanous data taken before and evoked recording,
-            % with the same fields as the spike structure.
-            
+        function SS = SqueakySpk(name,fs,recunit,spike,stimulus)
+        % SQUEAKYSPK(NAME, FS, RECUNIT, SPIKE) constructs a squeaky spike
+        % object. The first four arguments are required. NAME is a string
+        % that provides the SS object with a name. FS is the sampling
+        % frequency used to collect spiking informaiton in Hz. RECUNIT is a
+        % scaling factor for spike waveform data. It is the fraction of
+        % volts that the waveform data is provided in. For instance, if
+        % data are in volts, then recunit = 1. If in millivolts, then
+        % recunit = 1/1000 = 0.001. SPIKE is the spike data structure of
+        % the form:
+        %
+        %   spike.time = [NX1] vector of spike times in seconds
+        %   spike.unit = [NX1] vector of sported unit numbers 
+        %   spike.channel = [NX1] vector of corresponding channels
+        %   spike.waveform = [NXM] matrix of corresponding spike snippet 
+        %   waveforms
+        %
+        % SQUEAKYSPK(..., STIMULUS) constructs a SQUEAKYSPK object using
+        % additional arguments for a stimulus data structure of the form:
+        %
+        %   stimulus.time = [RX1] vector of spike times in seconds
+        %   stimulus.channel = [RX1] vector of corresponding stimulation 
+        %   channels.
+
             % Check input arguments
             if nargin < 4
                 error('Minimal arguements to create an SS object are (1) a name string, (2) the sampling frequency, (3) units used for recording as a fraction of Volts, and (4) a spike data structure.')
@@ -172,10 +183,8 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             SS.clean = true(length(spike.time),1);
             [SS.time ind] = sort(spike.time); % Make sure incoming data is sorted in time
             if min(spike.channel) == 0 % channel index is 1 based
-                warning('Channel index must be 1 based in an SS object, shifting your SS.channel, SS.sp_channel and SS.st_channel properties by 1');
-                SS.channel = spike.channel(ind)+1;
-                
-                SS.channel = spike.channel(ind)+1;
+                warning('Channel index must be 1 based in an SS object, shifting your SS.channel property by 1');
+                SS.channel = spike.channel(ind)+1;;
             else
                 SS.channel = spike.channel(ind);
             end
@@ -229,22 +238,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 end
             end
             
-            % Load spontaneous data
-            if nargin < 6 || isempty (spontaneous)
-                SS.sp_time = [];
-                SS.sp_channel = [];
-                SS.sp_waveform = [];
-                SS.sp_unit = [];
-            else
-                [SS.sp_time ind] = sort(spontaneous.time);
-                if min(spontaneous.channel) == 0 % channel index is 1 based
-                    SS.sp_channel = spontaneous.channel(ind)+1;
-                else
-                    SS.sp_channel = spontaneous.channel(ind);
-                end
-                SS.sp_waveform = (spontaneous.waveform(:,ind)).*1e6*SS.recunit;
-                SS.sp_unit = [];
-            end % END CONSTRUCTOR
+            % END CONSTRUCTOR
             
         end
         
@@ -252,159 +246,20 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         HardThreshold(SS,highThreshold,lowThreshold)
         % This method is contained in a separate file.
         
-        function RemoveBySymmetry(SS,maxWaveSymmetry)
-            % REMOVEBYSYMMETRY(SS,maxWaveSymmetry) takes the ratio of the
-            % maximal postive and negative deflections of a waveform about
-            % its mean (DC) offset and compares this to maxWaveSymmetry
-            % (which is between 0 and 1). If the ratio is larger than
-            % maxWaveSymmetry, the spike is rejected.
-            % Written by: JN
-            
-            if maxWaveSymmetry > 1 || maxWaveSymmetry <0
-                error(' The arguement maxWaveSymmetry must be a ratio between 0 and 1')
-            end
-            
-            meanAmplitude = mean(SS.waveform,1);
-            maxAmplitude = abs(max(SS.waveform,[],1) - meanAmplitude);
-            minAmplitude = abs(min(SS.waveform,[],1)  - meanAmplitude);
-            numeratorOverDenominator = sort([maxAmplitude; minAmplitude],1);
-            symRatio = numeratorOverDenominator(1,:)./numeratorOverDenominator(2,:);
-            dirty = symRatio > maxWaveSymmetry;
-            
-            if ~isempty(dirty)
-                SS.clean = SS.clean&(~dirty');
-            end
-            SS.methodlog = [SS.methodlog '<RemoveBySymmetry>'];
-        end
-        function RemoveSpkWithBlank(SS)
-            % REMOVESPKWITHBLANK(SS) Removes all 'spikes' that have more that have 5 or more
-            % voltage values in their waveform below 0.1 uV inidcating that a
-            % portion of the waveform is blanked. This is extremely
-            % unlikely otherwise.
-            % Written by: JN
-            
-            dirty = (sum(abs(SS.waveform) <= 0.1,1) >= 5);
-            if ~isempty(dirty)
-                SS.clean = SS.clean&(~dirty');
-            end
-            SS.methodlog = [SS.methodlog '<RemoveSpkWithBlank>'];
-        end
-        function RemoveChannel(SS,channel2remove)
-            % REMOVECHANNELS(SS,channel2remove) removes data collected on
-            % channels that the experimenter knows
-            % apriori are bad for some reason. channelstoremove is a
-            % 1-based, linearly indexed set of channel numbers to be
-            % removed from the data. The default channels to remove are [1
-            % 8 33 57 64] corresponding to the four unconnected channels
-            % and the ground on a standard MCS MEA.
-            % Written by: JN
-            
-            if nargin < 2 || isempty(channel2remove)
-                channel2remove = [1 8 33 57 64];
-            end
-            
-            % Append the badchannel vector
-            SS.badchannel = unique([SS.badchannel channel2remove]);
-            
-            dirty = ismember(SS.channel,channel2remove)';
-            if ~isempty(dirty)
-                SS.clean = SS.clean&(~dirty');
-            end
-            
-            SS.methodlog = [SS.methodlog '<RemoveChannel>'];
-        end
-        function RemoveUnit(SS,unit2remove)
-            % REMOVEUNIT(unit2remove) removes all a spikes with ID in the
-            % unit2remove vector from the clean array. Default is to remove
-            % all unsorted 'spikes'.
-            % Written by: JN
-            
-            if nargin < 2 || isempty(unit2remove)
-                unit2remove = 0;
-            end
-            if isempty(SS.unit)
-                warning('You have not clustered your data yet and unit information is not available. Cannot remove units')
-                return
-            end
-            
-            % Append the badunit vector
-            SS.badunit = [SS.badunit unit2remove];
-            
-            dirty = ismember(SS.unit,unit2remove);
-            if ~isempty(dirty)
-                SS.clean = SS.clean&(~dirty);
-            end
-            SS.methodlog = [SS.methodlog '<RemoveUnit>'];
-        end
-        function MitraClean(SS)
-            % MITRA CLEAN(SS) removes all spikes that have multiple peaks
-            % effective at removing noise, many stimulus artifacts
-            % still get through
-            %
-            % probably not optimal code, but this will work
-            %
-            % needs edit so that it doesn't care about minor ripples in the
-            % main peak
-            %
-            %will remove compound APs if they are less than 1ms apart
-            % Written by: RZT
-            
-            true_wave = ones(length(SS.waveform),1);
-            
-            for ind = 1:length(SS.waveform)
-                wave = SS.waveform(:,ind);%examine this particular waveform
-                [d i] = max(abs(wave));
-                d = wave(i); %get the peak amplitude, including the sign
-                pos = (d>0);
-                pos = pos*2-1;% -1 means negative, 1 means positive
-                low =i-25;%need to specify the region of interest- 25 samples on either side of the peak
-                if low<1;
-                    low = 1;
-                end
-                high = i+25;
-                if high>75
-                    high = 75;
-                end
-                %look for peaks on either side of the main peak
-                dt =diff(wave);
-                
-                %find the valleys on either side of the main peak
-                up = dt(i+1:high-1);
-                down = dt(low:i-1);
-                bup = find(up*pos>0);
-                bdown = find(-down*pos>0);
-                
-                %if a valley is found, check to see if other peaks after
-                %this valley are equal to half the amplitude of the main
-                %peak
-                if ~isempty(bup)
-                    bu = bup(1);
-                    %plot(i+bu,wave(i+bu),'.b');
-                    if max(wave(i+bu:high)*pos)>d*pos/2
-                        true_wave(ind) = 0;
-                    end
-                end
-                
-                %look to see if the first peak before the main peak exceeds
-                %threhold:
-                if ~isempty(bdown)
-                    bd = bdown(length(bdown));
-                    %plot(bd+low,wave(bd+low),'.m');
-                    if max(wave(low:bd+low)*pos)>d*pos/2
-                        true_wave(ind) = 0;
-                    end
-                end
-                %                 if true_wave(ind)
-                %                     figure(1);hold on;plot(wave);
-                %                 else
-                %                     figure(2);hold on; plot(wave);
-                %                 end
-            end
-            SS.clean = SS.clean&true_wave;
-            %                 size(SS.clean)
-            %                 size(true_wave)
-            SS.methodlog = [SS.methodlog '<Mitraclean>'];
-        end
+        RemoveBySymmetry(SS,maxWaveSymmetry)
+        % This method is contained in a separate file.
+        
+        RemoveSpkWithBlank(SS)
+        % This method is contained in a separate file.
+        
+        RemoveChannel(SS,channel2remove)
+        % This method is contained in a separate file.
+        
+        RemoveUnit(SS,unit2remove)
+        % This method is contained in a separate file.
+        
+        MitraClean(SS)
+        % This method is contained in a separate file.
         
         ResetClean(SS)
         % This method is contained in a separate file.
@@ -436,9 +291,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotWfs(SS,maxwfs,chan)
         % This method is contained in a separate file.
         
-        
         %% BLOCK 3: SORTING METHODS (methods that alter the 'unit' array)
         suc = WaveClus(SS,maxclusters,minspk,decompmeth,plotall,ploton)
+        % This method is contained in a separate file.
+        
+        LineSort(SS);
         % This method is contained in a separate file.
         
         %% BLOCK 4: ADVANCED CLEANING METHODS (methods that alter the 'clean' array, but have dependences on overloaded input properties or sorting)
@@ -530,11 +387,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         sqycln = ReturnClean(SS,bound)
         % This method is contained in a separate file.
         
-        %% Block 8: Save SS object
+        %% Block 8: SAVE SS OBJECT
         Save(SS,auxfid)
         % This method is contained in a separate file.
         
-        %% Block 9: Internal Methods
+        %% Block 9: INTERNAL METHODS
         [spike stim] = ReturnRangedData(SS, varargin)
         % This method is contained in a separate file.
         

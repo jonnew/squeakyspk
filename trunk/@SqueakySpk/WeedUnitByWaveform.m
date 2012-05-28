@@ -11,8 +11,12 @@ function WeedUnitByWaveform(SS)
 %
 %   Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
-if isempty(SS.unit) || isempty(SS.avgwaveform.avg)
+if isempty(SS.unit)
     error('You must perform spike sorting using SS.WaveClus before running this method')
+end
+
+if ~isfield(SS.avgwaveform, 'avg') || isempty(SS.avgwaveform.avg)
+    SS.CalculateAvgWaveform;
 end
 
 %  Create and then hide the GUI as it is being constructed.
@@ -165,7 +169,7 @@ set(f,'Visible','on');
         
         current_data_avg = SS.avgwaveform.avg(:,waveind);
         current_data_sd = SS.avgwaveform.std(:,waveind);
-
+        
         hold on
         
         plot([0 length(current_data_avg)],[0 0],'k--')
