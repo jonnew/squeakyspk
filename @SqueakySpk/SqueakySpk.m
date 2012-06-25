@@ -93,6 +93,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         badchannel; % Array of channels deemed to be bad
         psh; % Peri-stimulus histogram
         upsh; % unit-wise peri-stimulus histogram
+        unitfr; % the sorted average firing rate of each unit
         
         % properties of the stimulus given while collecting the main data
         % [STIM DATA]
@@ -184,7 +185,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             [SS.time ind] = sort(spike.time); % Make sure incoming data is sorted in time
             if min(spike.channel) == 0 % channel index is 1 based
                 warning('Channel index must be 1 based in an SS object, shifting your SS.channel property by 1');
-                SS.channel = spike.channel(ind)+1;;
+                SS.channel = spike.channel(ind)+1;
             else
                 SS.channel = spike.channel(ind);
             end
@@ -375,6 +376,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         
         latmat = LatencyMatrix(SS,bound,dur);
         % This method is contained in a separate file.
+        
+        UnitFR(SS,bound);
+        % This method is contained in a separate file
         
         %% Block 6: SONIFICATION TOOLS
         ns = NeuroSound(SS,tbound,pbspeed,ampscale,basefreq,scale,env,sniplength, fid)

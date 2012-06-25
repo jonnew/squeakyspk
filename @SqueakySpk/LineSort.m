@@ -227,6 +227,9 @@ set(f,'Visible','on');
             end
         end
         
+%         currentMinMax = [min(min(a_waves)), ...
+%             max(max(a_waves))];
+        
         set(a_waves,'Ylim',currentMinMax);
     end
 
@@ -258,8 +261,6 @@ set(f,'Visible','on');
             chs{i} = num2str(uChan(i));
         end
         set(lb_channels, 'String', chs,'Value',1);
-        currentMinMax = [min(min(ss.unit(ss.channel == currentChannel))), ...
-            max(max(ss.unit(ss.channel == currentChannel)))];
         contents = cellstr(get(lb_channels,'String'));
         currentChannel =  str2num(contents{get(lb_channels,'Value')});
         currentMinMax = [min(min(ss.waveform(:,ss.channel == currentChannel))), ...

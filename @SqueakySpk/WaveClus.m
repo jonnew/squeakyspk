@@ -84,30 +84,30 @@ else
     SS.avgwaveform.std = finresult.sdwave;
 end
 
-% Waveclus for spontaneous data
-if ~isempty(SS.sp_time)
-    
-    time = SS.sp_time;
-    channel = SS.sp_channel;
-    waveform = SS.sp_waveform;
-    
-    [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
-    if isempty(chanparse)
-        warning('It looks like there are very few clean spikes in the spontaneous data set, so sorting cannot be performed');
-        success = 0;
-        return;
-    else
-        clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
-        finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
-        
-        [SS.sp_time tempindex] = sort(finresult.time);
-        SS.sp_channel = finresult.channel(tempindex);
-        SS.sp_waveform = finresult.waveform(:,tempindex);
-        SS.sp_unit = finresult.unit(tempindex);
-        SS.sp_avgwaveform.avg = finresult.meanwave;
-        SS.sp_avgwaveform.std = finresult.sdwave;
-    end
-end
+% % Waveclus for spontaneous data
+% if ~isempty(SS.sp_time)
+%     
+%     time = SS.sp_time;
+%     channel = SS.sp_channel;
+%     waveform = SS.sp_waveform;
+%     
+%     [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
+%     if isempty(chanparse)
+%         warning('It looks like there are very few clean spikes in the spontaneous data set, so sorting cannot be performed');
+%         success = 0;
+%         return;
+%     else
+%         clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
+%         finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
+%         
+%         [SS.sp_time tempindex] = sort(finresult.time);
+%         SS.sp_channel = finresult.channel(tempindex);
+%         SS.sp_waveform = finresult.waveform(:,tempindex);
+%         SS.sp_unit = finresult.unit(tempindex);
+%         SS.sp_avgwaveform.avg = finresult.meanwave;
+%         SS.sp_avgwaveform.std = finresult.sdwave;
+%     end
+% end
 
 rmdir(hand,'s');
 
