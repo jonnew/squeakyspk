@@ -1,8 +1,11 @@
 function PlotUSDR(SS,frmax,sortu,sortbound)
-% PlotUSDR(SS,FRMAX)Plots the Unit Spike Detection Rate. Takes
+% PlotUSDR(SS,FRMA,SORTBOUND)Plots the Unit Spike Detection Rate. Takes
 % information from the usdr property to display data as image wherein the
 % firing rate for each unit is shown in grey scale from 0 to FRMAX Hz.
-% FRMAX is set to the maximal detected firing rate by default.
+% FRMAX is set to the maximal detected firing rate by default. SORTBOUND
+% defines the region, in time, over which to calculate indivudual unit
+% firing rates such that the resulting figure shows units in order of
+% descending firing rate.
 %
 %       Created by: Jon Newman (jnewman6 at gatech dot edu)
 %       Location: The Georgia Institute of Technology
@@ -48,7 +51,7 @@ end
 
 % Make the image
 imagesc(img);
-c = colorbar('Location','East');
+c = colorbar('Location','EastOutside');
 ylabel(c,'Firing Rate (Hz)')
 colormap(cmp);
 
