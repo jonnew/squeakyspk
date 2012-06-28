@@ -32,9 +32,9 @@ img = SS.usdr.usdr';
 
 % sort the image by integrated unit firing rate?
 if sortu
-    imgt = SS.usdr.usdr(SS.usdr.bin >= sortbound(1) & SS.usdr.bin < sortbound(2),:)';
-    int = sum(imgt,2);
-    [x ind] = sort(int);
+    imgt = SS.usdr.usdr(SS.usdr.bin >= sortbound(1) & SS.usdr.bin < sortbound(2),:);
+    int = sum(imgt,1);
+    [~, ind] = sort(int);
     img = img(ind,:);
 end
 
