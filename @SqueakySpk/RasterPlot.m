@@ -61,21 +61,21 @@ usechan = isempty(SS.unit);
 if usechan || yaxischannel
     unitinterest = SS.channel(startind:endind);
     % Set up figure and plot raster array
-    fh = figure();
-    set(fh,'color','k'); % sets the background color to black
+%     fh = figure();
+%     set(gcf,'color','k'); % sets the background color to black
     hold on
     
     
     % Plot the raster for spikes in the time bound of interest
     switch what2show
         case 'both'
-            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
+            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'k.','MarkerSize',4);
             plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
             plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
         case 'clean'
             spkinterest = spkinterest(cleaninterest);
             unitinterest = unitinterest(cleaninterest);            
-            plot(spkinterest,unitinterest,'w.','MarkerSize',4);
+            plot(spkinterest,unitinterest,'k.','MarkerSize',4);
             plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
         case 'dirty'
             spkinterest = spkinterest(~cleaninterest);
@@ -86,20 +86,20 @@ if usechan || yaxischannel
 else
     unitinterest = SS.unit(startind:endind);
     % Set up figure and plot raster array
-    fh = figure();
-    set(fh,'color','k'); % sets the background color to black
+%     fh = figure();
+%     set(gcf,'color','k'); % sets the background color to black
     hold on
     
     % Plot the raster for spikes in the time bound of interest
     switch what2show
         case 'both'
-            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'w.','MarkerSize',4);
+            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'k.','MarkerSize',4);
             plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
             plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
         case 'clean'
             spkinterest = spkinterest(cleaninterest);
             unitinterest = unitinterest(cleaninterest);           
-            plot(spkinterest,unitinterest,'w.','MarkerSize',4);
+            plot(spkinterest,unitinterest,'k.','MarkerSize',4);
             plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
         case 'dirty'
             spkinterest = spkinterest(~cleaninterest);
@@ -111,7 +111,7 @@ end
 
 axis tight
 h = gca;
-set(h,'color','k','XColor',[1 1 1],'YColor',[1 1 1],'ylim',[0 max(unitinterest)+1])
+set(h,'ylim',[0 max(unitinterest)+1])
 title('Spike Raster','fontsize',13)
 set(get(h,'Title'),'Color','white')
 xlabel('Time (sec)','fontsize',14)
