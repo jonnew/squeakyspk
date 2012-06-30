@@ -1,11 +1,12 @@
-function PlotUSDR(SS,frmax,sortu,sortbound)
-% PlotUSDR(SS,FRMA,SORTBOUND)Plots the Unit Spike Detection Rate. Takes
-% information from the usdr property to display data as image wherein the
-% firing rate for each unit is shown in grey scale from 0 to FRMAX Hz.
-% FRMAX is set to the maximal detected firing rate by default. SORTBOUND
-% defines the region, in time, over which to calculate indivudual unit
-% firing rates such that the resulting figure shows units in order of
-% descending firing rate.
+function PlotUSDR(SS,frmax,sortu,sortbound, showscale)
+% PlotUSDR(SS,FRMAX,SORTBOUND,SHOWSCALE)Plots the Unit Spike Detection
+% Rate. Takes information from the usdr property to display data as image
+% wherein the firing rate for each unit is shown in grey scale from 0 to
+% FRMAX Hz. FRMAX is set to the maximal detected firing rate by default.
+% SORTBOUND defines the region, in time, over which to calculate indivudual
+% unit firing rates such that the resulting figure shows units in order of
+% descending firing rate. SHOWSCALE is a boolean idicating whether or not
+% the firing rate colorscale is shown at the right of the figure.
 %
 %       Created by: Jon Newman (jnewman6 at gatech dot edu)
 %       Location: The Georgia Institute of Technology
@@ -18,6 +19,9 @@ if isempty(SS.asdr)
     return;
 end
 
+if nargin < 5 || isempty(showscale)
+    showscale = 1;
+end
 if nargin < 4 || isempty(sortbound)
     sortbound = [0 SS.time(end)];
 end
@@ -51,8 +55,10 @@ end
 
 % Make the image
 imagesc(img);
-c = colorbar('Location','EastOutside');
-ylabel(c,'Firing Rate (Hz)')
+if showscale
+    c = colorbar('Location','EastOutside');
+    ylabel(c,'Firing Rate (Hz)')
+end
 colormap(cmp);
 
 % label
