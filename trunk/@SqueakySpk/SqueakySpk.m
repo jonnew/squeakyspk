@@ -325,7 +325,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotCSDR(SS,frmax)
         % This method is contained in a separate file.
         
-        PlotUSDR(SS,frmax,sortu,sortbound)
+        PlotUSDR(SS,frmax,sortu,sortbound,showscale)
         % This method is contained in a separate file.
         
         PlotCSDRHist(SS,binsize,maxdr)
