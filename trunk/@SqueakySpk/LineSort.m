@@ -230,7 +230,8 @@ set(f,'Visible','on');
 %         currentMinMax = [min(min(a_waves)), ...
 %             max(max(a_waves))];
         
-        set(a_waves,'Ylim',currentMinMax);
+%         set(a_waves,'Ylim',currentMinMax);
+set(a_waves,'Ylim',[-100 100]);
     end
 
     function StartMouseDrag(hObject, eventdata, handles)

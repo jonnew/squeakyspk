@@ -104,7 +104,7 @@ end
 % Calculate ASDR
 SS.asdr.dt = dt;
 SS.asdr.bin = bins';
-SS.asdr.asdr = sum(SS.csdr.csdr(:,2:end),2);
+SS.asdr.asdr = sum(SS.csdr.csdr(:,1:end),2);
 SS.asdr.mean = mean(SS.asdr.asdr);
 SS.asdr.median = median(SS.asdr.asdr);
 SS.asdr.var = var(SS.asdr.asdr);
