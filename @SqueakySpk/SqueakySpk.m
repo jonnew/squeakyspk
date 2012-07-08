@@ -377,7 +377,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         latmat = LatencyMatrix(SS,bound,dur);
         % This method is contained in a separate file.
         
-        UnitFR(SS,bound);
+        UnitFR(SS,bound,units);
         % This method is contained in a separate file
         
         %% Block 6: SONIFICATION TOOLS
