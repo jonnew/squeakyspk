@@ -34,7 +34,7 @@ figure()
 if include0 || strcmp(SS.upsh.type,'channel-wise')
     img = SS.upsh.hist';
 elseif strcmp(SS.upsh.type,'unit-wise')
-    img = SS.upsh.hist(:,SS.upsh.unit ~= 0)';
+    img = SS.upsh.hist(:,SS.upsh.which ~= 0)';
 end
     
 % Create a color map that is good at displaying a wide range of data

@@ -1,4 +1,4 @@
-function UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton)
+function q = UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton)
 %UNITWISEPSH create the UPSH for an SS object.
 %
 %   	UNITWISEPSH(SS,DT,HISTRANGE,WHICHSTIM,WHICH,EFFRANGE,FORCECHAN,PLOTON)
@@ -213,7 +213,9 @@ disp('Finished calculating Peri-stimulus histogram.')
 
 % Plot if the user wants it
 if ploton
-    SS.PlotUnitWisePSH(100);
+    q = SS.PlotUnitWisePSH(100);
+else
+    q = 0;
 end
 
 % Add psh to method log

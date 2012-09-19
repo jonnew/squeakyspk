@@ -316,7 +316,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotPeriStimHistogram(SS)
         % This method is contained in a separate file.
         
-        PlotUnitWisePSH(SS,frmax,include0)
+        q = PlotUnitWisePSH(SS,frmax,include0)
         % This method is contained in a separate file.
         
         RandScat(SS,bound,forcechannel,sortu,sortbound)
@@ -353,7 +353,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PeriStimHistogram(SS,dt,histrange,whichstim,ploton);
         % This method is contained in a separate file.
         
-        UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton);
+        q = UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton);
         % This method is contained in a separate file.
         
         PeriStimRaster(SS,bound,dur,ch,ti);
