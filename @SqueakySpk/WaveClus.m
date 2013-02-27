@@ -1,23 +1,42 @@
 function success = WaveClus(SS,maxclus,minspk,decompmeth,plotall,ploton)
-% WAVECLUS ported version of Rodrigo Quian Quiroga's wave-clus
-% combined wavelet/superparamagnetic clustering algorithm.
+% WAVECLUS(SS) Ported version of Rodrigo Quian Quiroga's wave-clus combined
+% wavelet/superparamagnetic clustering algorithm. Citation: Quiroga, Q.,
+% Nadasdy, Z., & Ben-Shaul, Y. (2004). Unsupervised spike detection and
+% sorting with wavelets and superparamagnetic clustering. Neural
+% Computation, 1687, 1661–1687.
 %
-% Inputs:
-% maxclus - determines the maximal number of units allowed per channel.
-% minspk - sets the minimal number of spikes within a cluster for the
-% user to accept that data a legitimate unit.
-% decompmeth - Decomposition/feature extraction method. Default is 'wav'
-% which is a wavelet decomposition using Haar wavelets. User can also
-% specify principle component analysis using 'pca' (first three dimensions
-% are used in this case).
+% WAVECLUS(SS,MAXCLUS,MINSPK,DECOMPMETH) Perform spike sorting on the
+% multichannel spike data within the SS object. MAXCLUS defines the
+% maximual number of cluster (units) that are allowed on a particular
+% channel. MINSPK is the minimum number of spikes required to for a cluster
+% to be considered a unique unit. If this number is not met, the algorithm
+% attempts to combine the cluster with the others or rejects the spikes
+% entirely. DECOMPMETH is the spectral projection method that is used to
+% reduce the dimensionality of the spike waveforms before clustering. The
+% default method,'wav', is a wavelet transform, using a haar wavelet. 'pca'
+% can be used for principle component projection. The first 3 principle
+% components are used for clustering.
 %
-% Outputs:
-% A modified unit field in the SqueakySpk object.
+% Default parameters:
+%       MAXCLUS = 3
+%       MINSPK  = 20
+%       DECOMPMETH = 'wav';
+%
+% WAVECLUS(SS,...,PLOTALL,PLOTON) Changes the ploting options for the
+% algorithm. PLOTALL is a boolean that determins whether waveforms are
+% plotted or just the average waveform for each cluster. PLOTON is a
+% boolean that determines whether any plotting is performed or not.
+%
+% SUCCESS = WAVECLUS(SS,...) Boolean flag indicating whether algorithm ran
+% to completion.
+%
+% MAIN OUTPUT:
+% A modified unit field in the SqueakySpk object (SS.unit)
 %
 %   Created by: Jon Newman (jnewman6 at gatech dot edu)
 %   Location: The Georgia Institute of Technology
 %   Created on: July 30, 2009
-%   Last modified: Aug 05, 2010
+%   Last modified: Feb 21, 2013
 %
 %   Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
@@ -86,11 +105,11 @@ end
 
 % % Waveclus for spontaneous data
 % if ~isempty(SS.sp_time)
-%     
+%
 %     time = SS.sp_time;
 %     channel = SS.sp_channel;
 %     waveform = SS.sp_waveform;
-%     
+%
 %     [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
 %     if isempty(chanparse)
 %         warning('It looks like there are very few clean spikes in the spontaneous data set, so sorting cannot be performed');
@@ -99,7 +118,7 @@ end
 %     else
 %         clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
 %         finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
-%         
+%
 %         [SS.sp_time tempindex] = sort(finresult.time);
 %         SS.sp_channel = finresult.channel(tempindex);
 %         SS.sp_waveform = finresult.waveform(:,tempindex);
@@ -137,7 +156,7 @@ return;
         handles.par.sort_fmin = 300;                %high pass filter for sorting (default 300)
         handles.par.sort_fmax = 3000;               %low pass filter for sorting (default 3000)
         
-        handles.par.max_spk = inf;                  % max. # of spikes before starting templ. match.
+        handles.par.max_spk = 1000;                  % max. # of spikes before starting templ. match.
         handles.par.template_type = 'center';       % nn, center, ml, mahal
         handles.par.template_sdnum = 3;             % max radius of cluster in std devs. % JN: MAY WANT TO MAKE LOWER SO THAT NON-SPIKES GET EXCLUDED MORE
         
@@ -149,7 +168,7 @@ return;
         end
         
         handles.par.mintemp = 0.01;                 %minimum temperature
-        handles.par.maxtemp = 0.08;                 %maximum temperature
+        handles.par.maxtemp = 0.25;                 %maximum temperature
         handles.par.tempstep = 0.01;                %temperature step
         handles.par.num_temp = floor(...
             (handles.par.maxtemp - ...
@@ -190,7 +209,7 @@ return;
             index = channelparse.(genvarname(file_to_cluster{1})).index;
             switch handles.par.system
                 case {'PCWIN','PCWIN64'}
-                    handles.par.fname = ['.\' char(hand) '\data_' char(file_to_cluster{1})];  
+                    handles.par.fname = ['.\' char(hand) '\data_' char(file_to_cluster{1})];
                 case {'MAC','MACI'}
                     handles.par.fname = ['./' char(hand) '/data_' char(file_to_cluster{1})];
                 otherwise  %(GLNX86, GLNXA64, GLNXI64 correspond to linux)
@@ -204,9 +223,13 @@ return;
             
             % GOES FOR TEMPLATE MATCHING IF TOO MANY SPIKES.
             if size(spikes,1)> handles.par.max_spk;
-                naux = min(handles.par.max_spk,size(spikes,1));
-                inspk_aux = inspk(1:naux,:);
+                %naux = min(handles.par.max_spk,size(spikes,1));
+                r = randperm(size(spikes,1));
+                r_ind_train = r(1:handles.par.max_spk);
+                r_ind_match = r(handles.par.max_spk+1:end);
+                inspk_aux = inspk(r(1:handles.par.max_spk),:);
             else
+                r_ind_train = 1:size(spikes,1);
                 inspk_aux = inspk;
             end
             
@@ -223,29 +246,29 @@ return;
             class5 = [];
             switch maxclus
                 case 1
-                    class1=find(clu(temp,3:end)==0);
+                    class1=r_ind_train(clu(temp,3:end)==0);
                     class0=setdiff(1:size(spikes,1), sort(class1));
                 case 2
-                    class1=find(clu(temp,3:end)==0);
-                    class2=find(clu(temp,3:end)==1);
+                    class1=r_ind_train(clu(temp,3:end)==0);
+                    class2=r_ind_train(clu(temp,3:end)==1);
                     class0=setdiff(1:size(spikes,1), sort([class1 class2]));
                 case 3
-                    class1=find(clu(temp,3:end)==0);
-                    class2=find(clu(temp,3:end)==1);
+                    class1=r_ind_train(clu(temp,3:end)==0);
+                    class2=r_ind_train(clu(temp,3:end)==1);
                     class3=find(clu(temp,3:end)==2);
                     class0=setdiff(1:size(spikes,1), sort([class1 class2 class3]));
                 case 4
-                    class1=find(clu(temp,3:end)==0);
-                    class2=find(clu(temp,3:end)==1);
-                    class3=find(clu(temp,3:end)==2);
-                    class4=find(clu(temp,3:end)==3);
+                    class1=r_ind_train(clu(temp,3:end)==0);
+                    class2=r_ind_train(clu(temp,3:end)==1);
+                    class3=r_ind_train(clu(temp,3:end)==2);
+                    class4=r_ind_train(clu(temp,3:end)==3);
                     class0=setdiff(1:size(spikes,1), sort([class1 class2 class3 class4]));
                 case 5
-                    class1=find(clu(temp,3:end)==0);
-                    class2=find(clu(temp,3:end)==1);
-                    class3=find(clu(temp,3:end)==2);
-                    class4=find(clu(temp,3:end)==3);
-                    class5=find(clu(temp,3:end)==4);
+                    class1=r_ind_train(clu(temp,3:end)==0);
+                    class2=r_ind_train(clu(temp,3:end)==1);
+                    class3=r_ind_train(clu(temp,3:end)==2);
+                    class4=r_ind_train(clu(temp,3:end)==3);
+                    class5=r_ind_train(clu(temp,3:end)==4);
                     class0=setdiff(1:size(spikes,1), sort([class1 class2 class3 class4 class5]));
             end
             
@@ -261,10 +284,10 @@ return;
                 if length(class4)>=handles.par.min_clus; classes(class4) = 4; end
                 if length(class5)>=handles.par.min_clus; classes(class5) = 5; end
                 f_in  = spikes(classes~=0,:);
-                f_out = spikes(classes==0,:);
+                f_out = spikes(r_ind_match,:);
                 class_in = classes(classes~=0);
                 class_out = force_membership_wc(f_in, class_in, f_out, handles);
-                classes(classes==0) = class_out;
+                classes(r_ind_match) = class_out;
                 class0=find(classes==0);
                 class1=find(classes==1);
                 class2=find(classes==2);
@@ -703,7 +726,7 @@ return;
                     directory = which('cluster.exe');
                     copyfile(directory,[pwd '\' char(hand)]);
                 end
-%                    display('.\\%s\\Cluster.exe %s.run',hand,fname);
+                %                    display('.\\%s\\Cluster.exe %s.run',hand,fname);
                 dos(sprintf('.\\%s\\Cluster.exe %s.run',hand,fname));
             case {'MAC'}
                 directory = which('cluster_mac.exe');
@@ -755,12 +778,4 @@ return;
             temp = 2;
         end
     end
-
 end
-
-
-
-
-
-
-

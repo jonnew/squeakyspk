@@ -12,13 +12,14 @@ function LineSort(SS)
 
 % Global parameters
 numWaves2Plot = 500;
+ylimit = [-50 50];
 
 % Global variables
 ss.channel = SS.channel;
 ss.unit = SS.unit;
 ss.waveform = SS.waveform;
 ss_static = ss;
-col = [[0.2 0.2 0.2]; hsv(10)];
+col = [[0.2 0.2 0.2]; hsv(20)];
 currentChannel = 0;
 currentMinMax = [0 0];
 B = [];
@@ -231,7 +232,7 @@ set(f,'Visible','on');
 %             max(max(a_waves))];
         
 %         set(a_waves,'Ylim',currentMinMax);
-set(a_waves,'Ylim',[-100 100]);
+set(a_waves,'Ylim',ylimit);
     end
 
     function StartMouseDrag(hObject, eventdata, handles)

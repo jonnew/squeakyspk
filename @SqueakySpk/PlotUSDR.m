@@ -1,4 +1,4 @@
-function PlotUSDR(SS,frmax,sortu,sortbound, showscale)
+function PlotUSDR(SS,frmax,sortu,sortbound,showscale)
 % PlotUSDR(SS,FRMAX,SORTBOUND,SHOWSCALE)Plots the Unit Spike Detection
 % Rate. Takes information from the usdr property to display data as image
 % wherein the firing rate for each unit is shown in grey scale from 0 to
@@ -44,7 +44,7 @@ end
 
 % Create a color map that is good at displaying a wide range of data
 cmp = gray(200);
-cmp = flipud(cmp.^3);
+cmp = flipud(cmp.^1.5);
 
 % set FR max by setting a single pixel to this value and then using imagesc
 if sum(sum(img > frmax)) > 0
