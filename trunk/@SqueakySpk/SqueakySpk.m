@@ -296,7 +296,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         suc = WaveClus(SS,maxclusters,minspk,decompmeth,plotall,ploton)
         % This method is contained in a separate file.
         
-        LineSort(SS);
+        LineSort(SS,ylimit,numWaves2Plot);
         % This method is contained in a separate file.
         
         %% BLOCK 4: ADVANCED CLEANING METHODS (methods that alter the 'clean' array, but have dependences on overloaded input properties or sorting)

@@ -1,7 +1,7 @@
-function LineSort(SS)
+function LineSort(SS,ylimit,numWaves2Plot)
 % LINESORT Supervised spike sorting using time-domain feature selection.
 %
-%   
+%
 %
 %   Created by: Jon Newman (jnewman6 at gatech dot edu)
 %   Location: The Georgia Institute of Technology
@@ -11,15 +11,21 @@ function LineSort(SS)
 %   Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
 % Global parameters
-numWaves2Plot = 500;
-ylimit = [-50 50];
+if nargin < 3 || isempty(ylimit)
+    numWaves2Plot = 500;
+end
+if nargin < 2 || isempty(ylimit)
+    ylimit = [-50 50];
+end
+
 
 % Global variables
 ss.channel = SS.channel;
 ss.unit = SS.unit;
 ss.waveform = SS.waveform;
 ss_static = ss;
-col = [[0.2 0.2 0.2]; hsv(20)];
+col = [[0.4 0.4 0.4]; lines(7)];
+col(end,:) = [];
 currentChannel = 0;
 currentMinMax = [0 0];
 B = [];
@@ -50,30 +56,35 @@ b_save = uicontrol('Parent',f,'Style','pushbutton',...
 b_combine= uicontrol('Parent',p_units,'Style','pushbutton',...
     'String','Combine',...
     'Position',[10,10,85,30],...
-    'Callback',{@b_combine_Callback});
+    'Callback',{@b_combine_Callback},...
+    'KeyPressFcn',@CatchKeyboardPress);
 b_reset = uicontrol('Parent',p_units,'Style','pushbutton',...
     'String','Reset',...
     'Position',[105,10,85,30],...
-    'Callback',{@b_reset_Callback});
+    'Callback',{@b_reset_Callback},...
+    'KeyPressFcn',@CatchKeyboardPress);
 
 % List Boxes
 lb_channels = uicontrol('Parent',p_chans,'Style','listbox',...
     'Position',[10,10,180,225],...
     'Callback',{@lb_channels_Callback},...
+    'KeyPressFcn',@CatchKeyboardPress,...
     'Background',[1 1 1]);
 lb_units = uicontrol('Parent',p_units,'Style','listbox',...
     'Position',[10,50,180,155],...
     'Callback',{@lb_units_Callback},...
+    'KeyPressFcn',@CatchKeyboardPress,...
     'Background',[1 1 1],'Max',300,'Min',1);
 
 % Axes
 a_waves = axes('Parent',p_waves','Units','Pixels',...
     'Position',[10,10,480,470],'XTick',[],'YTick',[],...
     'box','on', ...
-    'ButtonDownFcn',@StartMouseDrag);
+    'ButtonDownFcn',@StartMouseDrag,...
+    'Color',[0 0 0]);
 
 % Line
-l_select = line([0 0],[0 0],'Parent',a_waves,'Color','k');
+l_select = line([0 0],[0 0],'Parent',a_waves,'Color',[1 1 1]);
 
 % Initialize the GUI.
 % Change units to normalized so components resize automatically.
@@ -114,9 +125,10 @@ set(f,'Visible','on');
     function CatchKeyboardPress(hObject, eventdata, handles)
         
         % Which key was pressed
-        keyval = get(hObject,'CurrentCharacter');
-  
-        % Assing, Delete or Ignore
+        keyval = eventdata.Character;
+        
+        
+        % Add, Delete or Ignore
         switch lower(keyval)
             case 'a',
                 % Make sure lineDef is defined
@@ -135,6 +147,7 @@ set(f,'Visible','on');
             case 'c',
                 % Make sure lineDef is defined
                 if isequal(lineDef,[0 0;0 0])
+                    b_combine_Callback();
                     return;
                 end
                 b = FindIntersectingWaves();
@@ -152,7 +165,7 @@ set(f,'Visible','on');
             case 'w',
                 idx = get(lb_channels,'Value');
                 contents = cellstr(get(lb_channels,'String'));
-                if idx > 1 
+                if idx > 1
                     currentChannel =  str2num(contents{idx-1});
                     currentMinMax = [min(min(ss.waveform(:,ss.channel == currentChannel))), ...
                         max(max(ss.waveform(:,ss.channel == currentChannel)))];
@@ -195,7 +208,7 @@ set(f,'Visible','on');
         
         axes(a_waves);
         cla;
-        l_select = line([0 0],[0 0],'Parent',a_waves,'Color','k');
+        l_select = line([0 0],[0 0],'Parent',a_waves,'Color',[1 1 1]);
         
         numSpikes = sum(B);
         if numSpikes > numWaves2Plot
@@ -223,16 +236,18 @@ set(f,'Visible','on');
                 if uu(j) == 0
                     plot(ww,'Color',col(1,:))
                 else
-                    plot(ww,'Color',col(selectedIdx(j)+1,:))
+                    plot(ww,'Color',col(mod(selectedIdx(j),length(col)-1)+2,:))
                 end
             end
         end
         
-%         currentMinMax = [min(min(a_waves)), ...
-%             max(max(a_waves))];
+        %         currentMinMax = [min(min(a_waves)), ...
+        %             max(max(a_waves))];
         
-%         set(a_waves,'Ylim',currentMinMax);
-set(a_waves,'Ylim',ylimit);
+        %         set(a_waves,'Ylim',currentMinMax);
+%         set(a_waves,'Ylim',ylimit,'XColor', 'w','XGrid','on','YGrid','on');
+        
+        
     end
 
     function StartMouseDrag(hObject, eventdata, handles)
@@ -281,7 +296,7 @@ set(a_waves,'Ylim',ylimit);
             selectedUnits = [];
             selectedIdx = [];
         end
-
+        
         for i = 1:length(cUnit)
             if ~nargin
                 selectedIdx = [selectedIdx i];
@@ -323,7 +338,7 @@ set(a_waves,'Ylim',ylimit);
     function CombineUnits(b)
         ss.unit(b & B) = min(selectedUnits);
         selectedUnits = min(selectedUnits);
-        UpdateUnitListBox(selectedUnits); 
+        UpdateUnitListBox(selectedUnits);
     end
 
     function CombineUnits2(b)
@@ -331,7 +346,7 @@ set(a_waves,'Ylim',ylimit);
         sd = setdiff(ss.unit(b & B),u);
         ss.unit(b & B) = u;
         selectedUnits = setdiff(selectedUnits,sd);
-        UpdateUnitListBox(selectedUnits); 
+        UpdateUnitListBox(selectedUnits);
     end
 
     function b = FindIntersectingWaves()
