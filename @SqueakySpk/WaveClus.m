@@ -67,6 +67,8 @@ end
 time = SS.time(SS.clean);
 channel = SS.channel(SS.clean);
 waveform = SS.waveform(:,SS.clean);
+id = SS.id(SS.clean);
+
 uniquechan = unique(channel);
 
 if isempty(time)
@@ -79,7 +81,7 @@ end
 hand = ['tmp-waveclus_' num2str(round(100000000000*rand))];
 mkdir(hand)
 
-[chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
+[chan2anal, chanparse] = PepareBatchData(time,channel,waveform,id,minspk);
 if isempty(chanparse)
     warning('It looks like there are very few clean spikes in the evoked data set, so sorting cannot be performed');
     pause(5);
@@ -87,46 +89,24 @@ if isempty(chanparse)
     return;
 else
     clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
-    finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
+    finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform,id);
     
     % Add dirty data back, but with the 0 unit specification
-    [SS.time tempindex] = sort([finresult.time;SS.time(~SS.clean)]);
+    [SS.time, idx] = sort([finresult.time;SS.time(~SS.clean)]);
     channel = [finresult.channel;SS.channel(~SS.clean)];
-    SS.channel = channel(tempindex);
+    SS.channel = channel(idx);
     waveform = [finresult.waveform SS.waveform(:,~SS.clean)];
-    SS.waveform = waveform(:,tempindex);
+    SS.waveform = waveform(:,idx);
     unit = [finresult.unit;zeros(sum(~SS.clean),1)];
-    SS.unit = unit(tempindex);
+    SS.unit = unit(idx);
     clean = [ones(size(finresult.time));zeros(size(SS.time(~SS.clean)))];
-    SS.clean = logical(clean(tempindex));
+    SS.clean = logical(clean(idx));
+    id = [finresult.id; SS.id(~SS.clean)];
+    SS.id = id(idx);
+    
     SS.avgwaveform.avg = finresult.meanwave;
     SS.avgwaveform.std = finresult.sdwave;
 end
-
-% % Waveclus for spontaneous data
-% if ~isempty(SS.sp_time)
-%
-%     time = SS.sp_time;
-%     channel = SS.sp_channel;
-%     waveform = SS.sp_waveform;
-%
-%     [chan2anal chanparse] = PepareBatchData(time,channel,waveform,minspk);
-%     if isempty(chanparse)
-%         warning('It looks like there are very few clean spikes in the spontaneous data set, so sorting cannot be performed');
-%         success = 0;
-%         return;
-%     else
-%         clustresults = Do_Clustering(chanparse,chan2anal,maxclus,minspk,plotall);
-%         finresult = Populate_Results(uniquechan,chan2anal,clustresults,time,channel,waveform);
-%
-%         [SS.sp_time tempindex] = sort(finresult.time);
-%         SS.sp_channel = finresult.channel(tempindex);
-%         SS.sp_waveform = finresult.waveform(:,tempindex);
-%         SS.sp_unit = finresult.unit(tempindex);
-%         SS.sp_avgwaveform.avg = finresult.meanwave;
-%         SS.sp_avgwaveform.std = finresult.sdwave;
-%     end
-% end
 
 rmdir(hand,'s');
 
@@ -152,11 +132,11 @@ return;
         handles.par.interpolation = 'y';            %interpolation for alignment
         handles.par.int_factor = 2;                 %interpolation factor
         handles.par.detect_fmin = 300;              %high pass filter for detection (default 300)
-        handles.par.detect_fmax = 3000;             %low pass filter for detection (default 3000)
+        handles.par.detect_fmax = 5000;             %low pass filter for detection (default 3000)
         handles.par.sort_fmin = 300;                %high pass filter for sorting (default 300)
-        handles.par.sort_fmax = 3000;               %low pass filter for sorting (default 3000)
+        handles.par.sort_fmax = 5000;               %low pass filter for sorting (default 3000)
         
-        handles.par.max_spk = 1000;                  % max. # of spikes before starting templ. match.
+        handles.par.max_spk = 2048;                 % max. # of spikes before starting templ. match.
         handles.par.template_type = 'center';       % nn, center, ml, mahal
         handles.par.template_sdnum = 3;             % max radius of cluster in std devs. % JN: MAY WANT TO MAKE LOWER SO THAT NON-SPIKES GET EXCLUDED MORE
         
@@ -193,20 +173,22 @@ return;
         handles.par.force_auto = 'n';               %automatically force membership if temp>3. % JN: MAY WANT TO MAKE NO SO THAT NON-SPIKES GET EXCLUDED MORE
         handles.par.max_spikes = 5000;              %maximum number of spikes to plot.
         
-        handles.par.sr = 24000;                     %sampling frequency, in Hz.
+        handles.par.sr = 25000;                     %sampling frequency, in Hz.
         
         parsefieldnames = fieldnames(channelparse);
         clusterresults = {};
         
         
-        for k=1:size(chan2anal,2)
+        for k = 1:size(chan2anal,2)
             
             tic
             file_to_cluster = parsefieldnames(k); % field for current channel
             
             % LOAD SC DATA
+            ids  = channelparse.(genvarname(file_to_cluster{1})).id;
             spikes = channelparse.(genvarname(file_to_cluster{1})).spikes;
-            index = channelparse.(genvarname(file_to_cluster{1})).index;
+            index = channelparse.(genvarname(file_to_cluster{1})).time;
+            
             switch handles.par.system
                 case {'PCWIN','PCWIN64'}
                     handles.par.fname = ['.\' char(hand) '\data_' char(file_to_cluster{1})];
@@ -227,7 +209,7 @@ return;
                 r = randperm(size(spikes,1));
                 r_ind_train = r(1:handles.par.max_spk);
                 r_ind_match = r(handles.par.max_spk+1:end);
-                inspk_aux = inspk(r(1:handles.par.max_spk),:);
+                inspk_aux = inspk(r_ind_train,:);
             else
                 r_ind_train = 1:size(spikes,1);
                 inspk_aux = inspk;
@@ -299,7 +281,7 @@ return;
             %PLOTS
             clus_pop = [];
             cluster=zeros(nspk,2);
-            cluster(:,2)= index';
+            cluster(:,2) = index';
             meanwave = [];
             sdwave = [];
             
@@ -347,7 +329,7 @@ return;
                 cluster(class5(:),1)=5;
             end
             
-            %PLOTS (if requested by user)
+            % PLOTS (if requested by user)
             if (ploton)
                 clf
                 set(gcf,'PaperOrientation','Landscape','PaperPosition',[0.25 0.25 10.5 8])
@@ -492,15 +474,18 @@ return;
             
             
             %Output
-            clusterresults.(genvarname(file_to_cluster{1})).spkindex = inspk;
-            clusterresults.(genvarname(file_to_cluster{1})).class = cluster;
+            clusterresults.(genvarname(file_to_cluster{1})).class = cluster(:,1);
+            clusterresults.(genvarname(file_to_cluster{1})).time = index;
+            clusterresults.(genvarname(file_to_cluster{1})).channel = chan2anal(k)*ones(size(cluster,1),1);
             clusterresults.(genvarname(file_to_cluster{1})).waveform = spikes;
+            clusterresults.(genvarname(file_to_cluster{1})).id = ids;
             clusterresults.(genvarname(file_to_cluster{1})).meanwave = meanwave;
             clusterresults.(genvarname(file_to_cluster{1})).sdwave = sdwave;
             
         end
     end
-    function result = Populate_Results(uniquechan, channels2anal,clusterresults,time,channel,waveform)
+
+    function result = Populate_Results(uniquechan, channels2anal,clusterresults,time,channel,waveform,id)
         
         % DELETE ANY RESIDUAL FILES
         delete *.dg_01.lab
@@ -511,50 +496,58 @@ return;
         delete *.param
         
         currunit = 1;
-        j = 1;
         spiketime = [];
         spikechannel = [];
         spikewave = [];
         unitID = [];
+        absID = [];
+        
         meanwave = [];
         sdwave = [];
         
         for i = uniquechan'
             
             if ismember(i,channels2anal)
-                chan = channels2anal(j);
-                sortdata = clusterresults.(genvarname(['chan' num2str(chan)]));
-                numclus = max(sortdata.class(:,1));
+                
+                sortdata = clusterresults.(genvarname(['chan' num2str(i)]));
+                numclus = max(sortdata.class);
+                
                 for k = 0:numclus
                     
+                    % Gather indicies of spike entries belonging to class k
+                    ind = sortdata.class == k;
+                    
                     if k == 0 % unsorted case
-                        indclus = sortdata.class(:,1) == k;
-                        spiketime = [spiketime; sortdata.class(indclus,2)./1000]; % convert back to seconds
-                        spikechannel = [spikechannel;chan*ones(sum(indclus),1)];
-                        spikewave = [spikewave sortdata.waveform(indclus,:)'];
-                        unitID = [unitID;zeros(sum(indclus),1)];
+                        
+                        spiketime = [spiketime; sortdata.time(ind)]; % convert back to seconds
+                        spikechannel = [spikechannel; sortdata.channel(ind)];
+                        spikewave = [spikewave sortdata.waveform(ind,:)'];
+                        unitID = [unitID;zeros(sum(ind),1)];
+                        absID = [absID; sortdata.id(ind)];
+                        
                     else % sorted units
-                        indclus = sortdata.class(:,1) == k;
-                        spiketime = [spiketime; sortdata.class(indclus,2)./1000]; % convert back to seconds
-                        spikechannel = [spikechannel;chan*ones(sum(indclus),1)];
-                        spikewave = [spikewave sortdata.waveform(indclus,:)'];
-                        unitID = [unitID; currunit*ones(sum(indclus),1)];
+                        
+                        spiketime = [spiketime; sortdata.time(ind)]; % convert back to seconds
+                        spikechannel = [spikechannel; sortdata.channel(ind)];
+                        spikewave = [spikewave sortdata.waveform(ind,:)'];
+                        unitID = [unitID; currunit*ones(sum(ind),1)];
                         meanwave = [meanwave sortdata.meanwave(:,k)];
                         sdwave = [sdwave sortdata.sdwave(:,k)];
+                        absID = [absID; sortdata.id(ind)];
+                        
+                        % Increment the current unit number
                         currunit = currunit+1;
                     end
                 end
-                j = j+1;
             else
                 ind = (channel == i);
-                spiketime = [spiketime;time(ind)];
-                spikechannel = [spikechannel;channel(ind)];
+                spiketime = [spiketime; time(ind)];
+                spikechannel = [spikechannel; channel(ind)];
                 spikewave = [spikewave waveform(:,ind')];
-                unitID = [unitID;zeros(size(time(ind)))];
+                unitID = [unitID; zeros(size(time(ind)))];
+                absID = [absID; id(ind)];
             end
         end
-        
-        result = {};
         
         result.time = spiketime;
         result.channel = spikechannel;
@@ -562,38 +555,36 @@ return;
         result.unit = unitID;
         result.meanwave = meanwave;
         result.sdwave = sdwave;
+        result.id = absID;
         
     end
-    function [chan2anal channelparse] = PepareBatchData(time,channel,waveform,minspk)
+
+    function [chan2anal, channelparse] = PepareBatchData(time,channel,waveform,id,minspk)
         
-        channelparse = {};
         chan2anal = [];
         
         for chan = unique(channel)';
             
             ind = (channel == chan);
             
+            % If there were enough spikes detected on this channel, then
+            % append its name to the list of channels to be sorted.
             if sum(ind) >= minspk
                 
-                changood = chan;
+                % Generate Field name
+                fld = strcat(['chan',num2str(chan)]);
                 
-                index = 1000.*time(ind); % wave_clus uses ms
-                spikes = waveform(:,ind)';
+                % Populate a struct containing the data for this channel
+                channelparse.(genvarname(fld)).id = id(ind);
+                channelparse.(genvarname(fld)).time = time(ind);
+                channelparse.(genvarname(fld)).spikes = waveform(:,ind)';
                 
-                matfid = strcat(['chan',num2str(chan)]);
-                
-                channelparse.(genvarname(matfid)).index = index;
-                channelparse.(genvarname(matfid)).spikes = spikes;
-                
-            else
-                changood = [];
+                % Update the channels to analyze list
+                chan2anal = [chan2anal chan];
             end
-            
-            chan2anal = [chan2anal changood];
-            
         end
-        
     end
+
     function [inspk] = wave_features(spikes,handles)
         %Calculates the spike features
         
@@ -641,13 +632,14 @@ return;
         end
         
         %CREATES INPUT MATRIX FOR SPC
-        inspk=zeros(nspk,inputs);
+        inspk = zeros(nspk,inputs);
         for i=1:nspk
             for j=1:inputs
                 inspk(i,j)=cc(i,coeff(j));
             end
         end
     end
+
     function [KSmax] = test_ks(x)
         %
         % Calculates the CDF (expcdf)
@@ -687,6 +679,7 @@ return;
         
         KSmax =  max(deltacdf);
     end
+
     function [clu, tree] = run_cluster(handles)
         
         dim=handles.par.inputs;
@@ -753,6 +746,7 @@ return;
         delete(fname_in);
         
     end
+
     function [temp] = find_temp(tree,handles)
         % Selects the temperature.
         
