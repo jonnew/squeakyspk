@@ -15,7 +15,9 @@ if nargin < 3 || isempty(ylimit)
     numWaves2Plot = 500;
 end
 if nargin < 2 || isempty(ylimit)
-    ylimit = [-50 50];
+    ylimit = NaN;
+elseif numel(ylimit) ~= 2
+   error('ylimit must be a two element vector') 
 end
 
 
@@ -195,7 +197,7 @@ set(f,'Visible','on');
         uu = unique(su);
         
         for i = 1:length(uu)-1
-            ss.unit(su == uu(i)+1) = i;
+            ss.unit(su == uu(i+1)) = i;
         end
         
         SS.unit = ss.unit;
@@ -245,7 +247,10 @@ set(f,'Visible','on');
         %             max(max(a_waves))];
         
         %         set(a_waves,'Ylim',currentMinMax);
-%         set(a_waves,'Ylim',ylimit,'XColor', 'w','XGrid','on','YGrid','on');
+        
+        if ~isnan(ylimit)
+            set(a_waves,'Ylim',ylimit);
+        end
         
         
     end
@@ -290,7 +295,7 @@ set(f,'Visible','on');
         
         % Add available units
         cUnit = unique(ss.unit(ss.channel == currentChannel));
-        u = {length(cUnit)};
+        u = cell(length(cUnit),1);
         
         if ~nargin
             selectedUnits = [];

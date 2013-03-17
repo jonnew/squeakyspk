@@ -77,6 +77,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         age; % age of culture, in seconds
         
         % properties of data that you are cleaning [MAIN DATA]
+        id; % [N DOUBLE (arbitrary spike identification number, spike index)]
         clean; % [N BOOL (clean?, spike index)]
         time; % [N DOUBLE (sec, spike index)]
         channel; % [N INT (channel #, spike index)]
@@ -196,6 +197,11 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
                 SS.unit = spike.unit(ind);
             else
                 SS.unit = [];
+            end
+            if isfield(spike,'id')
+                SS.id = spike.id(ind);
+            else
+                SS.id = [];
             end
             SS.methodlog = [];
             SS.badunit = [];
@@ -392,6 +398,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         %% Block 8: SAVE SS OBJECT
+        clone = Copy(SS)
+        % This method is contained in a separate file.
+        
         Save(SS,auxfid)
         % This method is contained in a separate file.
         
