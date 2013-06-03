@@ -12,6 +12,9 @@ if isempty(SS.unit)
     return
 end
 
+% Reshape
+unit2remove = unit2remove(:)';
+
 % Append the badunit vector
 SS.badunit = [SS.badunit unit2remove];
 

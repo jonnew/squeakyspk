@@ -68,6 +68,7 @@ disp('Calculating Peri-stimulus histogram ...')
 clean_spk = SS.time(SS.clean);
 
 for i = 1:sum(whichstim)
+
     t1 = b(1) + goodtime(i);
     t2 = b(2) + goodtime(i);
     

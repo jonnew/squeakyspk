@@ -136,7 +136,7 @@ return;
         handles.par.sort_fmin = 300;                %high pass filter for sorting (default 300)
         handles.par.sort_fmax = 5000;               %low pass filter for sorting (default 3000)
         
-        handles.par.max_spk = 2048;                 % max. # of spikes before starting templ. match.
+        handles.par.max_spk = 1024;                 % max. # of spikes before starting templ. match.
         handles.par.template_type = 'center';       % nn, center, ml, mahal
         handles.par.template_sdnum = 3;             % max radius of cluster in std devs. % JN: MAY WANT TO MAKE LOWER SO THAT NON-SPIKES GET EXCLUDED MORE
         

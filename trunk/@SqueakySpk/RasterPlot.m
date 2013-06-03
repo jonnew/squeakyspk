@@ -69,19 +69,19 @@ if usechan || yaxischannel
     % Plot the raster for spikes in the time bound of interest
     switch what2show
         case 'both'
-            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'k.','MarkerSize',4);
-            plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
+            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'k.','MarkerSize',2);
+            plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',2);
+            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',2);
         case 'clean'
             spkinterest = spkinterest(cleaninterest);
             unitinterest = unitinterest(cleaninterest);            
-            plot(spkinterest,unitinterest,'k.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
+            plot(spkinterest,unitinterest,'k.','MarkerSize',2);
+            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',2);
         case 'dirty'
             spkinterest = spkinterest(~cleaninterest);
             unitinterest = unitinterest(~cleaninterest);            
-            plot(spkinterest,unitinterest,'r.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',4);
+            plot(spkinterest,unitinterest,'r.','MarkerSize',2);
+            plot(SS.st_time(goodstimind),SS.st_channel(goodstimind),'*','Color',[0 1 0],'MarkerSize',2);
     end
 else
     unitinterest = SS.unit(startind:endind);
@@ -93,19 +93,19 @@ else
     % Plot the raster for spikes in the time bound of interest
     switch what2show
         case 'both'
-            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'k.','MarkerSize',4);
-            plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
+            plot(spkinterest(cleaninterest),unitinterest(cleaninterest),'k.','MarkerSize',2);
+            plot(spkinterest(~cleaninterest),unitinterest(~cleaninterest),'r.','MarkerSize',2);
+            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',2);
         case 'clean'
             spkinterest = spkinterest(cleaninterest);
             unitinterest = unitinterest(cleaninterest);           
-            plot(spkinterest,unitinterest,'k.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
+            plot(spkinterest,unitinterest,'k.','MarkerSize',2);
+            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',2);
         case 'dirty'
             spkinterest = spkinterest(~cleaninterest);
             unitinterest = unitinterest(~cleaninterest);
-            plot(spkinterest,unitinterest,'r.','MarkerSize',4);
-            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',4);
+            plot(spkinterest,unitinterest,'r.','MarkerSize',2);
+            plot(SS.st_time(goodstimind),ones(size(SS.st_time(goodstimind)))*max(SS.unit)+1,'*','Color',[0 1 0],'MarkerSize',2);
     end
 end
 
