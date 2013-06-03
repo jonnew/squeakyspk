@@ -1,4 +1,4 @@
-function q = PlotUnitWisePSH(SS,frmax,include0)
+function [q c] = PlotUnitWisePSH(SS,frmax,include0)
 % PLOTUNITWISEPSH plots the results of UnitWisePSH.
 % 
 %     PLOTUNITWISEPSH(SS,FRMAX) takes information from the upsh property to
@@ -28,8 +28,6 @@ if nargin < 2 || isempty(frmax)
     frmax = inf;
 end
 
-figure()
-
 % Decide if unit 0 should be included
 if include0 || strcmp(SS.upsh.type,'channel-wise')
     img = SS.upsh.hist';
@@ -39,7 +37,7 @@ end
     
 % Create a color map that is good at displaying a wide range of data
 cmp = gray(200);
-cmp = flipud(cmp.^3);
+cmp = flipud(cmp.^1);
 
 if sum(sum(img > frmax)) > 0
     img(img > frmax ) = frmax;
@@ -58,10 +56,10 @@ xt = get(gca,'XTick');
 idx = round(length(SS.upsh.t)*(xt/max(xt)));
 set(gca,'XTickLabel',SS.upsh.t(idx));
 
-% Draw a line indicating time 0
-hold on
-idx = find(SS.upsh.t ==0);
-plot([idx idx],[0 size(img,1)],'b-','LineWidth',2)
+% % Draw a line indicating time 0
+% hold on
+% idx = find(SS.upsh.t ==0);
+% plot([idx idx],[0 size(img,1)],'b-','LineWidth',2)
 
 % labels
 xlabel('Time (sec)')

@@ -95,6 +95,8 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         psh; % Peri-stimulus histogram
         upsh; % unit-wise peri-stimulus histogram
         unitfr; % the sorted average firing rate of each unit
+        isi_dist; % the interspike interval distribution of each channel or unit
+        unit_xc; % unit-unit x-correlation function
         
         % properties of the stimulus given while collecting the main data
         % [STIM DATA]
@@ -201,7 +203,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             if isfield(spike,'id')
                 SS.id = spike.id(ind);
             else
-                SS.id = [];
+                SS.id = (1:size(SS.time,1))';
             end
             SS.methodlog = [];
             SS.badunit = [];
@@ -322,7 +324,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PlotPeriStimHistogram(SS)
         % This method is contained in a separate file.
         
-        q = PlotUnitWisePSH(SS,frmax,include0)
+        [q c] = PlotUnitWisePSH(SS,frmax,include0)
         % This method is contained in a separate file.
         
         RandScat(SS,bound,forcechannel,sortu,sortbound)
@@ -348,6 +350,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         BI(SS,bound);
+        % This method is contained in a separate file.
+        
+        ISIDist(SS, bin, bound, force_channel)
         % This method is contained in a separate file.
         
         catmat = CATr(SS, movtimebin, timewindow, bmode, varargin)
@@ -384,6 +389,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file.
         
         UnitFR(SS,bound,units);
+        % This method is contained in a separate file
+        
+        GenerateUnitXCorr(SS,bound,dt,maxlag,units,useGPU,showplot)
         % This method is contained in a separate file
         
         %% Block 6: SONIFICATION TOOLS

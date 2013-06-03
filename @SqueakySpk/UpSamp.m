@@ -28,7 +28,9 @@ if pkalign
     wf      = zeros(nwfpts,size(SS.waveform_us,2));
 end
 %             if us>1,ttmp = interp(wftime,usfs);else ttmp = wftime;end
-tind = nearest(wftime,0):nearest(wftime,150);%peak will only come after crossing
+[~, i1] = min(abs(wftime-0));
+[~, i2] = min(abs(wftime-150));
+tind = i1:i2;%peak will only come after crossing
 cleanwfs = find(SS.clean);
 for k = 1:length(cleanwfs)
     SS.waveform_us(:,k) = interp(SS.waveform(:,cleanwfs(k)),us);
