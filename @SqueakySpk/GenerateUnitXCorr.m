@@ -6,7 +6,7 @@ function GenerateUnitXCorr(SS,bound,dt,maxlag,units,useGPU,showplot)
 % SS.unit_xc.lags:   (LX1) vector of lags for which the correlation
 %                    function is calculated in seconds 
 % SS.unit_xc.xc:     (NXL) matrix containing N = [n*(n-1)]/2 correlation 
-                     funtions from n units.
+%                    funtions from n units.
 % SS.unit_xc.uxc:    (LX1) vector containging the average cross-correlation
 %                    function
 % SS.unit_xc.combos: (NX2) vector containing the N = [n*(n-1)]/2 combinations
