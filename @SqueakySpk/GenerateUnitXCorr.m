@@ -3,13 +3,13 @@ function GenerateUnitXCorr(SS,bound,dt,maxlag,units,useGPU,showplot)
 % matrix and plot the average unit-unit cross correlation function. This
 % method modifies the SS.unit_xc property, which contains
 %
-% SS.unit_xc.lags:  (LX1) vector of lags for which the correlation
-%                   function is calculated in seconds 
-% SS.unit_xc.xc:    (NXL) matrix 
-%                   containing N = n*(n-1)/2 correlation funtions from n units.
-% SS.unit_xc.uxc:   (LX1) vector containging the average cross-correlation
-%                   function
-% SS.unit_xc.combos: (NX2) vector containing the N = n*(n-1)/2 combinations
+% SS.unit_xc.lags:   (LX1) vector of lags for which the correlation
+%                    function is calculated in seconds 
+% SS.unit_xc.xc:     (NXL) matrix containing N = [n*(n-1)]/2 correlation 
+                     funtions from n units.
+% SS.unit_xc.uxc:    (LX1) vector containging the average cross-correlation
+%                    function
+% SS.unit_xc.combos: (NX2) vector containing the N = [n*(n-1)]/2 combinations
 %                    of n units used to produce the cross correlation functions
 %
 % GENERATEUNITXCORR(SS,bound,dt,maxlag,units) Calculates the
@@ -19,8 +19,8 @@ function GenerateUnitXCorr(SS,bound,dt,maxlag,units,useGPU,showplot)
 % the nX1 dimensional vector UNITS.
 % 
 % GENERATEUNITXCORR(SS,...,useGPU,showplot) Provides the ability to
-% calculate the cross correlation function using the GPY (if available).
-% Seetting SHOWPLOT to 1 will produce a plot of the average cross
+% calculate the cross correlation function using the GPU(if available).
+% Setting SHOWPLOT to 1 will produce a plot of the average cross
 % correlation function upon completion of the calculation.
 %
 %       Created by: Jon Newman (jnewman6 at gatech dot edu)
