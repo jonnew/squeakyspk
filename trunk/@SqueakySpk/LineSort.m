@@ -17,16 +17,15 @@ end
 if nargin < 2 || isempty(ylimit)
     ylimit = NaN;
 elseif numel(ylimit) ~= 2
-   error('ylimit must be a two element vector') 
+    error('ylimit must be a two element vector')
 end
-
 
 % Global variables
 ss.channel = SS.channel;
 ss.unit = SS.unit;
 ss.waveform = SS.waveform;
 ss_static = ss;
-col = [[0.4 0.4 0.4]; lines(7)];
+col = [[0.4 0.4 0.4]; lines(10)];
 col(end,:) = [];
 currentChannel = 0;
 currentMinMax = [0 0];
@@ -85,12 +84,17 @@ a_waves = axes('Parent',p_waves','Units','Pixels',...
     'ButtonDownFcn',@StartMouseDrag,...
     'Color',[0 0 0]);
 
+a_nums = axes('Parent',p_waves','Units','Pixels',...
+    'Position',[10,420,1,60],'XTick',[],'YTick',[],...
+    'box','on', ...
+    'Color',[0 0 0]);
+
 % Line
 l_select = line([0 0],[0 0],'Parent',a_waves,'Color',[1 1 1]);
 
 % Initialize the GUI.
 % Change units to normalized so components resize automatically.
-set([f,p_chans, p_units, p_waves,b_save,b_combine,b_reset,lb_channels,lb_units,a_waves],...
+set([f,p_chans, p_units, p_waves,b_save,b_combine,b_reset,lb_channels,lb_units,a_waves,a_nums],...
     'Units','Normalized');
 
 % Update the channel list box
@@ -224,6 +228,7 @@ set(f,'Visible','on');
         w = w(:,idx);
         if ~isempty(ss.unit)
             u = ss.unit(B);
+            uall = u;
             u = u(idx);
         else
             u = zeros(size(w),2);
@@ -243,15 +248,27 @@ set(f,'Visible','on');
             end
         end
         
-        %         currentMinMax = [min(min(a_waves)), ...
-        %             max(max(a_waves))];
-        
-        %         set(a_waves,'Ylim',currentMinMax);
-        
         if ~isnan(ylimit)
-            set(a_waves,'Ylim',ylimit);
+            set(a_waves,'Ylim',ylimit,'Xlim',[1 size(ss.waveform,1)]);
+        else
+            set(a_waves,'Xlim',[1 size(ss.waveform,1)]);
         end
+
         
+        % Update counts box
+        axes(a_nums);
+        cla;
+        set(a_nums,'Ylim',[0 11],'Xlim',[0 1]);
+        pos = 10;
+        for j = 1:length(uu)
+            num = sum(uall == uu(j));
+            if uu(j) == 0
+                text(1,pos,[num2str(num) ' spks'],'Color',col(1,:),'FontSize',8)
+            else
+                text(1,pos,[num2str(num) ' spks'],'Color',col(mod(selectedIdx(j),length(col)-1)+2,:),'FontSize',8)
+            end
+            pos = pos - 1.5;
+        end
         
     end
 
