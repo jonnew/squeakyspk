@@ -73,7 +73,8 @@ for i = 1:sum(whichstim)
     t2 = b(2) + goodtime(i);
     
     spks = clean_spk(clean_spk >= (t1-dtsec) & clean_spk <= (t2+dtsec));
-    count = histc(spks-goodtime(i),psh.t)';
+    count = histc(spks-goodtime(i),psh.t);
+    count = count(:)';
     
     if size(count,2) ~= 1
         psh.hist(goodchan(i),:) = psh.hist(goodchan(i),:) + count;
