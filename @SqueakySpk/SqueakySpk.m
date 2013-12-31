@@ -97,6 +97,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         unitfr; % the sorted average firing rate of each unit
         isi_dist; % the interspike interval distribution of each channel or unit
         unit_xc; % unit-unit x-correlation function
+        chan_xc; % channel-channel x-correlation function
         
         % properties of the stimulus given while collecting the main data
         % [STIM DATA]
@@ -185,7 +186,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             %constructor using only the spike construct (ie, the data to be
             %cleaned)
             SS.clean = true(length(spike.time),1);
-            [SS.time ind] = sort(spike.time); % Make sure incoming data is sorted in time
+            [SS.time, ind] = sort(spike.time); % Make sure incoming data is sorted in time
             if min(spike.channel) == 0 % channel index is 1 based
                 warning('Channel index must be 1 based in an SS object, shifting your SS.channel property by 1');
                 SS.channel = spike.channel(ind)+1;
@@ -205,6 +206,10 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
             else
                 SS.id = (1:size(SS.time,1))';
             end
+            SS.time = SS.time(:);
+            SS.channel = SS.channel(:);
+            SS.unit = SS.unit(:);
+            
             SS.methodlog = [];
             SS.badunit = [];
             SS.badchannel = [];
@@ -364,7 +369,7 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         PeriStimHistogram(SS,dt,histrange,whichstim,ploton);
         % This method is contained in a separate file.
         
-        q = UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton);
+        q = UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,effsort,ploton);
         % This method is contained in a separate file.
         
         PeriStimRaster(SS,bound,dur,ch,ti);
@@ -392,6 +397,9 @@ classdef (ConstructOnLoad = false) SqueakySpk < handle
         % This method is contained in a separate file
         
         GenerateUnitXCorr(SS,bound,dt,maxlag,units,useGPU,showplot)
+        % This method is contained in a separate file
+        
+        GenerateChannelXCorr(SS,bound,dt,maxlag,channels,useGPU,showplot)
         % This method is contained in a separate file
         
         %% Block 6: SONIFICATION TOOLS

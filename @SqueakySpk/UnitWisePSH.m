@@ -1,4 +1,4 @@
-function q = UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,ploton)
+function q = UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan, effsort,ploton)
 %UNITWISEPSH create the UPSH for an SS object.
 %
 %   	UNITWISEPSH(SS,DT,HISTRANGE,WHICHSTIM,WHICH,EFFRANGE,FORCECHAN,PLOTON)
@@ -11,10 +11,10 @@ function q = UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,plot
 %       defining which stimuli the PSH should be calculated for. The
 %       default value is WHICHSTIM = true(size(SS.st_time)).
 %
-%       WHICH is an integer array, defining which units or channels the
-%       PSH should be calculated for. The default value is WHICH =
-%       unique(SS.unit) if spike sorting has been performed and WHICH =
-%       unique(SS.channel), otherwise.
+%       WHICH is an integer array, defining which units or channels the PSH
+%       should be calculated for. The default value is WHICH =
+%       unique(SS.unit(SS.clean)) if spike sorting has been performed and
+%       WHICH = unique(SS.channel(SS.clean)), otherwise.
 %
 %       The UPSH is caculated for each unit/channel and stored in the [M X
 %       N] matrix psh.hist which represents the M sample long psh for each
@@ -59,8 +59,13 @@ function q = UnitWisePSH(SS,dt,histrange,whichstim,which,effrange,forcechan,plot
 %
 %       Licensed under the GPL: http://www.gnu.org/licenses/gpl.txt
 
-if nargin < 8 || isempty(ploton)
+CS = SS.ReturnClean();
+
+if nargin < 0 || isempty(ploton)
     ploton = 1; % Whole recording
+end
+if nargin < 8 || isempty(ploton)
+    effsort = 1; % Whole recording
 end
 if nargin < 7 || isempty(forcechan)
     forcechan = 0; % Whole recording
@@ -70,9 +75,9 @@ if nargin < 6 || isempty(effrange)
 end
 if nargin < 5 || isempty(which)
     if ~forcechan
-        which = unique(SS.unit); % All units
+        which = unique(CS.unit); % All units
     else
-        which = unique(SS.channel); % All channels
+        which = unique(CS.channel); % All channels
     end
 end
 if nargin < 4 || isempty(whichstim)
@@ -89,7 +94,7 @@ if nargin < 1
 end
 
 % check number and whichstim of arguments
-if ~forcechan && (isempty(SS.unit) || length(SS.unit) ~= length(SS.time))
+if ~forcechan && (isempty(CS.unit) || length(CS.unit) ~= length(CS.time))
     warning(['You have not performed spike sorting yet or the unit property is not correctly populated.', ...
         ' performing the unitwisepsh across channels']);
     forcechan = true;
@@ -191,17 +196,19 @@ upsh.std = sqrt(upsh.std/upsh.stmcount)/dtsec;
 upsh.hist = upsh.hist/upsh.stmcount/dtsec;
 
 % calculate efficacy
-eff = sum(upsh.hist(upsh.t>0 & upsh.t<=effrange/1000,:),1);
-[eff idx] = sort(eff);
+upsh.eff = sum(upsh.hist(upsh.t>0 & upsh.t<=effrange/1000,:),1);
 
 % sort the whole thing based on efficacy
-upsh.which = upsh.which(idx);
-upsh.hist = upsh.hist(:,idx);
-upsh.std = upsh.std(:,idx);
-upsh.eff = eff;
+if effsort
+    [upsh.eff, idx] = sort(upsh.eff);
+    upsh.which = upsh.which(idx);
+    upsh.hist = upsh.hist(:,idx);
+    upsh.std = upsh.std(:,idx);
+    upsh.eff = upsh.eff;
+end
 
 % calculate peaks and latencies
-[maxh idx] = max(upsh.hist,[],1);
+[maxh, idx] = max(upsh.hist,[],1);
 peaklat = upsh.t(idx);
 upsh.peak = [peaklat ; maxh];
 

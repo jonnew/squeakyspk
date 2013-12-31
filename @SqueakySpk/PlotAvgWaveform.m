@@ -21,9 +21,9 @@ n = ceil(sqrt(size(SS.avgwaveform.avg,2)));
 min_amp = min(min(SS.avgwaveform.avg)) - max(max(SS.avgwaveform.std));
 max_amp = max(max(SS.avgwaveform.avg)) + max(max(SS.avgwaveform.std));
 
-for it = 1:size(SS.avgwaveform.avg,2)
+for it = 1:size(SS.avgwaveform.avg,2) 
     subplot(m,n,it)
-    if ismember(it, SS.badunit)
+    if ismember(it, SS.badunit) % TODO: this does not work if units are not in linear order
         col = [1 0 0];
     else
         col = [0 0 1];

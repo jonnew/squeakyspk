@@ -1,4 +1,4 @@
-function [q c] = PlotUnitWisePSH(SS,frmax,include0)
+function [q, c] = PlotUnitWisePSH(SS,frmax,include0)
 % PLOTUNITWISEPSH plots the results of UnitWisePSH.
 % 
 %     PLOTUNITWISEPSH(SS,FRMAX) takes information from the upsh property to
@@ -36,8 +36,11 @@ elseif strcmp(SS.upsh.type,'unit-wise')
 end
     
 % Create a color map that is good at displaying a wide range of data
-cmp = gray(200);
-cmp = flipud(cmp.^1);
+cmp = [spring(50); gray(200)];
+cmp = flipud(cmp);
+
+
+% cmp = flipud(cmp);
 
 if sum(sum(img > frmax)) > 0
     img(img > frmax ) = frmax;
@@ -46,15 +49,16 @@ elseif frmax ~= inf
 end
 
 % Make the image
-q = imagesc(img);
-c = colorbar();
-ylabel(c,'Firing Rate (Hz)')
+q = image(size(cmp,1)*img/frmax);
+% c = colorbar();
+% ylabel(c,'Firing Rate (Hz)')
 colormap(cmp);
 
-% fix the x-axis
-xt = get(gca,'XTick');
-idx = round(length(SS.upsh.t)*(xt/max(xt)));
-set(gca,'XTickLabel',SS.upsh.t(idx));
+% % fix the x-axis
+% xt = get(gca,'XTick');
+% idx = round(length(SS.upsh.t)*(xt/max(xt)));
+% idx(idx == 0) = 1;
+% set(gca,'XTickLabel',SS.upsh.t(idx));
 
 % % Draw a line indicating time 0
 % hold on
@@ -62,11 +66,11 @@ set(gca,'XTickLabel',SS.upsh.t(idx));
 % plot([idx idx],[0 size(img,1)],'b-','LineWidth',2)
 
 % labels
-xlabel('Time (sec)')
+% xlabel('Time (sec)')
 if strcmp(SS.upsh.type,'unit-wise')
-    ylabel('Unit (sorted by response efficacy)')
+%     ylabel('Unit (sorted by response efficacy)')
 else
-    ylabel('Channel (sorted by response efficacy)')
+%     ylabel('Channel (sorted by response efficacy)')
 end
 set(gca,'YDir','normal')
 end
